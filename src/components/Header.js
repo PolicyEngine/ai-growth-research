@@ -53,7 +53,7 @@ function Header() {
         <div className="header-left">
           <a href="https://policyengine.org" className="logo-link">
             <img
-              src="/policyengine-logo.svg"
+              src={`${process.env.PUBLIC_URL}/policyengine-logo.svg`}
               alt="PolicyEngine"
               className="header-logo"
             />

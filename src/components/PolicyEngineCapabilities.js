@@ -10,10 +10,10 @@ function PolicyEngineCapabilities() {
         "Transparent, auditable tax-benefit modeling enables collaborative examination of policy coordination problems.",
     },
     {
-      title: "AI-Powered Tools",
+      title: "AI Pioneer in Policy Analysis",
       icon: "🤖",
       description:
-        "PolicyEngine has substantially integrated AI into policy analysis (policyengine.org/us/ai) for enhanced insights.",
+        "First policy analysis platform to integrate LLMs (April 3, 2023)—just 3 weeks after GPT-4 launched. Substantial ongoing AI integration.",
     },
     {
       title: "Real-Time Policy Impact",
