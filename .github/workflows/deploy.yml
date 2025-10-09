@@ -39,6 +39,12 @@ jobs:
       - name: Run tests
         run: npm test -- --watchAll=false --passWithNoTests --coverage
 
+      - name: Install Playwright browsers
+        run: npx playwright install chromium
+
+      - name: Run E2E image tests
+        run: npx playwright test tests/e2e/images.spec.js --project=chromium
+
       - name: Upload coverage reports
         uses: codecov/codecov-action@v4
         if: always()

@@ -7,7 +7,7 @@ function ExampleProjects() {
       title: "OBBBA Household-by-Household Analysis",
       description:
         "Interactive tool showing how the One Big Beautiful Bill Act affects over 20,000 representative household types.",
-      image: "/images/obbba-household-by-household.png",
+      image: `${process.env.PUBLIC_URL}/images/obbba-household-by-household.png`,
       url: "https://policyengine.org/us/research/obbba-household-by-household",
       type: "Distributional Impact",
     },
@@ -15,7 +15,7 @@ function ExampleProjects() {
       title: "AI-Written Policy Reports",
       description:
         "Automatically generated policy analysis reports using AI to synthesize microsimulation results.",
-      image: "/images/ai-analysis.png",
+      image: `${process.env.PUBLIC_URL}/images/ai-analysis.png`,
       url: "https://policyengine.org/us/research/gpt-analysis",
       type: "AI Integration",
     },
@@ -23,7 +23,7 @@ function ExampleProjects() {
       title: "Household Benefit Eligibility API",
       description:
         "Programmatic access to calculate tax liabilities and benefit eligibility for any household configuration.",
-      image: "/images/how-developers-can-explore-the-policyengine-api.jpg",
+      image: `${process.env.PUBLIC_URL}/images/how-developers-can-explore-the-policyengine-api.jpg`,
       url: "https://policyengine.org/us/research/how-developers-can-explore-the-policyengine-api",
       type: "Developer API",
     },
@@ -31,7 +31,7 @@ function ExampleProjects() {
       title: "Enhanced CPS Microdata",
       description:
         "Comprehensive survey enhancement enabling household-level tax-benefit microsimulation.",
-      image: "/images/enhanced-cps-launch.png",
+      image: `${process.env.PUBLIC_URL}/images/enhanced-cps-launch.png`,
       url: "https://policyengine.org/us/research/enhanced-cps-launch",
       type: "Data Infrastructure",
     },
@@ -39,7 +39,7 @@ function ExampleProjects() {
       title: "ACA Premium Tax Credit Calculator",
       description:
         "Calculate health insurance subsidies under current and alternative policies.",
-      image: "/images/aca-calc-chart.png",
+      image: `${process.env.PUBLIC_URL}/images/aca-calc-chart.png`,
       url: "https://policyengine.org/us/research/introducing-aca-calc",
       type: "Policy Calculator",
     },
@@ -47,7 +47,7 @@ function ExampleProjects() {
       title: "NBER TAXSIM Integration",
       description:
         "Partnership with National Bureau of Economic Research to expand tax microsimulation capabilities.",
-      image: "/images/policyengine-nber-mou-taxsim.png",
+      image: `${process.env.PUBLIC_URL}/images/policyengine-nber-mou-taxsim.png`,
       url: "https://policyengine.org/us/research/policyengine-nber-mou-taxsim",
       type: "Research Partnership",
     },
