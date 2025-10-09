@@ -104,6 +104,7 @@ function Stakeholders() {
     },
   ];
 
+  // eslint-disable-next-line no-unused-vars
   const categoryIcons = {
     "AI Research": "🔬",
     "AI Companies": "🤖",

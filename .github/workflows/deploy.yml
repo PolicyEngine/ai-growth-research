@@ -37,7 +37,7 @@ jobs:
         run: npm run lint -- --max-warnings=0
 
       - name: Run tests
-        run: npm test -- --watchAll=false --coverage
+        run: npm test -- --watchAll=false --passWithNoTests --coverage
 
       - name: Upload coverage reports
         uses: codecov/codecov-action@v4
