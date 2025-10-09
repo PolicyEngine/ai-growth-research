@@ -130,21 +130,11 @@ ai-growth-research/
 └── README.md
 ```
 
-## Deployment
+## Live Site
 
-This site is configured to deploy to GitHub Pages automatically on pushes to `main`.
-
-### First-time Setup
-
-1. Go to repository Settings → Pages
-2. Under "Build and deployment", select:
-   - Source: "GitHub Actions"
-3. The workflow will automatically deploy on the next push
-
-### Deployment URL
-
-Once configured, the site will be available at:
 **https://policyengine.github.io/ai-growth-research/**
+
+The site automatically deploys to GitHub Pages on every push to `main`.
 
 ## Contributing
 
