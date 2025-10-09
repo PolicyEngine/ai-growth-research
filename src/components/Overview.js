@@ -82,7 +82,8 @@ function Overview() {
         <p className="intro-text">
           We examine how economic policies mediate the relationship between AI
           shocks and distributional outcomes. Researchers provide AI economic
-          scenarios as inputs, we microsimulate policy responses, and analyze
+          scenarios as inputs, we microsimulate policy responses using
+          PolicyEngine models (US, UK, or other countries), and analyze
           resulting distributions of income, consumption, and wealth.
         </p>
         <div className="process-flow">

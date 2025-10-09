@@ -6,7 +6,7 @@ function ExampleProjects() {
     {
       title: "OBBBA Household-by-Household Analysis",
       description:
-        "Interactive tool showing how the One Big Beautiful Bill Act affects every US household configuration.",
+        "Interactive tool showing how the One Big Beautiful Bill Act affects over 20,000 representative household types.",
       image: "/images/obbba-household-by-household.png",
       url: "https://policyengine.org/us/research/obbba-household-by-household",
       type: "Distributional Impact",
