@@ -1,0 +1,250 @@
+.policy-section {
+  padding: 6rem 3rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.section-header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.section-header h2 {
+  font-size: 2.5rem;
+  color: #319795;
+  margin-bottom: 1rem;
+}
+
+.section-subtitle {
+  font-size: 1.2rem;
+  color: #5a5a5a;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.scenarios-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2.5rem;
+  margin-bottom: 4rem;
+}
+
+.scenario-card {
+  background: white;
+  border-radius: 12px;
+  border-top: 4px solid;
+  padding: 2.5rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+}
+
+.scenario-card:hover {
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
+  transform: translateY(-4px);
+}
+
+.scenario-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.scenario-icon {
+  font-size: 2.5rem;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+}
+
+.scenario-header h3 {
+  font-size: 1.3rem;
+  margin: 0;
+  font-weight: 600;
+}
+
+.scenario-highlights {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.highlight-tag {
+  padding: 0.4rem 0.8rem;
+  border-radius: 20px;
+  border: 1.5px solid;
+  font-size: 0.85rem;
+  font-weight: 500;
+  background: white;
+  transition: all 0.2s ease;
+}
+
+.highlight-tag:hover {
+  transform: scale(1.05);
+}
+
+.scenario-areas {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.area-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  font-size: 0.95rem;
+  color: #344054;
+  line-height: 1.5;
+}
+
+.area-bullet {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-top: 0.5rem;
+  flex-shrink: 0;
+}
+
+.analysis-note {
+  background: linear-gradient(135deg, #f0f9ff 0%, #e6fffa 100%);
+  padding: 2rem;
+  border-radius: 12px;
+  border: 2px solid #319795;
+  display: flex;
+  gap: 1.5rem;
+  align-items: flex-start;
+}
+
+.note-icon {
+  font-size: 3rem;
+  flex-shrink: 0;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
+}
+
+.note-content h4 {
+  font-size: 1.3rem;
+  color: #285e61;
+  margin-bottom: 0.75rem;
+}
+
+.note-content p {
+  font-size: 1rem;
+  color: #344054;
+  line-height: 1.6;
+  margin: 0;
+}
+
+@media (max-width: 768px) {
+  .policy-section {
+    padding: 3rem 1.25rem;
+  }
+
+  .section-header h2 {
+    font-size: 1.8rem;
+  }
+
+  .section-subtitle {
+    font-size: 1rem;
+    padding: 0 0.5rem;
+  }
+
+  .scenarios-grid {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  .scenario-card {
+    padding: 2rem 1.5rem;
+  }
+
+  .scenario-header {
+    flex-direction: row;
+    gap: 0.75rem;
+  }
+
+  .scenario-icon {
+    font-size: 2rem;
+  }
+
+  .scenario-header h3 {
+    font-size: 1.15rem;
+  }
+
+  .scenario-highlights {
+    gap: 0.4rem;
+  }
+
+  .highlight-tag {
+    font-size: 0.75rem;
+    padding: 0.3rem 0.6rem;
+  }
+
+  .area-item {
+    font-size: 0.9rem;
+  }
+
+  .analysis-note {
+    flex-direction: column;
+    padding: 2rem 1.5rem;
+    gap: 1rem;
+  }
+
+  .note-icon {
+    font-size: 2.5rem;
+  }
+
+  .note-content h4 {
+    font-size: 1.15rem;
+  }
+
+  .note-content p {
+    font-size: 0.95rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .policy-section {
+    padding: 2.5rem 1rem;
+  }
+
+  .section-header h2 {
+    font-size: 1.6rem;
+  }
+
+  .section-subtitle {
+    font-size: 0.95rem;
+  }
+
+  .scenarios-grid {
+    gap: 1.5rem;
+  }
+
+  .scenario-card {
+    padding: 1.75rem 1.25rem;
+  }
+
+  .scenario-icon {
+    font-size: 1.75rem;
+  }
+
+  .scenario-header h3 {
+    font-size: 1.05rem;
+  }
+
+  .highlight-tag {
+    font-size: 0.7rem;
+    padding: 0.25rem 0.5rem;
+  }
+
+  .area-item {
+    font-size: 0.85rem;
+  }
+
+  .analysis-note {
+    padding: 1.75rem 1.25rem;
+  }
+
+  .note-icon {
+    font-size: 2rem;
+  }
+}

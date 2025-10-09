@@ -1,0 +1,175 @@
+.App {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.section {
+  padding: 6rem 3rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.section h2 {
+  font-size: 2.5rem;
+  color: #319795;
+  margin-bottom: 2rem;
+  text-align: center;
+  font-weight: 500;
+}
+
+.section h3 {
+  font-size: 1.5rem;
+  color: #285e61;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  font-weight: 500;
+}
+
+.section-alt {
+  background-color: white;
+}
+
+.card {
+  background: white;
+  border-radius: 8px;
+  padding: 2rem;
+  margin-bottom: 1.5rem;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 1px 3px rgba(16, 24, 40, 0.05);
+  transition: all 0.2s ease;
+}
+
+.card:hover {
+  border-color: #319795;
+  box-shadow: 0 4px 12px rgba(49, 151, 149, 0.15);
+  transform: translateY(-2px);
+}
+
+.card h3 {
+  margin-top: 0;
+  color: #285e61;
+}
+
+.card-interactive {
+  cursor: pointer;
+  background: white;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 1px 3px rgba(16, 24, 40, 0.05);
+  transition: all 0.2s ease;
+}
+
+.card-interactive:hover {
+  background-color: #f9fafb;
+  border-color: #cbd5e1;
+  box-shadow: 0 4px 12px rgba(16, 24, 40, 0.1);
+  transform: translateY(-1px);
+}
+
+.card-interactive.active {
+  background-color: #f2f4f7;
+  border-color: #319795;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    max-height: 0;
+  }
+  to {
+    opacity: 1;
+    max-height: 500px;
+  }
+}
+
+.card.expanded ul {
+  animation: slideDown 0.3s ease-out;
+}
+
+.section {
+  animation: fadeIn 0.6s ease-out;
+}
+
+@media (max-width: 768px) {
+  .section {
+    padding: 3rem 1.25rem;
+  }
+
+  .section h2 {
+    font-size: 1.8rem;
+  }
+
+  .section h3 {
+    font-size: 1.3rem;
+  }
+
+  .grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .card {
+    padding: 1.5rem;
+  }
+
+  .card h3 {
+    font-size: 1.2rem;
+  }
+
+  .card p {
+    font-size: 0.95rem;
+  }
+
+  .card ul {
+    font-size: 0.95rem;
+  }
+
+  .card-interactive {
+    padding: 1.25rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .section {
+    padding: 2.5rem 1rem;
+  }
+
+  .section h2 {
+    font-size: 1.6rem;
+  }
+
+  .section h3 {
+    font-size: 1.15rem;
+  }
+
+  .card {
+    padding: 1.25rem;
+  }
+
+  .card p,
+  .card ul {
+    font-size: 0.9rem;
+  }
+}

@@ -1,0 +1,432 @@
+.overview-section {
+  padding: 6rem 3rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.section-header {
+  text-align: center;
+  margin-bottom: 4rem;
+}
+
+.section-header h2 {
+  font-size: 2.5rem;
+  color: #319795;
+  margin-bottom: 1rem;
+}
+
+.section-subtitle {
+  font-size: 1.3rem;
+  color: #5a5a5a;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.subsection-title {
+  font-size: 2rem;
+  color: #285e61;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.intro-text {
+  text-align: center;
+  max-width: 800px;
+  margin: 0 auto 2rem;
+  font-size: 1.1rem;
+  color: #5a5a5a;
+}
+
+/* Challenge Section - Icon Grid */
+.challenge-container {
+  margin-bottom: 6rem;
+}
+
+.icon-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 2.5rem;
+  margin-top: 3rem;
+}
+
+.icon-card {
+  text-align: center;
+  padding: 2.5rem 2rem;
+  background: white;
+  border-radius: 12px;
+  border: 2px solid #e2e8f0;
+  transition: all 0.3s ease;
+}
+
+.icon-card:hover {
+  border-color: #319795;
+  box-shadow: 0 8px 24px rgba(49, 151, 149, 0.15);
+  transform: translateY(-4px);
+}
+
+.icon-large {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
+}
+
+.icon-card h4 {
+  font-size: 1.2rem;
+  color: #285e61;
+  margin-bottom: 0.5rem;
+}
+
+.icon-card p {
+  font-size: 0.95rem;
+  color: #5a5a5a;
+  line-height: 1.5;
+}
+
+/* Approach Section - Process Flow */
+.approach-container {
+  margin-bottom: 6rem;
+  background: linear-gradient(135deg, #e6fffa 0%, #f0f9ff 100%);
+  padding: 4rem 3rem;
+  border-radius: 16px;
+}
+
+.process-flow {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1.5rem;
+  margin-top: 3rem;
+  align-items: center;
+}
+
+.process-step {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background: white;
+  padding: 1.5rem 2rem;
+  border-radius: 12px;
+  border: 2px solid #319795;
+  min-width: 200px;
+  box-shadow: 0 4px 12px rgba(49, 151, 149, 0.1);
+  transition: all 0.3s ease;
+}
+
+.process-step:hover {
+  box-shadow: 0 8px 24px rgba(49, 151, 149, 0.2);
+  transform: scale(1.05);
+}
+
+.step-number {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #319795;
+  background: #e6fffa;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.step-content h4 {
+  font-size: 1.1rem;
+  color: #285e61;
+  margin-bottom: 0.25rem;
+}
+
+.step-content p {
+  font-size: 0.9rem;
+  color: #5a5a5a;
+  margin: 0;
+}
+
+.flow-arrow {
+  font-size: 2rem;
+  color: #319795;
+  font-weight: bold;
+}
+
+.integration-note {
+  text-align: center;
+  max-width: 800px;
+  margin: 2rem auto 0;
+  font-size: 0.95rem;
+  color: #344054;
+  padding: 1rem 1.5rem;
+  background: rgba(255, 255, 255, 0.6);
+  border-radius: 8px;
+  border: 1px solid rgba(49, 151, 149, 0.2);
+}
+
+/* Uncertainty Section - Highlight Box */
+.uncertainty-box {
+  background: linear-gradient(135deg, #319795 0%, #2c7a7b 100%);
+  color: white;
+  padding: 4rem;
+  border-radius: 16px;
+  margin-bottom: 6rem;
+  box-shadow: 0 12px 32px rgba(49, 151, 149, 0.25);
+}
+
+.box-content h3 {
+  font-size: 1.8rem;
+  margin-bottom: 1rem;
+  font-weight: 500;
+}
+
+.box-content p {
+  line-height: 1.6;
+  opacity: 0.95;
+  margin-bottom: 2rem;
+}
+
+.stats-row {
+  display: flex;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.stat-item {
+  text-align: center;
+  padding: 1rem;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 8px;
+  backdrop-filter: blur(10px);
+  flex: 1;
+  min-width: 120px;
+}
+
+.stat-value {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+.stat-label {
+  font-size: 0.9rem;
+  opacity: 0.9;
+}
+
+/* Impact Section - Impact Grid */
+.impact-section {
+  margin-bottom: 3rem;
+}
+
+.impact-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.impact-card {
+  background: white;
+  padding: 2rem;
+  border-radius: 12px;
+  border: 2px solid #e2e8f0;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.impact-card:hover {
+  border-color: #319795;
+  box-shadow: 0 8px 24px rgba(49, 151, 149, 0.15);
+  transform: translateY(-4px);
+}
+
+.impact-icon {
+  font-size: 2.5rem;
+  display: block;
+  margin-bottom: 1rem;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
+}
+
+.impact-card h4 {
+  font-size: 1.2rem;
+  color: #285e61;
+  margin-bottom: 0.5rem;
+}
+
+.impact-card p {
+  font-size: 0.95rem;
+  color: #5a5a5a;
+  line-height: 1.5;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .overview-section {
+    padding: 3rem 1.25rem;
+  }
+
+  .section-header h2 {
+    font-size: 1.8rem;
+  }
+
+  .section-subtitle {
+    font-size: 1rem;
+    padding: 0 0.5rem;
+  }
+
+  .subsection-title {
+    font-size: 1.5rem;
+  }
+
+  .intro-text {
+    font-size: 1rem;
+    padding: 0 0.5rem;
+  }
+
+  .icon-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    margin-top: 2rem;
+  }
+
+  .icon-card {
+    padding: 2rem 1.5rem;
+  }
+
+  .approach-container {
+    padding: 2.5rem 1.5rem;
+    margin-bottom: 3rem;
+  }
+
+  .process-flow {
+    flex-direction: column;
+    margin-top: 2rem;
+  }
+
+  .flow-arrow {
+    transform: rotate(90deg);
+    font-size: 1.5rem;
+  }
+
+  .process-step {
+    width: 100%;
+    min-width: auto;
+  }
+
+  .integration-note {
+    font-size: 0.85rem;
+    padding: 1rem;
+  }
+
+  .uncertainty-box {
+    padding: 2.5rem 1.5rem;
+    margin-bottom: 3rem;
+  }
+
+  .box-content h3 {
+    font-size: 1.5rem;
+  }
+
+  .box-content p {
+    font-size: 0.95rem;
+  }
+
+  .stats-row {
+    gap: 1rem;
+  }
+
+  .stat-item {
+    min-width: 100px;
+  }
+
+  .stat-value {
+    font-size: 1.2rem;
+  }
+
+  .stat-label {
+    font-size: 0.8rem;
+  }
+
+  .impact-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .impact-card {
+    padding: 1.5rem;
+  }
+
+  .impact-icon {
+    font-size: 2rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .overview-section {
+    padding: 2.5rem 1rem;
+  }
+
+  .section-header h2 {
+    font-size: 1.6rem;
+  }
+
+  .section-subtitle {
+    font-size: 0.95rem;
+  }
+
+  .subsection-title {
+    font-size: 1.3rem;
+  }
+
+  .intro-text {
+    font-size: 0.95rem;
+  }
+
+  .icon-card h4 {
+    font-size: 1.1rem;
+  }
+
+  .icon-card p {
+    font-size: 0.9rem;
+  }
+
+  .approach-container {
+    padding: 2rem 1.25rem;
+  }
+
+  .process-step {
+    padding: 1.25rem 1.5rem;
+    font-size: 0.9rem;
+  }
+
+  .step-number {
+    width: 40px;
+    height: 40px;
+    font-size: 1.5rem;
+  }
+
+  .step-content h4 {
+    font-size: 1rem;
+  }
+
+  .step-content p {
+    font-size: 0.85rem;
+  }
+
+  .uncertainty-box {
+    padding: 2rem 1.25rem;
+  }
+
+  .box-content h3 {
+    font-size: 1.3rem;
+  }
+
+  .box-content p {
+    font-size: 0.9rem;
+  }
+
+  .impact-card h4 {
+    font-size: 1.1rem;
+  }
+
+  .impact-card p {
+    font-size: 0.9rem;
+  }
+}

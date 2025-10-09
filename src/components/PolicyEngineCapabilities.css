@@ -1,0 +1,223 @@
+.capabilities-section {
+  background: linear-gradient(135deg, #f9fafb 0%, #ffffff 100%);
+  padding: 6rem 3rem;
+}
+
+.capabilities-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.capabilities-header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.capabilities-header h2 {
+  font-size: 2.5rem;
+  color: #319795;
+  margin-bottom: 1rem;
+}
+
+.capabilities-header p {
+  font-size: 1.2rem;
+  color: #5a5a5a;
+  max-width: 800px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+.capabilities-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+  margin-bottom: 3rem;
+}
+
+.capability-card {
+  background: white;
+  padding: 2rem;
+  border-radius: 12px;
+  border: 2px solid #e2e8f0;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.capability-card:hover {
+  border-color: #319795;
+  box-shadow: 0 8px 24px rgba(49, 151, 149, 0.15);
+  transform: translateY(-4px);
+}
+
+.capability-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
+}
+
+.capability-card h3 {
+  font-size: 1.2rem;
+  color: #285e61;
+  margin-bottom: 0.75rem;
+}
+
+.capability-card p {
+  font-size: 0.95rem;
+  color: #5a5a5a;
+  line-height: 1.6;
+}
+
+.open-source-box {
+  background: linear-gradient(135deg, #319795 0%, #2c7a7b 100%);
+  color: white;
+  padding: 3rem;
+  border-radius: 16px;
+  box-shadow: 0 12px 32px rgba(49, 151, 149, 0.25);
+}
+
+.open-source-box h3 {
+  font-size: 1.8rem;
+  margin-bottom: 1rem;
+  font-weight: 500;
+}
+
+.open-source-box p {
+  font-size: 1.1rem;
+  line-height: 1.7;
+  opacity: 0.95;
+  margin-bottom: 2rem;
+}
+
+.links-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+}
+
+.capability-link {
+  display: inline-block;
+  padding: 0.75rem 1.5rem;
+  background: rgba(255, 255, 255, 0.15);
+  color: white;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.capability-link:hover {
+  background: rgba(255, 255, 255, 0.25);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+@media (max-width: 768px) {
+  .capabilities-section {
+    padding: 3rem 1.25rem;
+  }
+
+  .capabilities-header h2 {
+    font-size: 1.8rem;
+  }
+
+  .capabilities-header p {
+    font-size: 1rem;
+    padding: 0 0.5rem;
+  }
+
+  .capabilities-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+  }
+
+  .capability-card {
+    padding: 1.75rem 1.5rem;
+  }
+
+  .capability-icon {
+    font-size: 2.5rem;
+  }
+
+  .capability-card h3 {
+    font-size: 1.1rem;
+  }
+
+  .capability-card p {
+    font-size: 0.9rem;
+  }
+
+  .open-source-box {
+    padding: 2.5rem 1.5rem;
+  }
+
+  .open-source-box h3 {
+    font-size: 1.5rem;
+  }
+
+  .open-source-box p {
+    font-size: 0.95rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .links-row {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .capability-link {
+    text-align: center;
+    width: 100%;
+    padding: 0.85rem 1.25rem;
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .capabilities-section {
+    padding: 2.5rem 1rem;
+  }
+
+  .capabilities-header h2 {
+    font-size: 1.6rem;
+  }
+
+  .capabilities-header p {
+    font-size: 0.95rem;
+  }
+
+  .capability-card {
+    padding: 1.5rem 1.25rem;
+  }
+
+  .capability-icon {
+    font-size: 2rem;
+  }
+
+  .capability-card h3 {
+    font-size: 1.05rem;
+  }
+
+  .capability-card p {
+    font-size: 0.85rem;
+  }
+
+  .open-source-box {
+    padding: 2rem 1.25rem;
+  }
+
+  .open-source-box h3 {
+    font-size: 1.3rem;
+  }
+
+  .open-source-box p {
+    font-size: 0.9rem;
+  }
+
+  .capability-link {
+    padding: 0.75rem 1rem;
+    font-size: 0.85rem;
+  }
+}

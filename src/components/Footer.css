@@ -1,0 +1,128 @@
+.footer {
+  background: linear-gradient(135deg, #319795 0%, #285e61 100%);
+  color: white;
+  padding: 0;
+  margin-top: 4rem;
+}
+
+.conference-banner {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 1.5rem 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+}
+
+.banner-icon {
+  font-size: 1.5rem;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+}
+
+.banner-content {
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+.banner-content strong {
+  font-weight: 600;
+  margin-right: 0.5rem;
+}
+
+.footer-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+  margin-bottom: 2rem;
+  padding: 3rem 2rem 1rem;
+}
+
+.footer-section h4 {
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+  font-weight: 500;
+}
+
+.footer-section p {
+  line-height: 1.6;
+  opacity: 0.9;
+}
+
+.footer-section ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.footer-section li {
+  margin-bottom: 0.5rem;
+}
+
+.footer-section a {
+  color: white;
+  opacity: 0.9;
+  transition: opacity 0.2s;
+}
+
+.footer-section a:hover {
+  opacity: 1;
+  text-decoration: underline;
+}
+
+.footer-bottom {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding-top: 2rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  text-align: center;
+  opacity: 0.8;
+}
+
+@media (max-width: 768px) {
+  .conference-banner {
+    flex-direction: column;
+    padding: 1.25rem 1.5rem;
+    text-align: center;
+  }
+
+  .banner-content {
+    font-size: 0.9rem;
+  }
+
+  .footer-content {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    padding: 2rem 1.5rem 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .conference-banner {
+    padding: 1rem 1.25rem;
+  }
+
+  .banner-icon {
+    font-size: 1.25rem;
+  }
+
+  .banner-content {
+    font-size: 0.85rem;
+  }
+
+  .footer-content {
+    padding: 2rem 1.25rem 1rem;
+  }
+
+  .footer-section h4 {
+    font-size: 1.1rem;
+  }
+
+  .footer-section p,
+  .footer-section li {
+    font-size: 0.9rem;
+  }
+}
