@@ -25,3 +25,6 @@ yarn-error.log*
 .idea/
 *.swp
 *.swo
+
+# Internal documents (not for public repo)
+social-posts.md
