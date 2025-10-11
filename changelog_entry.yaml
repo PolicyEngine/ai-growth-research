@@ -1,0 +1,4 @@
+- bump: patch
+  changes:
+    added:
+    - Add six key AI research papers to Relevant Research section (Erdil & Besiroglu on explosive growth, Besiroglu et al on AI-augmented R&D, Thompson et al on computing power, Acemoglu on AI macroeconomics, Autor & Thompson on expertise, and Eloundou et al on LLM labor impacts)

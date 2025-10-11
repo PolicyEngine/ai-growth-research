@@ -6,7 +6,7 @@ function Research() {
     {
       title: "AI and Labor Market Impacts",
       description:
-        "Federal Reserve research shows striking correlation between AI prevalence and unemployment. BLS incorporating AI in employment projections. Yale Budget Lab evaluating using Anthropic data.",
+        "Federal Reserve research shows striking correlation between AI prevalence and unemployment. BLS incorporating AI in employment projections. Yale Budget Lab evaluating using Anthropic data. Research examines automation models, task expertise dynamics, and LLM exposure across occupations.",
       links: [
         {
           text: "Yale Budget Lab: AI Labor Market Impact (2025)",
@@ -20,12 +20,24 @@ function Research() {
           text: "BLS: Incorporating AI in Employment Projections (2025)",
           url: "https://www.bls.gov/opub/mlr/2025/article/incorporating-ai-impacts-in-bls-employment-projections.htm",
         },
+        {
+          text: "Acemoglu: The Simple Macroeconomics of AI (2024)",
+          url: "https://www.nber.org/papers/w32487",
+        },
+        {
+          text: "Autor & Thompson: Expertise (2025)",
+          url: "https://www.nber.org/papers/w33941",
+        },
+        {
+          text: "Eloundou et al: GPTs are GPTs (2024)",
+          url: "https://www.science.org/doi/10.1126/science.adj0998",
+        },
       ],
     },
     {
       title: "AI Productivity & Growth Modeling",
       description:
-        "Penn Wharton estimates 0.01pp TFP boost in 2025. McKinsey sizes opportunity at $4.4T in productivity. IMF projects AI affects 40% of jobs globally.",
+        "Penn Wharton estimates 0.01pp TFP boost in 2025. McKinsey sizes opportunity at $4.4T in productivity. IMF projects AI affects 40% of jobs globally. Research examines explosive growth scenarios, capital deepening in AI R&D, and compute scaling impacts.",
       links: [
         {
           text: "Penn Wharton: Projected AI Impact on Productivity (2025)",
@@ -38,6 +50,18 @@ function Research() {
         {
           text: "IMF: AI Transform Global Economy (2024)",
           url: "https://www.imf.org/en/Blogs/Articles/2024/01/14/ai-will-transform-the-global-economy-lets-make-sure-it-benefits-humanity",
+        },
+        {
+          text: "Erdil & Besiroglu: Explosive Growth from AI Automation (2023)",
+          url: "https://arxiv.org/abs/2309.11690",
+        },
+        {
+          text: "Besiroglu, Emery-Xu & Thompson: Economic Impacts of AI-Augmented R&D (2024)",
+          url: "https://www.sciencedirect.com/science/article/pii/S0048733324000866",
+        },
+        {
+          text: "Thompson, Ge & Manso: The Importance of (Exponentially More) Computing Power (2022)",
+          url: "https://arxiv.org/abs/2206.14007",
         },
       ],
     },
