@@ -4,14 +4,6 @@ import "./Footer.css";
 function Footer() {
   return (
     <footer className="footer">
-      <div className="conference-banner">
-        <span className="banner-icon">📅</span>
-        <div className="banner-content">
-          <strong>EAG NYC 2025:</strong> Max Ghenis and Daphne Hansell will be
-          at Effective Altruism Global NYC this weekend. Interested in
-          discussing this research? Reach out!
-        </div>
-      </div>
       <div className="footer-content">
         <div className="footer-section">
           <h4>About PolicyEngine</h4>

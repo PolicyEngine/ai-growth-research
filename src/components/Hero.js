@@ -22,12 +22,6 @@ function Hero() {
           >
             Connect with us
           </a>
-          <div className="cta-event">
-            <span className="event-icon">📅</span>
-            <span className="event-text">
-              Meet Max Ghenis or Daphne Hansell at EAG NYC this weekend
-            </span>
-          </div>
         </div>
       </div>
     </div>
