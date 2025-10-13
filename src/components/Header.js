@@ -1,52 +1,9 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React from "react";
+import { Link, useLocation } from "react-router-dom";
 import "./Header.css";
 
 function Header() {
-  const [activeSection, setActiveSection] = useState("");
-
-  const sections = useMemo(
-    () => [
-      { id: "examples", label: "What PE Does" },
-      { id: "overview", label: "Overview" },
-      { id: "research", label: "Research" },
-      { id: "stochastic-forecasting", label: "Stochastic Forecasting" },
-      { id: "scenarios", label: "Scenarios" },
-      { id: "stakeholders", label: "Stakeholders" },
-    ],
-    [],
-  );
-
-  useEffect(() => {
-    const handleScroll = () => {
-      const scrollPosition = window.scrollY + 100;
-
-      for (const section of sections) {
-        const element = document.getElementById(section.id);
-        if (element) {
-          const { offsetTop, offsetHeight } = element;
-          if (
-            scrollPosition >= offsetTop &&
-            scrollPosition < offsetTop + offsetHeight
-          ) {
-            setActiveSection(section.id);
-            break;
-          }
-        }
-      }
-    };
-
-    window.addEventListener("scroll", handleScroll);
-    handleScroll();
-
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, [sections]);
-
-  const scrollToSection = (id) => {
-    const element = document.getElementById(id);
-    if (element) {
-      element.scrollIntoView({ behavior: "smooth", block: "start" });
-    }
-  };
+  const location = useLocation();
 
   return (
     <header className="header-bar">
@@ -64,15 +21,24 @@ function Header() {
         </div>
 
         <nav className="header-nav">
-          {sections.map((section) => (
-            <button
-              key={section.id}
-              className={`nav-link ${activeSection === section.id ? "active" : ""}`}
-              onClick={() => scrollToSection(section.id)}
-            >
-              {section.label}
-            </button>
-          ))}
+          <Link
+            to="/"
+            className={`nav-link ${location.pathname === "/" ? "active" : ""}`}
+          >
+            Home
+          </Link>
+          <Link
+            to="/research"
+            className={`nav-link ${location.pathname === "/research" ? "active" : ""}`}
+          >
+            Research
+          </Link>
+          <Link
+            to="/policy-analysis"
+            className={`nav-link ${location.pathname === "/policy-analysis" ? "active" : ""}`}
+          >
+            Policy Analysis
+          </Link>
         </nav>
 
         <div className="header-right">

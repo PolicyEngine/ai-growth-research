@@ -1,32 +1,25 @@
 import React from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import "./App.css";
 import Header from "./components/Header";
-import Hero from "./components/Hero";
-import ExampleProjects from "./components/ExampleProjects";
-import Overview from "./components/Overview";
-import PolicyEngineCapabilities from "./components/PolicyEngineCapabilities";
-import Research from "./components/Research";
-import StochasticForecasting from "./components/StochasticForecasting";
-import Stakeholders from "./components/Stakeholders";
-import TechnicalRequirements from "./components/TechnicalRequirements";
-import PolicyScenarios from "./components/PolicyScenarios";
 import Footer from "./components/Footer";
+import Home from "./pages/Home";
+import ResearchPage from "./pages/Research";
+import PolicyAnalysis from "./pages/PolicyAnalysis";
 
 function App() {
   return (
-    <div className="App">
-      <Header />
-      <Hero />
-      <ExampleProjects />
-      <Overview />
-      <PolicyEngineCapabilities />
-      <Research />
-      <StochasticForecasting />
-      <PolicyScenarios />
-      <TechnicalRequirements />
-      <Stakeholders />
-      <Footer />
-    </div>
+    <Router basename={process.env.PUBLIC_URL}>
+      <div className="App">
+        <Header />
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/research" element={<ResearchPage />} />
+          <Route path="/policy-analysis" element={<PolicyAnalysis />} />
+        </Routes>
+        <Footer />
+      </div>
+    </Router>
   );
 }
 

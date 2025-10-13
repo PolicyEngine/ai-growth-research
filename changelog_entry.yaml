@@ -1,6 +1,11 @@
 - bump: minor
   changes:
     added:
-    - Add comprehensive Stochastic Economic Forecasting section analyzing PolicyEngine-US's 318 uprating parameters and probabilistic forecasting approaches for microsimulation under uncertainty
-    - Add Stochastic Forecasting research topic linking to new detailed analysis section
-    - Document data sources (SPF, CBO, Michigan Survey, NY Fed) and modeling approaches (VAR, Copulas, Bayesian VAR, Historical Resampling) for joint distribution modeling
+    - Restructure into multi-page app with Home, Research, and Policy Analysis pages
+    - Add interactive uprating viewer showing all 318 PolicyEngine-US parameters by growth factor category
+    - Enable search and filter functionality for uprating parameters with links to source code on GitHub
+    - Add GitHub Pages SPA routing support (404.html redirect)
+    changed:
+    - Convert from single-page scroll to React Router multi-page navigation
+    - Update Header navigation from scroll-to-section to page-based routing
+    - Reorganize content for better audience targeting (executives, researchers, policy analysts)
