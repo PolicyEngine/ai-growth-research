@@ -6,6 +6,7 @@ import ExampleProjects from "./components/ExampleProjects";
 import Overview from "./components/Overview";
 import PolicyEngineCapabilities from "./components/PolicyEngineCapabilities";
 import Research from "./components/Research";
+import StochasticForecasting from "./components/StochasticForecasting";
 import Stakeholders from "./components/Stakeholders";
 import TechnicalRequirements from "./components/TechnicalRequirements";
 import PolicyScenarios from "./components/PolicyScenarios";
@@ -20,6 +21,7 @@ function App() {
       <Overview />
       <PolicyEngineCapabilities />
       <Research />
+      <StochasticForecasting />
       <PolicyScenarios />
       <TechnicalRequirements />
       <Stakeholders />

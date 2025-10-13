@@ -1,4 +1,6 @@
-- bump: patch
+- bump: minor
   changes:
     added:
-    - Add six key AI research papers to Relevant Research section (Erdil & Besiroglu on explosive growth, Besiroglu et al on AI-augmented R&D, Thompson et al on computing power, Acemoglu on AI macroeconomics, Autor & Thompson on expertise, and Eloundou et al on LLM labor impacts)
+    - Add comprehensive Stochastic Economic Forecasting section analyzing PolicyEngine-US's 318 uprating parameters and probabilistic forecasting approaches for microsimulation under uncertainty
+    - Add Stochastic Forecasting research topic linking to new detailed analysis section
+    - Document data sources (SPF, CBO, Michigan Survey, NY Fed) and modeling approaches (VAR, Copulas, Bayesian VAR, Historical Resampling) for joint distribution modeling

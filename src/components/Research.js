@@ -137,6 +137,29 @@ function Research() {
         },
       ],
     },
+    {
+      title: "Stochastic Economic Forecasting",
+      description:
+        "Probabilistic forecasts and joint distribution modeling for economic variables. Critical for microsimulation under uncertainty. See detailed analysis below.",
+      links: [
+        {
+          text: "Philadelphia Fed: Survey of Professional Forecasters",
+          url: "https://www.philadelphiafed.org/surveys-and-data/real-time-data-research/survey-of-professional-forecasters",
+        },
+        {
+          text: "CBO: Economic Uncertainty Analysis (Bayesian VAR)",
+          url: "https://www.cbo.gov/publication/58883",
+        },
+        {
+          text: "NY Fed: Outlook-at-Risk (Quantile VAR)",
+          url: "https://www.newyorkfed.org/research/policy/outlook-at-risk",
+        },
+        {
+          text: "↓ See PolicyEngine's Stochastic Forecasting Approach Below",
+          url: "#stochastic-forecasting",
+        },
+      ],
+    },
   ];
 
   return (

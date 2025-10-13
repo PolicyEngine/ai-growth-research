@@ -9,6 +9,7 @@ function Header() {
       { id: "examples", label: "What PE Does" },
       { id: "overview", label: "Overview" },
       { id: "research", label: "Research" },
+      { id: "stochastic-forecasting", label: "Stochastic Forecasting" },
       { id: "scenarios", label: "Scenarios" },
       { id: "stakeholders", label: "Stakeholders" },
     ],
