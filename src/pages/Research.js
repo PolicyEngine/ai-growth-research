@@ -8,7 +8,13 @@ function ResearchPage() {
   return (
     <>
       <div className="section section-alt" style={{ paddingTop: "6rem" }}>
-        <h1 style={{ textAlign: "center", marginBottom: "1rem" }}>
+        <h1
+          style={{
+            textAlign: "center",
+            marginBottom: "1rem",
+            fontSize: "3rem",
+          }}
+        >
           Research Context
         </h1>
         <p
