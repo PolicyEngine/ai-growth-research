@@ -39,17 +39,32 @@ function UpratingViewer() {
     data.forEach((row) => {
       const category = row.uprating_category || "Unknown";
       if (!grouped[category]) {
-        grouped[category] = [];
+        grouped[category] = { parameters: [], variables: [] };
       }
-      grouped[category].push(row);
+      if (row.type === "parameter") {
+        grouped[category].parameters.push(row);
+      } else if (row.type === "variable") {
+        grouped[category].variables.push(row);
+      }
     });
 
     return grouped;
   }, [data]);
 
   const categories = useMemo(() => {
+    // Sort by total count (parameters + variables), putting income_by_source categories first
     return Object.keys(groupedData).sort((a, b) => {
-      return groupedData[b].length - groupedData[a].length;
+      const aIsIncome = a.includes("income_by_source");
+      const bIsIncome = b.includes("income_by_source");
+
+      if (aIsIncome && !bIsIncome) return -1;
+      if (!aIsIncome && bIsIncome) return 1;
+
+      const aTotal =
+        groupedData[a].parameters.length + groupedData[a].variables.length;
+      const bTotal =
+        groupedData[b].parameters.length + groupedData[b].variables.length;
+      return bTotal - aTotal;
     });
   }, [groupedData]);
 
@@ -63,7 +78,11 @@ function UpratingViewer() {
     if (searchTerm) {
       const result = {};
       Object.keys(filtered).forEach((category) => {
-        const matchingRows = filtered[category].filter((row) => {
+        const allRows = [
+          ...filtered[category].parameters,
+          ...filtered[category].variables,
+        ];
+        const matchingRows = allRows.filter((row) => {
           const searchLower = searchTerm.toLowerCase();
           return (
             row.path?.toLowerCase().includes(searchLower) ||
@@ -72,7 +91,10 @@ function UpratingViewer() {
           );
         });
         if (matchingRows.length > 0) {
-          result[category] = matchingRows;
+          result[category] = {
+            parameters: matchingRows.filter((r) => r.type === "parameter"),
+            variables: matchingRows.filter((r) => r.type === "variable"),
+          };
         }
       });
       return result;
@@ -81,12 +103,27 @@ function UpratingViewer() {
     return filtered;
   }, [groupedData, selectedCategory, searchTerm]);
 
-  const totalParams = useMemo(() => {
-    return Object.values(filteredData).reduce(
-      (sum, params) => sum + params.length,
-      0,
-    );
+  const totalCounts = useMemo(() => {
+    let parameters = 0;
+    let variables = 0;
+    Object.values(filteredData).forEach((group) => {
+      parameters += group.parameters.length;
+      variables += group.variables.length;
+    });
+    return { parameters, variables, total: parameters + variables };
   }, [filteredData]);
+
+  const getCategoryDisplayName = (category) => {
+    // Clean up category names for better display
+    if (category.startsWith("Other: calibration.gov.cbo.income_by_source")) {
+      const parts = category.split(".");
+      const income_type = parts[parts.length - 1]
+        .replace(/_/g, " ")
+        .replace(/\b\w/g, (l) => l.toUpperCase());
+      return `Income by Source: ${income_type}`;
+    }
+    return category;
+  };
 
   if (loading) {
     return (
@@ -106,19 +143,37 @@ function UpratingViewer() {
 
   return (
     <div id="uprating-viewer" className="section section-alt">
-      <h2>PolicyEngine-US Uprating Parameters</h2>
+      <h2>PolicyEngine-US Uprating Parameters & Variables</h2>
       <p
         style={{
           textAlign: "center",
           maxWidth: "800px",
-          margin: "0 auto 2rem",
+          margin: "0 auto 1rem",
           fontSize: "1.1rem",
         }}
       >
-        Explore the 318 parameters in PolicyEngine-US that grow over time based
-        on different economic indicators. These growth factors create correlated
-        uncertainty in long-term policy projections.
+        Explore the <strong>294 parameters</strong> and{" "}
+        <strong>23 variables</strong> in PolicyEngine-US that grow over time
+        based on different economic indicators. These growth factors create
+        correlated uncertainty in long-term policy projections.
       </p>
+      <div
+        style={{
+          textAlign: "center",
+          marginBottom: "2rem",
+          padding: "1rem",
+          backgroundColor: "#fff3cd",
+          borderRadius: "8px",
+          maxWidth: "800px",
+          margin: "0 auto 2rem",
+        }}
+      >
+        <p style={{ margin: 0, fontWeight: "500" }}>
+          💡 <strong>Income by Source</strong> projections are critical for AI
+          scenarios, as AI-driven wage compression and capital income shifts
+          directly impact these growth rates.
+        </p>
+      </div>
 
       {/* Search and Filter Controls */}
       <div
@@ -160,21 +215,25 @@ function UpratingViewer() {
               flex: 1,
             }}
           >
-            <option value="all">
-              All Categories ({data.length} parameters)
-            </option>
-            {categories.map((category) => (
-              <option key={category} value={category}>
-                {category} ({groupedData[category].length})
-              </option>
-            ))}
+            <option value="all">All Categories ({data.length} total)</option>
+            {categories.map((category) => {
+              const total =
+                groupedData[category].parameters.length +
+                groupedData[category].variables.length;
+              return (
+                <option key={category} value={category}>
+                  {getCategoryDisplayName(category)} ({total})
+                </option>
+              );
+            })}
           </select>
         </div>
 
         <p
           style={{ textAlign: "center", color: "#718096", fontSize: "0.95rem" }}
         >
-          Showing {totalParams} parameters
+          Showing {totalCounts.total} items ({totalCounts.parameters}{" "}
+          parameters, {totalCounts.variables} variables)
           {searchTerm && ` matching "${searchTerm}"`}
         </p>
       </div>
@@ -182,15 +241,21 @@ function UpratingViewer() {
       {/* Grouped Parameter Display */}
       <div className="grid">
         {Object.keys(filteredData).map((category) => {
-          const params = filteredData[category];
+          const group = filteredData[category];
+          const allItems = [...group.parameters, ...group.variables];
           const isExpanded = expandedCategory === category;
+          const isIncome = category.includes("income_by_source");
 
           return (
             <div
               key={category}
               className={`card ${isExpanded ? "expanded" : ""}`}
               onClick={() => setExpandedCategory(isExpanded ? null : category)}
-              style={{ cursor: "pointer" }}
+              style={{
+                cursor: "pointer",
+                border: isIncome ? "2px solid #fbbf24" : undefined,
+                backgroundColor: isIncome ? "#fffbeb" : undefined,
+              }}
             >
               <h3
                 style={{
@@ -199,15 +264,26 @@ function UpratingViewer() {
                   alignItems: "center",
                 }}
               >
-                {category}
+                <span>
+                  {isIncome && "⭐ "}
+                  {getCategoryDisplayName(category)}
+                </span>
                 <span
                   style={{
-                    fontSize: "0.9rem",
+                    fontSize: "0.85rem",
                     color: "#319795",
                     fontWeight: "normal",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "0.5rem",
                   }}
                 >
-                  {params.length} {isExpanded ? "▼" : "▶"}
+                  <span>
+                    {group.parameters.length}p {group.variables.length}v
+                  </span>
+                  <span style={{ fontSize: "1.2rem" }}>
+                    {isExpanded ? "▼" : "▶"}
+                  </span>
                 </span>
               </h3>
 
@@ -225,14 +301,14 @@ function UpratingViewer() {
                       padding: "1rem",
                     }}
                   >
-                    {params.slice(0, 50).map((param, idx) => (
+                    {allItems.slice(0, 50).map((param, idx) => (
                       <div
                         key={idx}
                         style={{
                           marginBottom: "1rem",
                           paddingBottom: "1rem",
                           borderBottom:
-                            idx < params.length - 1
+                            idx < allItems.length - 1
                               ? "1px solid #e2e8f0"
                               : "none",
                         }}
@@ -243,9 +319,29 @@ function UpratingViewer() {
                             fontSize: "0.85rem",
                             color: "#2d3748",
                             marginBottom: "0.25rem",
+                            display: "flex",
+                            justifyContent: "space-between",
+                            alignItems: "center",
                           }}
                         >
                           <strong>{param.path}</strong>
+                          <span
+                            style={{
+                              fontSize: "0.75rem",
+                              padding: "0.125rem 0.375rem",
+                              borderRadius: "4px",
+                              backgroundColor:
+                                param.type === "variable"
+                                  ? "#e0f2fe"
+                                  : "#f3f4f6",
+                              color:
+                                param.type === "variable"
+                                  ? "#0369a1"
+                                  : "#374151",
+                            }}
+                          >
+                            {param.type}
+                          </span>
                         </div>
                         {param.description && (
                           <div
@@ -284,7 +380,7 @@ function UpratingViewer() {
                         </a>
                       </div>
                     ))}
-                    {params.length > 50 && (
+                    {allItems.length > 50 && (
                       <p
                         style={{
                           textAlign: "center",
@@ -293,8 +389,8 @@ function UpratingViewer() {
                           marginTop: "1rem",
                         }}
                       >
-                        Showing first 50 of {params.length} parameters. Use
-                        search to narrow results.
+                        Showing first 50 of {allItems.length} items. Use search
+                        to narrow results.
                       </p>
                     )}
                   </div>
@@ -359,5 +455,7 @@ function UpratingViewer() {
     </div>
   );
 }
+
+UpratingViewer.displayName = "UpratingViewer";
 
 export default UpratingViewer;

@@ -1,11 +1,9 @@
-- bump: minor
+- bump: patch
   changes:
-    added:
-    - Restructure into multi-page app with Home, Research, and Policy Analysis pages
-    - Add interactive uprating viewer showing all 318 PolicyEngine-US parameters by growth factor category
-    - Enable search and filter functionality for uprating parameters with links to source code on GitHub
-    - Add GitHub Pages SPA routing support (404.html redirect)
     changed:
-    - Convert from single-page scroll to React Router multi-page navigation
-    - Update Header navigation from scroll-to-section to page-based routing
-    - Reorganize content for better audience targeting (executives, researchers, policy analysts)
+    - Enhance uprating viewer to show separate counts for parameters (294) vs variables (23)
+    - Highlight Income by Source categories as critical for AI scenarios
+    - Add visual distinction for income-related uprating with yellow border and star icon
+    - Display parameter/variable type badges on each item
+    - Improve display names for income by source categories
+    - Sort categories to show income by source first
