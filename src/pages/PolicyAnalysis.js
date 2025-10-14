@@ -6,7 +6,13 @@ function PolicyAnalysis() {
   return (
     <>
       <div className="section section-alt" style={{ paddingTop: "6rem" }}>
-        <h1 style={{ textAlign: "center", marginBottom: "1rem" }}>
+        <h1
+          style={{
+            textAlign: "center",
+            marginBottom: "1rem",
+            fontSize: "3rem",
+          }}
+        >
           Policy Analysis Framework
         </h1>
         <p
