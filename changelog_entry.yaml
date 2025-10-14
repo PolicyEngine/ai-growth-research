@@ -1,9 +1,9 @@
 - bump: patch
   changes:
     changed:
-    - Enhance uprating viewer to show separate counts for parameters (294) vs variables (23)
-    - Highlight Income by Source categories as critical for AI scenarios
-    - Add visual distinction for income-related uprating with yellow border and star icon
-    - Display parameter/variable type badges on each item
-    - Improve display names for income by source categories
-    - Sort categories to show income by source first
+      - Enhance uprating viewer to show separate counts for parameters (294) vs variables (23)
+      - Highlight Income by Source categories as critical for AI scenarios
+      - Add visual distinction for income-related uprating with yellow border and star icon
+      - Display parameter/variable type badges on each item
+      - Improve display names for income by source categories
+      - Sort categories to show income by source first

@@ -114,15 +114,37 @@ function UpratingViewer() {
   }, [filteredData]);
 
   const getCategoryDisplayName = (category) => {
-    // Clean up category names for better display
-    if (category.startsWith("Other: calibration.gov.cbo.income_by_source")) {
-      const parts = category.split(".");
-      const income_type = parts[parts.length - 1]
-        .replace(/_/g, " ")
-        .replace(/\b\w/g, (l) => l.toUpperCase());
-      return `Income by Source: ${income_type}`;
-    }
-    return category;
+    // Hard-coded mapping for clean display names
+    const nameMap = {
+      "IRS (Chained CPI-U)": "IRS Chained CPI-U",
+      "CPI-U (Direct)": "CPI-U",
+      "SNAP (CPI-U Q2)": "SNAP",
+      "SSA (CPI-W)": "Social Security (CPI-W)",
+      "HHS (CPI-U)": "HHS Federal Poverty Guidelines",
+      "ACA Benchmark Premium": "ACA Benchmark Premium",
+      "Other: gov.ssa.nawi": "National Average Wage Index (SSA)",
+      "Other: gov.states.ca.cpi": "California CPI",
+      "Other: {'parameter': 'gov.states.ca.cpi'": "California CPI",
+      "Other: calibration.gov.census.populations.total": "Population (Census)",
+      "Other: calibration.gov.cbo.income_by_source.adjusted_gross_income":
+        "Adjusted Gross Income (CBO)",
+      "Other: calibration.gov.cbo.income_by_source.employment_income":
+        "Employment Income (CBO)",
+      "Other: calibration.gov.cbo.income_by_source.net_capital_gain":
+        "Net Capital Gain (CBO)",
+      "Other: calibration.gov.cbo.income_by_source.qualified_dividend_income":
+        "Qualified Dividend Income (CBO)",
+      "Other: calibration.gov.cbo.income_by_source.self_employment_income":
+        "Self Employment Income (CBO)",
+      "Other: calibration.gov.cbo.income_by_source.taxable_interest_and_ordinary_dividends":
+        "Taxable Interest And Ordinary Dividends (CBO)",
+      "Other: calibration.gov.cbo.income_by_source.taxable_pension_income":
+        "Taxable Pension Income (CBO)",
+      "Other: calibration.gov.cbo.income_by_source.taxable_social_security":
+        "Taxable Social Security (CBO)",
+    };
+
+    return nameMap[category] || category;
   };
 
   if (loading) {
@@ -169,9 +191,9 @@ function UpratingViewer() {
         }}
       >
         <p style={{ margin: 0, fontWeight: "500" }}>
-          💡 <strong>Income by Source</strong> projections are critical for AI
-          scenarios, as AI-driven wage compression and capital income shifts
-          directly impact these growth rates.
+          💡 <strong>CBO Income by Source</strong> projections (highlighted in
+          yellow) are critical for AI scenarios, as AI-driven wage compression
+          and capital income shifts directly impact these growth rates.
         </p>
       </div>
 
@@ -264,10 +286,7 @@ function UpratingViewer() {
                   alignItems: "center",
                 }}
               >
-                <span>
-                  {isIncome && "⭐ "}
-                  {getCategoryDisplayName(category)}
-                </span>
+                <span>{getCategoryDisplayName(category)}</span>
                 <span
                   style={{
                     fontSize: "0.85rem",
