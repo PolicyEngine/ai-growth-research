@@ -81,12 +81,19 @@ function References() {
                   <span className="reference-year">{ref.year}</span>
                 </div>
 
-                <div
-                  className="reference-citation"
-                  dangerouslySetInnerHTML={{
-                    __html: formatAPACitation(ref),
-                  }}
-                />
+                <a
+                  href={ref.doi ? `https://doi.org/${ref.doi}` : ref.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="reference-citation-link"
+                >
+                  <div
+                    className="reference-citation"
+                    dangerouslySetInnerHTML={{
+                      __html: formatAPACitation(ref),
+                    }}
+                  />
+                </a>
 
                 {ref.abstract && (
                   <details className="reference-abstract">
@@ -108,26 +115,6 @@ function References() {
                   >
                     Copy BibTeX
                   </button>
-                  {ref.doi && (
-                    <a
-                      href={`https://doi.org/${ref.doi}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="action-button link-button"
-                    >
-                      DOI
-                    </a>
-                  )}
-                  {ref.url && !ref.doi && (
-                    <a
-                      href={ref.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="action-button link-button"
-                    >
-                      Link
-                    </a>
-                  )}
                 </div>
 
                 {showBibTeX[ref.id] && (
