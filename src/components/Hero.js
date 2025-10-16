@@ -7,9 +7,7 @@ function Hero() {
       <div className="hero-content">
         <h1>AI and Distributional Policy Research</h1>
         <p className="hero-subtitle">
-          How do economic policies mediate AI's impact
-          <br />
-          on income, consumption, and wealth distribution?
+          How do economic policies mediate AI's impact on inequality?
         </p>
         <p className="hero-description">
           A PolicyEngine research initiative examining how policy interventions
