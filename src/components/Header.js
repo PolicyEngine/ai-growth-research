@@ -17,7 +17,9 @@ function Header() {
             />
           </a>
           <span className="header-divider">|</span>
-          <span className="header-title">AI Growth Research</span>
+          <Link to="/" className="header-title-link">
+            <span className="header-title">AI Growth Research</span>
+          </Link>
         </div>
 
         <nav className="header-nav">

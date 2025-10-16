@@ -42,10 +42,20 @@
   font-weight: 300;
 }
 
+.header-title-link {
+  text-decoration: none;
+  transition: opacity 0.2s;
+}
+
+.header-title-link:hover {
+  opacity: 0.8;
+}
+
 .header-title {
   color: white;
   font-weight: 600;
   font-size: 1rem;
+  cursor: pointer;
 }
 
 .header-nav {
