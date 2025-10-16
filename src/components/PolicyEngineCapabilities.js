@@ -1,7 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
+import UpratingViewer from "./UpratingViewer";
 import "./PolicyEngineCapabilities.css";
 
 function PolicyEngineCapabilities() {
+  const [showUprating, setShowUprating] = useState(false);
+
   const capabilities = [
     {
       title: "Open-Source Microsimulation",
@@ -88,6 +91,16 @@ function PolicyEngineCapabilities() {
               </a>
             </div>
           </div>
+        </div>
+
+        <div className="uprating-section">
+          <button
+            onClick={() => setShowUprating(!showUprating)}
+            className="uprating-toggle"
+          >
+            {showUprating ? "▼" : "▶"} Interactive Uprating Explorer
+          </button>
+          {showUprating && <UpratingViewer />}
         </div>
       </div>
     </div>
