@@ -7,13 +7,14 @@ function Hero() {
       <div className="hero-content">
         <h1>How do economic policies mediate AI's impact on inequality?</h1>
         <p className="hero-subtitle">
-          PolicyEngine models how alternative policies—UBI, expanded safety nets,
-          capital taxation—shape distributional outcomes under AI-driven
-          economic change.
+          A PolicyEngine research initiative examining how policy interventions
+          shape distributional outcomes when AI drives economic transformation.
         </p>
         <p className="hero-description">
-          Our open-source microsimulation platform enables rigorous, transparent
-          analysis for policymakers, researchers, and the public.
+          Rather than forecasting AI's economic impacts or prescribing optimal
+          policies, we provide a framework for analyzing how different policy
+          responses shape distributional outcomes under AI-driven economic
+          change.
         </p>
         <div className="hero-cta">
           <a
