@@ -1,26 +1,13 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   getAllReferences,
-  getReferencesByType,
   formatAPACitation,
   formatBibTeX,
 } from "../data/references";
 import "./References.css";
 
 function References() {
-  const [filterType, setFilterType] = useState("all");
-
-  const references =
-    filterType === "all" ? getAllReferences() : getReferencesByType(filterType);
-
-  const referenceTypes = [
-    { value: "all", label: "All References" },
-    { value: "article", label: "Journal Articles" },
-    { value: "book", label: "Books" },
-    { value: "inproceedings", label: "Conference Papers" },
-    { value: "techreport", label: "Technical Reports" },
-    { value: "misc", label: "Other" },
-  ];
+  const references = getAllReferences();
 
   return (
     <div className="references-page">
@@ -48,25 +35,6 @@ function References() {
       </div>
 
       <div className="container references-content">
-        <div className="references-controls">
-          <label htmlFor="type-filter">Filter by type: </label>
-          <select
-            id="type-filter"
-            value={filterType}
-            onChange={(e) => setFilterType(e.target.value)}
-            className="type-filter"
-          >
-            {referenceTypes.map((type) => (
-              <option key={type.value} value={type.value}>
-                {type.label}
-              </option>
-            ))}
-          </select>
-          <span className="reference-count">
-            {references.length} reference{references.length !== 1 ? "s" : ""}
-          </span>
-        </div>
-
         <div className="references-list">
           {references.length === 0 ? (
             <div className="no-references">
