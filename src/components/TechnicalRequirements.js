@@ -24,7 +24,7 @@ function TechnicalRequirements() {
       category: "PolicyEngine Model Extensions",
       items: [
         "Build modules to apply AI scenario shocks to household incomes",
-        "Implement policy reforms (UBI, safety net expansions, tax changes)",
+        "Apply existing policy modeling capabilities (UBI, safety net expansions, tax changes) to AI scenarios",
         "Calculate distributional impacts (Gini, poverty rates, decile shares)",
         "Model behavioral responses (labor supply, savings, program take-up)",
       ],
