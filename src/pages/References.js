@@ -9,7 +9,6 @@ import "./References.css";
 
 function References() {
   const [filterType, setFilterType] = useState("all");
-  const [showBibTeX, setShowBibTeX] = useState({});
 
   const references =
     filterType === "all" ? getAllReferences() : getReferencesByType(filterType);
@@ -23,29 +22,29 @@ function References() {
     { value: "misc", label: "Other" },
   ];
 
-  const toggleBibTeX = (id) => {
-    setShowBibTeX((prev) => ({
-      ...prev,
-      [id]: !prev[id],
-    }));
-  };
-
-  const copyBibTeX = (reference) => {
-    const bibtex = formatBibTeX(reference);
-    navigator.clipboard.writeText(bibtex);
-    // Could add a toast notification here
-  };
-
   return (
     <div className="references-page">
-      <div className="references-hero">
-        <div className="container">
-          <h1>References</h1>
-          <p className="references-subtitle">
-            Academic literature on AI economics, labor impacts, distributional
-            effects, and microsimulation modeling
-          </p>
-        </div>
+      <div className="section section-alt" style={{ paddingTop: "6rem" }}>
+        <h1
+          style={{
+            textAlign: "center",
+            marginBottom: "1rem",
+            fontSize: "3rem",
+          }}
+        >
+          References
+        </h1>
+        <p
+          style={{
+            textAlign: "center",
+            fontSize: "1.2rem",
+            maxWidth: "800px",
+            margin: "0 auto 3rem",
+          }}
+        >
+          Academic literature on AI economics, labor impacts, distributional
+          effects, and microsimulation modeling
+        </p>
       </div>
 
       <div className="container references-content">
@@ -76,11 +75,6 @@ function References() {
           ) : (
             references.map((ref) => (
               <div key={ref.id} className="reference-item">
-                <div className="reference-header">
-                  <span className="reference-type">{ref.type}</span>
-                  <span className="reference-year">{ref.year}</span>
-                </div>
-
                 <a
                   href={ref.doi ? `https://doi.org/${ref.doi}` : ref.url}
                   target="_blank"
@@ -94,32 +88,6 @@ function References() {
                     }}
                   />
                 </a>
-
-                {ref.abstract && (
-                  <details className="reference-abstract">
-                    <summary>Abstract</summary>
-                    <p>{ref.abstract}</p>
-                  </details>
-                )}
-
-                <div className="reference-actions">
-                  <button
-                    onClick={() => toggleBibTeX(ref.id)}
-                    className="action-button"
-                  >
-                    {showBibTeX[ref.id] ? "Hide" : "Show"} BibTeX
-                  </button>
-                  <button
-                    onClick={() => copyBibTeX(ref)}
-                    className="action-button"
-                  >
-                    Copy BibTeX
-                  </button>
-                </div>
-
-                {showBibTeX[ref.id] && (
-                  <pre className="bibtex-block">{formatBibTeX(ref)}</pre>
-                )}
               </div>
             ))
           )}
