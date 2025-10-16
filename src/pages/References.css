@@ -62,17 +62,12 @@
 }
 
 .reference-item {
-  padding: 0.75rem 0;
-  border-bottom: 1px solid #e8e8e8;
+  padding: 0.5rem 0;
   transition: background-color 0.15s;
 }
 
 .reference-item:hover {
   background-color: #fafafa;
-}
-
-.reference-item:last-child {
-  border-bottom: none;
 }
 
 .reference-header {
