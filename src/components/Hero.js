@@ -10,8 +10,8 @@ function Hero() {
           Policy choices will determine the answer.
         </p>
         <p className="hero-description">
-          PolicyEngine models how alternative policy responses—universal basic
-          income, expanded safety nets, capital taxation—shape inequality under
+          We model how alternative policy responses—universal basic income,
+          expanded safety nets, capital taxation—shape inequality under
           AI-driven economic change. Our open-source microsimulation platform
           enables rigorous, transparent analysis for policymakers, researchers,
           and the public.
