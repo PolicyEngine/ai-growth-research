@@ -5,9 +5,10 @@ function Hero() {
   return (
     <div className="hero">
       <div className="hero-content">
-        <h1>Will AI Increase or Reduce Inequality?</h1>
+        <h1>How do economic policies mediate AI's impact on inequality?</h1>
         <p className="hero-subtitle">
-          Policy choices will determine the answer.
+          PolicyEngine models alternative policy responses to AI-driven economic
+          change.
         </p>
         <p className="hero-description">
           We model how alternative policy responses—universal basic income,
