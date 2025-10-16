@@ -350,8 +350,6 @@ export function formatAPACitation(reference) {
     pages,
     institution,
     note,
-    doi,
-    url,
   } = reference;
 
   let citation = `${author} (${year}).`;
