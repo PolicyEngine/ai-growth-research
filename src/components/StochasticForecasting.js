@@ -1,7 +1,9 @@
 import React, { useState } from "react";
+import UpratingViewer from "./UpratingViewer";
 
 function StochasticForecasting() {
   const [expandedCard, setExpandedCard] = useState(null);
+  const [showUpratingViewer, setShowUpratingViewer] = useState(false);
 
   const upratingCategories = [
     {
@@ -198,6 +200,32 @@ function StochasticForecasting() {
             )}
           </div>
         ))}
+      </div>
+
+      <div style={{ marginTop: "2rem", marginBottom: "3rem" }}>
+        <button
+          onClick={() => setShowUpratingViewer(!showUpratingViewer)}
+          style={{
+            width: "100%",
+            padding: "1rem 1.5rem",
+            background: "#f0f9ff",
+            border: "2px solid #319795",
+            borderRadius: "8px",
+            fontSize: "1.1rem",
+            fontWeight: "600",
+            cursor: "pointer",
+            transition: "all 0.2s",
+            textAlign: "left",
+            color: "#319795",
+          }}
+        >
+          {showUpratingViewer ? "▼" : "▶"} Interactive Uprating Explorer
+        </button>
+        {showUpratingViewer && (
+          <div style={{ marginTop: "2rem" }}>
+            <UpratingViewer />
+          </div>
+        )}
       </div>
 
       <h3 style={{ marginTop: "3rem" }}>Probabilistic Forecast Data Sources</h3>
