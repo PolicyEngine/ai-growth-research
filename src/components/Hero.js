@@ -5,17 +5,20 @@ function Hero() {
   return (
     <div className="hero">
       <div className="hero-content">
-        <h1>AI and Distributional Policy Research</h1>
+        <h1>Will AI Increase or Reduce Inequality?</h1>
         <p className="hero-subtitle">
-          How do economic policies mediate AI's impact on inequality?
+          Policy choices will determine the answer.
         </p>
         <p className="hero-description">
-          A PolicyEngine research initiative examining how policy interventions
-          shape distributional outcomes when AI drives economic transformation.
+          PolicyEngine models how alternative policy responses—universal basic
+          income, expanded safety nets, capital taxation—shape inequality under
+          AI-driven economic change. Our open-source microsimulation platform
+          enables rigorous, transparent analysis for policymakers, researchers,
+          and the public.
         </p>
         <div className="hero-cta">
           <a
-            href="mailto:hello@policyengine.org?subject=AI Distributional Policy Research"
+            href="mailto:hello@policyengine.org?subject=AI and Inequality Research"
             className="cta-button primary"
           >
             Connect with us
