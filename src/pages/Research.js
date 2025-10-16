@@ -1,7 +1,6 @@
 import React from "react";
 import Research from "../components/Research";
 import StochasticForecasting from "../components/StochasticForecasting";
-import UpratingViewer from "../components/UpratingViewer";
 import TechnicalRequirements from "../components/TechnicalRequirements";
 
 function ResearchPage() {
@@ -31,7 +30,6 @@ function ResearchPage() {
       </div>
       <Research />
       <StochasticForecasting />
-      <UpratingViewer />
       <TechnicalRequirements />
       <div
         className="section"
