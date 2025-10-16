@@ -39,24 +39,27 @@ function Header() {
           >
             Policy Analysis
           </Link>
+          <Link
+            to="/references"
+            className={`nav-link ${location.pathname === "/references" ? "active" : ""}`}
+          >
+            References
+          </Link>
         </nav>
 
         <div className="header-right">
           <a
-            href="https://policyengine.org/us"
-            className="header-link"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            PE-US
-          </a>
-          <a
             href="https://github.com/PolicyEngine"
-            className="header-link"
+            className="header-link github-link"
             target="_blank"
             rel="noopener noreferrer"
+            aria-label="PolicyEngine GitHub"
           >
-            GitHub
+            <img
+              src={`${process.env.PUBLIC_URL}/github-logo.svg`}
+              alt="GitHub"
+              className="github-logo"
+            />
           </a>
         </div>
       </div>

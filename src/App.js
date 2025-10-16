@@ -6,6 +6,7 @@ import Footer from "./components/Footer";
 import Home from "./pages/Home";
 import ResearchPage from "./pages/Research";
 import PolicyAnalysis from "./pages/PolicyAnalysis";
+import References from "./pages/References";
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/research" element={<ResearchPage />} />
           <Route path="/policy-analysis" element={<PolicyAnalysis />} />
+          <Route path="/references" element={<References />} />
         </Routes>
         <Footer />
       </div>
