@@ -58,46 +58,51 @@
 .references-list {
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  gap: 1.25rem;
 }
 
 .reference-item {
-  border: 1px solid #e0e0e0;
-  border-radius: 8px;
-  padding: 1.5rem;
-  background: white;
-  transition: box-shadow 0.2s;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #e8e8e8;
+  transition: background-color 0.15s;
 }
 
 .reference-item:hover {
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  background-color: #fafafa;
+}
+
+.reference-item:last-child {
+  border-bottom: none;
 }
 
 .reference-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 0.75rem;
+  display: inline;
+  margin-right: 0.5rem;
 }
 
 .reference-type {
   display: inline-block;
-  padding: 0.25rem 0.75rem;
-  background: #2c5f7c;
-  color: white;
-  border-radius: 4px;
-  font-size: 0.85rem;
-  text-transform: capitalize;
+  padding: 0.15rem 0.5rem;
+  background: #e8f0f5;
+  color: #2c5f7c;
+  border-radius: 3px;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  font-weight: 600;
+  margin-right: 0.5rem;
+  letter-spacing: 0.03em;
 }
 
 .reference-year {
   color: #666;
   font-weight: 500;
+  margin-right: 0.5rem;
 }
 
 .reference-citation {
   line-height: 1.6;
-  margin-bottom: 1rem;
+  margin-bottom: 0.5rem;
+  display: inline;
 }
 
 .reference-citation em {
@@ -130,20 +135,21 @@
 }
 
 .reference-actions {
-  display: flex;
+  display: inline-flex;
   gap: 0.5rem;
   flex-wrap: wrap;
-  margin-top: 1rem;
+  margin-top: 0.5rem;
 }
 
 .action-button {
-  padding: 0.5rem 1rem;
-  background: #f5f5f5;
+  padding: 0.35rem 0.75rem;
+  background: transparent;
   border: 1px solid #ddd;
-  border-radius: 4px;
-  font-size: 0.9rem;
+  border-radius: 3px;
+  font-size: 0.8rem;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all 0.15s;
+  color: #555;
 }
 
 .action-button:hover {
