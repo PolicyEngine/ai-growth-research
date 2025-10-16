@@ -378,12 +378,6 @@ export function formatAPACitation(reference) {
     citation += ` ${note}.`;
   }
 
-  if (doi) {
-    citation += ` <a href="https://doi.org/${doi}" target="_blank" rel="noopener noreferrer">https://doi.org/${doi}</a>`;
-  } else if (url) {
-    citation += ` <a href="${url}" target="_blank" rel="noopener noreferrer">Link</a>`;
-  }
-
   return citation;
 }
 

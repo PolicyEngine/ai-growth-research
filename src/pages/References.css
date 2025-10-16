@@ -99,14 +99,32 @@
   margin-right: 0.5rem;
 }
 
+.reference-citation-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+  cursor: pointer;
+}
+
+.reference-citation-link:hover .reference-citation {
+  color: #2c5f7c;
+}
+
 .reference-citation {
   line-height: 1.6;
   margin-bottom: 0.5rem;
   display: inline;
+  transition: color 0.15s;
 }
 
 .reference-citation em {
   font-style: italic;
+}
+
+.reference-citation a {
+  pointer-events: none;
+  text-decoration: none;
+  color: inherit;
 }
 
 .reference-abstract {
