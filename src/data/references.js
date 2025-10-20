@@ -50,6 +50,16 @@ export const references = [
     url: "https://academic.oup.com/economicpolicy/article/40/121/13/7728473",
   },
   {
+    id: "Autor2024",
+    type: "techreport",
+    author: "Autor, David H.",
+    title: "Applying AI to Rebuild Middle Class Jobs",
+    year: 2024,
+    institution: "NBER",
+    number: "32140",
+    url: "https://www.nber.org/system/files/working_papers/w32140/w32140.pdf",
+  },
+  {
     id: "Brynjolfsson2021",
     type: "article",
     author: "Brynjolfsson, Erik and Rock, Daniel and Syverson, Chad",
@@ -84,6 +94,19 @@ export const references = [
       "Canaries in the Coal Mine: Early Indicators of Labor Market Transformation",
     year: 2025,
     url: "https://digitaleconomy.stanford.edu/wp-content/uploads/2025/08/Canaries_BrynjolfssonChandarChen.pdf",
+  },
+  {
+    id: "Liuetal2025",
+    type: "techreport",
+    author:
+      "Liu, Huben and Papanikolaou, Dimitris and Schmidt, Lawrence D. W. and Seegmiller, Bryan",
+    title:
+      "Technology and Labor Markets: Past, Present, and Future; Evidence from Two Centuries of Innovation",
+    year: 2025,
+    institution: "NBER",
+    number: "34386",
+    note: "Brookings Papers on Economic Activity, Fall 2025",
+    url: "https://www.brookings.edu/wp-content/uploads/2025/09/4_Liu-et-al_unembargoed.pdf",
   },
   {
     id: "Hanson2001",

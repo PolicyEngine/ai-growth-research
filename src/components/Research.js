@@ -6,8 +6,20 @@ function Research() {
     {
       title: "AI and Labor Market Impacts",
       description:
-        "Federal Reserve research shows striking correlation between AI prevalence and unemployment. BLS incorporating AI in employment projections. Yale Budget Lab evaluating using Anthropic data. Research examines automation models, task expertise dynamics, and LLM exposure across occupations.",
+        "Fundamental disagreement over AI's labor impact: Autor (2024) argues AI can elevate middle-skill workers by extending expertise, while Liu et al. (2025) find AI reverses historical patterns, favoring low-education jobs and displacing high-skill workers. This uncertainty underscores the importance of policy analysis regardless of which scenario unfolds. Federal agencies (BLS, Fed) now incorporating AI in projections.",
       links: [
+        {
+          text: "Autor: Applying AI to Rebuild Middle Class Jobs (2024)",
+          url: "https://www.nber.org/papers/w32140",
+        },
+        {
+          text: "Liu et al: Technology and Labor Markets - Two Centuries (2025)",
+          url: "https://www.brookings.edu/wp-content/uploads/2025/09/4_Liu-et-al_unembargoed.pdf",
+        },
+        {
+          text: "Autor & Thompson: Expertise (2025)",
+          url: "https://www.nber.org/papers/w33941",
+        },
         {
           text: "Yale Budget Lab: AI Labor Market Impact (2025)",
           url: "https://budgetlab.yale.edu/research/evaluating-impact-ai-labor-market-current-state-affairs",
@@ -23,10 +35,6 @@ function Research() {
         {
           text: "Acemoglu: The Simple Macroeconomics of AI (2024)",
           url: "https://www.nber.org/papers/w32487",
-        },
-        {
-          text: "Autor & Thompson: Expertise (2025)",
-          url: "https://www.nber.org/papers/w33941",
         },
         {
           text: "Eloundou et al: GPTs are GPTs (2024)",
