@@ -4,25 +4,25 @@ import "./PolicyEngineCapabilities.css";
 function PolicyEngineCapabilities() {
   const capabilities = [
     {
-      title: "Open-Source Microsimulation",
+      title: "Open-source microsimulation",
       icon: "🔓",
       description:
         "Transparent, auditable tax-benefit modeling enables collaborative examination of policy coordination problems.",
     },
     {
-      title: "AI Pioneer in Policy Analysis",
+      title: "AI pioneer in policy analysis",
       icon: "🤖",
       description:
         "First policy analysis platform to integrate LLMs (April 3, 2023)—just 3 weeks after GPT-4 launched. Substantial ongoing AI integration.",
     },
     {
-      title: "Real-Time Policy Impact",
+      title: "Real-time policy impact",
       icon: "⚡",
       description:
         "Instant calculation of distributional effects across US federal and state programs for millions of households.",
     },
     {
-      title: "Collaborative Research",
+      title: "Collaborative research",
       icon: "🤝",
       description:
         "Open platform enables researchers worldwide to validate, extend, and build upon policy simulations.",
@@ -68,7 +68,7 @@ function PolicyEngineCapabilities() {
                 rel="noopener noreferrer"
                 className="capability-link"
               >
-                Explore AI Features →
+                Explore AI features →
               </a>
               <a
                 href="https://github.com/policyengine"
@@ -84,7 +84,7 @@ function PolicyEngineCapabilities() {
                 rel="noopener noreferrer"
                 className="capability-link"
               >
-                Read Our Research →
+                Read our research →
               </a>
             </div>
           </div>

@@ -32,7 +32,7 @@ function StochasticForecasting() {
       ],
     },
     {
-      category: "Income Growth by Source",
+      category: "Income growth by source",
       count: 12,
       percentage: 4,
       description:
@@ -55,7 +55,7 @@ function StochasticForecasting() {
       examples: ["Social Security benefit amounts", "Taxable wage base"],
     },
     {
-      category: "Population Growth",
+      category: "Population growth",
       count: 10,
       percentage: 3,
       description: "Census Bureau population projections",
@@ -109,7 +109,7 @@ function StochasticForecasting() {
         "One-step ahead forecasts with lagged values; iterate forward",
     },
     {
-      method: "Copula-Based Models",
+      method: "Copula-based models",
       description:
         "Separate modeling of marginal distributions and dependence structure",
       advantages:
@@ -126,7 +126,7 @@ function StochasticForecasting() {
       implementation: "MCMC sampling from posterior; used by CBO",
     },
     {
-      method: "Historical Resampling",
+      method: "Historical resampling",
       description:
         "Bootstrap from historical joint realizations of economic variables",
       advantages:

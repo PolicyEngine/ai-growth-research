@@ -5,22 +5,22 @@ function Overview() {
   const challenges = [
     {
       icon: "📈",
-      title: "Rising Incomes",
+      title: "Rising incomes",
       desc: "Productivity gains, unevenly distributed",
     },
     {
       icon: "🏭",
-      title: "Capital Share Growth",
+      title: "Capital share growth",
       desc: "AI replacing or augmenting labor",
     },
     {
       icon: "⚠️",
-      title: "Labor Disruption",
+      title: "Labor disruption",
       desc: "Potential technological unemployment",
     },
     {
       icon: "📊",
-      title: "Growing Inequality",
+      title: "Growing inequality",
       desc: "Gap between beneficiaries and displaced",
     },
   ];
@@ -28,22 +28,22 @@ function Overview() {
   const approach = [
     {
       step: 1,
-      title: "AI Economic Shocks",
+      title: "AI economic shocks",
       desc: "Income changes, unemployment, capital share shifts",
     },
     {
       step: 2,
-      title: "Policy Mediation",
+      title: "Policy mediation",
       desc: "Taxes, transfers, UBI proposals, safety nets",
     },
     {
       step: 3,
-      title: "Distributional Outcomes",
+      title: "Distributional outcomes",
       desc: "Income, consumption, wealth inequality effects",
     },
     {
       step: 4,
-      title: "Cross-Policy Comparison",
+      title: "Cross-policy comparison",
       desc: "How different interventions shape outcomes",
     },
   ];

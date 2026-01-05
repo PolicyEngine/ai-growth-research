@@ -4,7 +4,7 @@ import "./PolicyScenarios.css";
 function PolicyScenarios() {
   const scenarios = [
     {
-      title: "Current Policy Baseline",
+      title: "Current policy baseline",
       icon: "📋",
       color: "#64748b",
       highlights: [
@@ -15,7 +15,7 @@ function PolicyScenarios() {
       areas: ["Progressive taxation", "EITC & CTC", "Automatic stabilizers"],
     },
     {
-      title: "Universal Basic Income",
+      title: "Universal basic income",
       icon: "💵",
       color: "#319795",
       highlights: [
@@ -30,14 +30,14 @@ function PolicyScenarios() {
       ],
     },
     {
-      title: "Expanded Safety Net",
+      title: "Expanded safety net",
       icon: "🛡️",
       color: "#0ea5e9",
       highlights: ["Enhanced programs", "Job transitions", "Family support"],
       areas: ["UI & wage subsidies", "SNAP & housing", "Child allowances"],
     },
     {
-      title: "Capital Taxation",
+      title: "Capital taxation",
       icon: "🏛️",
       color: "#8b5cf6",
       highlights: [
@@ -48,7 +48,7 @@ function PolicyScenarios() {
       areas: ["Capital gains rates", "Wealth taxes", "Automation taxes"],
     },
     {
-      title: "Hybrid Approaches",
+      title: "Hybrid approaches",
       icon: "🔀",
       color: "#f59e0b",
       highlights: [
