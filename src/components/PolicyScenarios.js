@@ -67,7 +67,7 @@ function PolicyScenarios() {
   return (
     <div id="scenarios" className="policy-section">
       <div className="section-header">
-        <h2>Alternative Policy Interventions</h2>
+        <h2>Alternative policy interventions</h2>
         <p className="section-subtitle">
           How would different policy responses mediate AI's distributional
           impacts?
@@ -118,7 +118,7 @@ function PolicyScenarios() {
       <div className="analysis-note">
         <div className="note-icon">📊</div>
         <div className="note-content">
-          <h4>Comparative Distributional Analysis</h4>
+          <h4>Comparative distributional analysis</h4>
           <p>
             For each policy intervention, we'll analyze how it mediates AI
             shocks—examining impacts on income, consumption, and wealth

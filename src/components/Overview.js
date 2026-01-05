@@ -51,7 +51,7 @@ function Overview() {
   return (
     <div id="overview" className="overview-section">
       <div className="section-header">
-        <h2>Research Overview</h2>
+        <h2>Research overview</h2>
         <p className="section-subtitle">
           Examining the causal chain: AI economic shocks → policy interventions
           → distributional outcomes
@@ -60,7 +60,7 @@ function Overview() {
 
       {/* Challenge Section - Icon Grid */}
       <div className="challenge-container">
-        <h3 className="subsection-title">Potential AI Economic Shocks</h3>
+        <h3 className="subsection-title">Potential AI economic shocks</h3>
         <p className="intro-text">
           AI could drive major changes in income distribution through various
           mechanisms:
@@ -78,7 +78,7 @@ function Overview() {
 
       {/* Approach Section - Process Flow */}
       <div className="approach-container">
-        <h3 className="subsection-title">Research Framework</h3>
+        <h3 className="subsection-title">Research framework</h3>
         <p className="intro-text">
           We examine how economic policies mediate the relationship between AI
           shocks and distributional outcomes. Researchers provide AI economic
@@ -115,7 +115,7 @@ function Overview() {
       {/* Uncertainty Section - Highlight Box */}
       <div className="uncertainty-box">
         <div className="box-content">
-          <h3>Quantifying Uncertainty</h3>
+          <h3>Quantifying uncertainty</h3>
           <p>
             Traditional policy analysis reports only point estimates (e.g., CBO
             baseline forecasts). AI-driven economic change involves profound
@@ -141,11 +141,11 @@ function Overview() {
 
       {/* Why This Matters - Impact Grid */}
       <div className="impact-section">
-        <h3 className="subsection-title">Why This Matters</h3>
+        <h3 className="subsection-title">Why this matters</h3>
         <div className="impact-grid">
           <div className="impact-card">
             <span className="impact-icon">🔬</span>
-            <h4>Understand Mediation</h4>
+            <h4>Understand mediation</h4>
             <p>
               How do policies shape AI's distributional impacts on income,
               consumption, wealth?
@@ -153,14 +153,14 @@ function Overview() {
           </div>
           <div className="impact-card">
             <span className="impact-icon">📊</span>
-            <h4>Compare Interventions</h4>
+            <h4>Compare interventions</h4>
             <p>
               Contrast how current policies vs. alternatives mediate AI shocks
             </p>
           </div>
           <div className="impact-card">
             <span className="impact-icon">🎲</span>
-            <h4>Quantify Uncertainty</h4>
+            <h4>Quantify uncertainty</h4>
             <p>
               Model ranges of AI scenarios and policy responses, not just point
               estimates
@@ -168,7 +168,7 @@ function Overview() {
           </div>
           <div className="impact-card">
             <span className="impact-icon">🌐</span>
-            <h4>Open Collaboration</h4>
+            <h4>Open collaboration</h4>
             <p>
               Transparent microsimulation enables researchers to test their own
               assumptions

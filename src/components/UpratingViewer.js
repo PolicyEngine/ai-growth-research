@@ -165,7 +165,7 @@ function UpratingViewer() {
 
   return (
     <div id="uprating-viewer" className="section section-alt">
-      <h2>PolicyEngine-US Uprating Parameters & Variables</h2>
+      <h2>PolicyEngine-US uprating parameters & variables</h2>
       <p
         style={{
           textAlign: "center",
@@ -437,7 +437,7 @@ function UpratingViewer() {
         className="card"
         style={{ marginTop: "2rem", backgroundColor: "#f0f9ff" }}
       >
-        <h3>About These Parameters</h3>
+        <h3>About these parameters</h3>
         <p>
           Each parameter in PolicyEngine-US that changes over time uses an
           "uprating" method to project its value forward. The uprating method

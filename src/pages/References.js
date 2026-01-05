@@ -62,7 +62,7 @@ function References() {
         </div>
 
         <div className="references-footer">
-          <h3>Download All References</h3>
+          <h3>Download all references</h3>
           <p>
             Click below to download all references in BibTeX format for use with
             citation managers like Zotero, Mendeley, or BibDesk.

@@ -60,7 +60,7 @@ function TechnicalRequirements() {
 
   return (
     <div id="technical" className="section section-alt">
-      <h2>Technical Requirements</h2>
+      <h2>Technical requirements</h2>
       <p
         style={{
           textAlign: "center",

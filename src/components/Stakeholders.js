@@ -134,7 +134,7 @@ function Stakeholders() {
   return (
     <div id="stakeholders" className="stakeholders-section">
       <div className="section-header">
-        <h2>Potential Stakeholders</h2>
+        <h2>Potential stakeholders</h2>
         <p className="section-subtitle">
           Organizations that might be interested in supporting or collaborating
           on this research
@@ -197,7 +197,7 @@ function Stakeholders() {
       <div className="international-box">
         <div className="box-header">
           <span className="box-icon">🌍</span>
-          <h3>International Expansion</h3>
+          <h3>International expansion</h3>
         </div>
         <p>
           While initial work would focus on the United States using

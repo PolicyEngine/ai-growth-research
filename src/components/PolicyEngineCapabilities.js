@@ -53,7 +53,7 @@ function PolicyEngineCapabilities() {
 
         <div className="open-source-box">
           <div className="box-content">
-            <h3>🌐 Open Source Enables Transparent Analysis</h3>
+            <h3>🌐 Open source enables transparent analysis</h3>
             <p>
               Unlike proprietary economic models, PolicyEngine's open-source
               approach enables transparent, collaborative examination of complex

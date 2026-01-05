@@ -192,7 +192,7 @@ function Research() {
 
   return (
     <div id="research" className="section section-alt">
-      <h2>Relevant Research</h2>
+      <h2>Relevant research</h2>
       <p
         style={{
           textAlign: "center",

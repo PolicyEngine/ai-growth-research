@@ -137,7 +137,7 @@ function StochasticForecasting() {
 
   return (
     <div id="stochastic-forecasting" className="section">
-      <h2>Stochastic Economic Forecasting for Microsimulation</h2>
+      <h2>Stochastic economic forecasting for microsimulation</h2>
 
       <div style={{ marginBottom: "2rem" }}>
         <p style={{ fontSize: "1.1rem", lineHeight: "1.6" }}>
@@ -150,7 +150,7 @@ function StochasticForecasting() {
         </p>
       </div>
 
-      <h3>Uprating Parameters in PolicyEngine-US</h3>
+      <h3>Uprating parameters in PolicyEngine-US</h3>
       <p style={{ textAlign: "center", marginBottom: "2rem" }}>
         Distribution of uprating categories across 318 parameters
       </p>
@@ -334,7 +334,7 @@ function StochasticForecasting() {
         className="card"
         style={{ marginTop: "2rem", backgroundColor: "#f0f9ff" }}
       >
-        <h3>PolicyEngine's Unique Advantage</h3>
+        <h3>PolicyEngine's unique advantage</h3>
         <p>
           While we can provide default stochastic scenarios calibrated to
           professional forecasts and historical data,{" "}
@@ -370,7 +370,7 @@ function StochasticForecasting() {
       </div>
 
       <div className="card" style={{ marginTop: "2rem" }}>
-        <h3>Research Roadmap</h3>
+        <h3>Research roadmap</h3>
         <ol>
           <li>
             <strong>Phase 1: Marginal Distributions</strong> - Start with

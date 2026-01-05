@@ -57,7 +57,7 @@ function ExampleProjects() {
     <div id="examples" className="examples-section">
       <div className="examples-container">
         <div className="section-header">
-          <h2>What PolicyEngine Does</h2>
+          <h2>What PolicyEngine does</h2>
           <p className="section-subtitle">
             Open-source tax-benefit microsimulation enabling distributional
             analysis of policy interventions

@@ -14,7 +14,7 @@ function Home() {
         className="section"
         style={{ textAlign: "center", padding: "4rem 2rem" }}
       >
-        <h2>Dive Deeper</h2>
+        <h2>Dive deeper</h2>
         <p
           style={{
             maxWidth: "800px",
