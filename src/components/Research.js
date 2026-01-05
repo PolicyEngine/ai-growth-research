@@ -76,11 +76,27 @@ function Research() {
     {
       title: "AI Inequality & Distribution",
       description:
-        "IMF finds AI reduces wage inequality but substantially increases wealth inequality. Brookings: half of Americans expect greater income inequality from AI.",
+        "IMF finds AI reduces wage inequality but substantially increases wealth inequality through capital returns. New research shows AI may widen global inequality, with high-income countries better positioned despite higher labor displacement. PNAS Nexus: AI exposure predicts unemployment risk with 18% additional variation explained.",
       links: [
         {
           text: "IMF: AI Adoption and Inequality (2025)",
           url: "https://www.imf.org/en/Publications/WP/Issues/2025/04/04/AI-Adoption-and-Inequality-565729",
+        },
+        {
+          text: "IMF: The Global Impact of AI (2025)",
+          url: "https://www.imf.org/-/media/files/publications/wp/2025/english/wpiea2025076-print-pdf.pdf",
+        },
+        {
+          text: "PNAS Nexus: AI Exposure Predicts Unemployment Risk (2025)",
+          url: "https://academic.oup.com/pnasnexus/article/4/4/pgaf107/8104152",
+        },
+        {
+          text: "EPJ Data Science: AI and Economic Divide in US (2025)",
+          url: "https://epjdatascience.springeropen.com/articles/10.1140/epjds/s13688-025-00547-9",
+        },
+        {
+          text: "CGDev: Three Reasons AI May Widen Global Inequality",
+          url: "https://www.cgdev.org/blog/three-reasons-why-ai-may-widen-global-inequality",
         },
         {
           text: "Brookings: AI Impact on Income Inequality",
@@ -95,8 +111,12 @@ function Research() {
     {
       title: "UBI & Automation Tax Modeling",
       description:
-        "CMU research shows AI needs 5-6x productivity for 11% GDP UBI. Proposals for robot taxes, sovereign AI wealth funds, and AI capital taxation.",
+        "CMU research shows AI needs 5-6x productivity for 11% GDP UBI. RAND recommends asymmetric automation policy: incentivize vertical automation while moderating horizontal expansion. Proposals include robot taxes, sovereign AI wealth funds, and AI capital taxation.",
       links: [
+        {
+          text: "RAND: Managing AI's Economic Future (2025)",
+          url: "https://www.rand.org/pubs/research_reports/RRA3764-1.html",
+        },
         {
           text: "First Movers: Robot Tax Funding UBI",
           url: "https://firstmovers.ai/universal-basic-income-automation/",

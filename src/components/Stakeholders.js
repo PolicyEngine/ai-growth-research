@@ -115,14 +115,15 @@ function Stakeholders() {
     "Industry Research": "📊",
   };
 
+  // WCAG AA compliant colors (4.5:1 contrast ratio on white)
   const categoryColors = {
-    "AI Research": "#8b5cf6",
-    "AI Companies": "#319795",
-    "AI Safety & Policy": "#0ea5e9",
-    Funders: "#f59e0b",
-    Forecasting: "#ec4899",
-    "Academic Research": "#10b981",
-    "Industry Research": "#6366f1",
+    "AI Research": "#7c3aed", // violet-600
+    "AI Companies": "#2c7a7b", // teal-700
+    "AI Safety & Policy": "#0369a1", // sky-700
+    Funders: "#b45309", // amber-700
+    Forecasting: "#be185d", // pink-700
+    "Academic Research": "#047857", // emerald-700
+    "Industry Research": "#4338ca", // indigo-700
   };
 
   const filteredStakeholders =

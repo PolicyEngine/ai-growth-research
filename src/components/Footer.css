@@ -1,55 +1,98 @@
+/* Footer - Premium Dark Design */
 .footer {
-  background: linear-gradient(135deg, #319795 0%, #285e61 100%);
+  background: linear-gradient(135deg, #1a3a3a 0%, #0d2626 100%);
   color: white;
   padding: 0;
-  margin-top: 4rem;
+  margin-top: var(--space-16);
+  position: relative;
+  overflow: hidden;
 }
 
+.footer::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--pe-teal-500),
+    transparent
+  );
+}
+
+.footer::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(
+    circle,
+    rgba(49, 151, 149, 0.15) 0%,
+    transparent 70%
+  );
+  pointer-events: none;
+}
+
+/* Conference Banner */
 .conference-banner {
-  background: rgba(255, 255, 255, 0.1);
-  padding: 1.5rem 2rem;
+  background: rgba(49, 151, 149, 0.15);
+  padding: var(--space-5) var(--space-8);
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 1rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-  backdrop-filter: blur(10px);
+  gap: var(--space-4);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(20px);
+  position: relative;
 }
 
 .banner-icon {
   font-size: 1.5rem;
-  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+  animation: pulse 2s ease-in-out infinite;
 }
 
 .banner-content {
-  font-size: 1rem;
+  font-size: 0.95rem;
   line-height: 1.5;
+  opacity: 0.95;
 }
 
 .banner-content strong {
   font-weight: 600;
-  margin-right: 0.5rem;
+  margin-right: var(--space-2);
+  color: var(--pe-teal-200);
 }
 
+/* Footer Content */
 .footer-content {
   max-width: 1200px;
   margin: 0 auto;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 2rem;
-  margin-bottom: 2rem;
-  padding: 3rem 2rem 1rem;
+  gap: var(--space-10);
+  padding: var(--space-16) var(--space-8) var(--space-8);
+  position: relative;
 }
 
 .footer-section h4 {
-  font-size: 1.2rem;
-  margin-bottom: 1rem;
-  font-weight: 500;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: var(--space-6);
+  font-weight: 600;
+  color: var(--pe-teal-300);
 }
 
 .footer-section p {
-  line-height: 1.6;
-  opacity: 0.9;
+  line-height: 1.7;
+  opacity: 0.8;
+  font-size: 0.95rem;
+  color: var(--pe-gray-300);
 }
 
 .footer-section ul {
@@ -59,33 +102,59 @@
 }
 
 .footer-section li {
-  margin-bottom: 0.5rem;
+  margin-bottom: var(--space-3);
 }
 
 .footer-section a {
   color: white;
-  opacity: 0.9;
-  transition: opacity 0.2s;
+  opacity: 0.8;
+  transition: all var(--transition-fast);
+  font-size: 0.95rem;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.footer-section a::before {
+  content: "";
+  width: 0;
+  height: 1px;
+  background: var(--pe-teal-400);
+  transition: width var(--transition-base);
 }
 
 .footer-section a:hover {
   opacity: 1;
-  text-decoration: underline;
+  color: var(--pe-teal-200);
+  text-decoration: none;
 }
 
+.footer-section a:hover::before {
+  width: 12px;
+}
+
+/* Footer Bottom */
 .footer-bottom {
   max-width: 1200px;
   margin: 0 auto;
-  padding-top: 2rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  padding: var(--space-6) var(--space-8);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
   text-align: center;
-  opacity: 0.8;
+  position: relative;
 }
 
+.footer-bottom p {
+  opacity: 0.6;
+  font-size: 0.85rem;
+  margin: 0;
+  color: var(--pe-gray-400);
+}
+
+/* Responsive */
 @media (max-width: 768px) {
   .conference-banner {
     flex-direction: column;
-    padding: 1.25rem 1.5rem;
+    padding: var(--space-4) var(--space-5);
     text-align: center;
   }
 
@@ -95,14 +164,19 @@
 
   .footer-content {
     grid-template-columns: 1fr;
-    gap: 1.5rem;
-    padding: 2rem 1.5rem 1rem;
+    gap: var(--space-8);
+    padding: var(--space-10) var(--space-5) var(--space-6);
+  }
+
+  .footer-section h4 {
+    font-size: 0.8rem;
+    margin-bottom: var(--space-4);
   }
 }
 
 @media (max-width: 480px) {
   .conference-banner {
-    padding: 1rem 1.25rem;
+    padding: var(--space-3) var(--space-4);
   }
 
   .banner-icon {
@@ -114,15 +188,23 @@
   }
 
   .footer-content {
-    padding: 2rem 1.25rem 1rem;
+    padding: var(--space-8) var(--space-4) var(--space-5);
   }
 
   .footer-section h4 {
-    font-size: 1.1rem;
+    font-size: 0.75rem;
   }
 
   .footer-section p,
-  .footer-section li {
+  .footer-section li a {
     font-size: 0.9rem;
+  }
+
+  .footer-bottom {
+    padding: var(--space-5) var(--space-4);
+  }
+
+  .footer-bottom p {
+    font-size: 0.8rem;
   }
 }

@@ -1,88 +1,153 @@
+/* App Layout & Base Components */
 .App {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  background: white;
 }
 
+/* Section System */
 .section {
-  padding: 6rem 3rem;
+  padding: var(--space-24) var(--space-12);
   max-width: 1200px;
   margin: 0 auto;
   width: 100%;
-}
-
-.section h2 {
-  font-size: 2rem;
-  color: #319795;
-  margin-bottom: 2rem;
-  text-align: center;
-  font-weight: 500;
-}
-
-.section h3 {
-  font-size: 1.5rem;
-  color: #285e61;
-  margin-top: 2rem;
-  margin-bottom: 1rem;
-  font-weight: 500;
+  animation: sectionFadeIn 0.6s ease-out;
 }
 
 .section-alt {
-  background-color: white;
+  background: linear-gradient(180deg, var(--pe-gray-50) 0%, white 100%);
 }
 
+.section h2 {
+  font-size: clamp(1.75rem, 4vw, 2.5rem);
+  color: var(--pe-teal-600);
+  margin-bottom: var(--space-8);
+  text-align: center;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+}
+
+.section h3 {
+  font-size: clamp(1.25rem, 3vw, 1.5rem);
+  color: var(--pe-gray-800);
+  margin-top: var(--space-8);
+  margin-bottom: var(--space-4);
+  font-weight: 600;
+}
+
+/* Card System */
 .card {
   background: white;
-  border-radius: 8px;
-  padding: 2rem;
-  margin-bottom: 1.5rem;
-  border: 1px solid #e2e8f0;
-  box-shadow: 0 1px 3px rgba(16, 24, 40, 0.05);
-  transition: all 0.2s ease;
+  border-radius: var(--radius-lg);
+  padding: var(--space-8);
+  margin-bottom: var(--space-6);
+  border: 1px solid var(--pe-gray-200);
+  box-shadow: var(--shadow-sm);
+  transition:
+    transform var(--transition-slow),
+    box-shadow var(--transition-slow),
+    border-color var(--transition-base);
+  position: relative;
+}
+
+.card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius-lg);
+  padding: 1px;
+  background: linear-gradient(
+    135deg,
+    transparent 0%,
+    var(--pe-teal-300) 50%,
+    transparent 100%
+  );
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity var(--transition-slow);
+  pointer-events: none;
 }
 
 .card:hover {
-  border-color: #319795;
-  box-shadow: 0 4px 12px rgba(49, 151, 149, 0.15);
-  transform: translateY(-2px);
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--pe-teal-300);
+}
+
+.card:hover::before {
+  opacity: 1;
 }
 
 .card h3 {
   margin-top: 0;
-  color: #285e61;
+  color: var(--pe-gray-800);
+  font-weight: 600;
 }
 
+/* Interactive Card */
 .card-interactive {
   cursor: pointer;
   background: white;
-  border-radius: 8px;
-  padding: 1.5rem;
-  margin-bottom: 1rem;
-  border: 1px solid #e2e8f0;
-  box-shadow: 0 1px 3px rgba(16, 24, 40, 0.05);
-  transition: all 0.2s ease;
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
+  margin-bottom: var(--space-4);
+  border: 1px solid var(--pe-gray-200);
+  box-shadow: var(--shadow-sm);
+  transition: all var(--transition-base);
+  position: relative;
+  overflow: hidden;
+}
+
+.card-interactive::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 3px;
+  background: linear-gradient(90deg, var(--pe-teal-500), var(--pe-teal-300));
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--transition-slow);
 }
 
 .card-interactive:hover {
-  background-color: #f9fafb;
-  border-color: #cbd5e1;
-  box-shadow: 0 4px 12px rgba(16, 24, 40, 0.1);
-  transform: translateY(-1px);
+  background-color: var(--pe-gray-50);
+  border-color: var(--pe-gray-300);
+  box-shadow: var(--shadow-md);
+}
+
+.card-interactive:hover::after {
+  transform: scaleX(1);
 }
 
 .card-interactive.active {
-  background-color: #f2f4f7;
-  border-color: #319795;
+  background-color: var(--pe-teal-50);
+  border-color: var(--pe-teal-500);
 }
 
+.card-interactive.active::after {
+  transform: scaleX(1);
+}
+
+/* Grid System */
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 2rem;
-  margin-top: 2rem;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: var(--space-8);
+  margin-top: var(--space-8);
 }
 
-@keyframes fadeIn {
+/* Animations */
+@keyframes sectionFadeIn {
   from {
     opacity: 0;
     transform: translateY(20px);
@@ -93,28 +158,27 @@
   }
 }
 
-@keyframes slideDown {
+@keyframes expandContent {
   from {
     opacity: 0;
     max-height: 0;
+    transform: translateY(-10px);
   }
   to {
     opacity: 1;
     max-height: 500px;
+    transform: translateY(0);
   }
 }
 
 .card.expanded ul {
-  animation: slideDown 0.3s ease-out;
+  animation: expandContent 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.section {
-  animation: fadeIn 0.6s ease-out;
-}
-
+/* Responsive */
 @media (max-width: 768px) {
   .section {
-    padding: 3rem 1.25rem;
+    padding: var(--space-12) var(--space-5);
   }
 
   .section h2 {
@@ -122,50 +186,46 @@
   }
 
   .section h3 {
-    font-size: 1.3rem;
+    font-size: 1.25rem;
   }
 
   .grid {
     grid-template-columns: 1fr;
-    gap: 1.5rem;
+    gap: var(--space-6);
   }
 
   .card {
-    padding: 1.5rem;
+    padding: var(--space-6);
   }
 
   .card h3 {
-    font-size: 1.2rem;
+    font-size: 1.15rem;
   }
 
   .card p {
     font-size: 0.95rem;
   }
 
-  .card ul {
-    font-size: 0.95rem;
-  }
-
   .card-interactive {
-    padding: 1.25rem;
+    padding: var(--space-5);
   }
 }
 
 @media (max-width: 480px) {
   .section {
-    padding: 2.5rem 1rem;
+    padding: var(--space-10) var(--space-4);
   }
 
   .section h2 {
-    font-size: 1.3rem;
+    font-size: 1.35rem;
   }
 
   .section h3 {
-    font-size: 1.15rem;
+    font-size: 1.1rem;
   }
 
   .card {
-    padding: 1.25rem;
+    padding: var(--space-5);
   }
 
   .card p,
