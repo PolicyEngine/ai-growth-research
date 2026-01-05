@@ -1,6 +1,6 @@
 # How Do Policies Mediate AI's Impact on Economic Disempowerment?
 
-*Exploring a research direction at the intersection of AI, inequality, and public policy*
+_Exploring a research direction at the intersection of AI, inequality, and public policy_
 
 ## Summary
 
@@ -23,11 +23,13 @@ This uncertainty creates challenges for policy analysis. Yet policy choices—ta
 **How do different policy interventions shape distributional outcomes (income, consumption, wealth inequality) under various AI economic scenarios?**
 
 This isn't about:
+
 - Forecasting which AI scenario will occur
 - Prescribing optimal policies
 - Making claims about AI timelines
 
 It's about:
+
 - Providing infrastructure for translating AI economic scenarios into distributional outcomes under different policy regimes
 - Enabling researchers to analyze policy mediation without building microsimulation infrastructure themselves
 - Generating probability distributions over inequality metrics, not just point estimates
@@ -37,6 +39,7 @@ It's about:
 **Economic disempowerment as a component of existential risk:** If a large fraction of the population has no economic value or resources in an AI-driven economy, this could create political instability, power concentration, or other dynamics relevant to long-term outcomes.
 
 **Tractability:** While AI's economic trajectory is highly uncertain, policy responses are:
+
 - More tractable to analyze (existing microsimulation methods)
 - Potentially more influenceable than AI development trajectories
 - Important regardless of which AI scenario unfolds
@@ -48,6 +51,7 @@ It's about:
 **Microsimulation:** PolicyEngine maintains open-source tax-benefit models for the US, UK, and Canada that simulate how policies affect household-level outcomes.
 
 **Probabilistic forecasting:** Rather than point estimates, generate probability distributions over inequality metrics using:
+
 - Inputs: Forecasts from platforms like Metaculus (wage distributions, labor market shifts, etc.)
 - Outputs: Distributions over post-policy metrics (Gini coefficients, poverty rates, etc.)
 
@@ -58,6 +62,7 @@ It's about:
 ## Current Status
 
 We've developed a preliminary framework ([site here](https://policyengine.github.io/ai-growth-research/)) incorporating:
+
 - Literature on AI growth, labor impacts, and inequality
 - Policy scenarios (current systems, UBI variants, safety net expansions, capital taxation)
 - Technical requirements for probabilistic microsimulation
@@ -68,12 +73,14 @@ We're currently seeking feedback from researchers and funders on whether this ad
 ## How You Can Help
 
 **Feedback welcome on:**
+
 - Does this research direction address important gaps in understanding AI's distributional impacts?
 - What AI economic scenarios would be most valuable to analyze?
 - What policy questions are most decision-relevant?
 - How should this integrate with forecasting platforms?
 
 **Potentially useful if you:**
+
 - Study AI economics and want distributional analysis of your scenarios
 - Work on UBI or other policy proposals and want microsimulation under AI scenarios
 - Run forecasting initiatives and want policy-level outputs
@@ -90,4 +97,4 @@ We're currently seeking feedback from researchers and funders on whether this ad
 
 ---
 
-*Disclosure: I run PolicyEngine. This post represents early-stage exploration, not active research. We're genuinely uncertain whether this direction is valuable and welcome critical feedback.*
+_Disclosure: I run PolicyEngine. This post represents early-stage exploration, not active research. We're genuinely uncertain whether this direction is valuable and welcome critical feedback._

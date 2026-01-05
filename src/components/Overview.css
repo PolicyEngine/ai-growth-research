@@ -295,7 +295,7 @@
 .box-content p {
   font-size: 1.1rem;
   line-height: 1.7;
-  opacity: 0.9;
+  color: white; /* Full white for WCAG AA contrast on dark background */
   margin-bottom: var(--space-8);
   max-width: 800px;
 }
@@ -332,7 +332,7 @@
 
 .stat-label {
   font-size: 0.85rem;
-  opacity: 0.8;
+  color: rgba(255, 255, 255, 0.95); /* High opacity for good contrast */
   font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 0.05em;

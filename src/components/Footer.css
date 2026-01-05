@@ -59,7 +59,7 @@
 .banner-content {
   font-size: 0.95rem;
   line-height: 1.5;
-  opacity: 0.95;
+  color: white;
 }
 
 .banner-content strong {
@@ -90,9 +90,8 @@
 
 .footer-section p {
   line-height: 1.7;
-  opacity: 0.8;
   font-size: 0.95rem;
-  color: var(--pe-gray-300);
+  color: rgba(255, 255, 255, 0.9); /* Good contrast on dark background */
 }
 
 .footer-section ul {
@@ -106,8 +105,7 @@
 }
 
 .footer-section a {
-  color: white;
-  opacity: 0.8;
+  color: rgba(255, 255, 255, 0.9); /* Good contrast on dark background */
   transition: all var(--transition-fast);
   font-size: 0.95rem;
   display: inline-flex;
@@ -144,10 +142,9 @@
 }
 
 .footer-bottom p {
-  opacity: 0.6;
   font-size: 0.85rem;
   margin: 0;
-  color: var(--pe-gray-400);
+  color: rgba(255, 255, 255, 0.75); /* Better contrast on dark background */
 }
 
 /* Responsive */
