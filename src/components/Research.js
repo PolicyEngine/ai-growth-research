@@ -109,6 +109,33 @@ function Research() {
       ],
     },
     {
+      title: "Capital, Labor & AI: The Piketty Debate",
+      description:
+        "Trammell & Patel (Dec 2025) argue AI will make capital fully substitute for labor, causing Piketty-style inequality spirals—proposing progressive capital taxes. Thompson counters that abundance benefits all and humans prefer humans. Zvi accepts premises but questions whether property rights survive superintelligence.",
+      links: [
+        {
+          text: "Trammell & Patel: Capital in the 22nd Century (2025)",
+          url: "https://philiptrammell.substack.com/p/capital-in-the-22nd-century",
+        },
+        {
+          text: "Thompson/Stratechery: AI and the Human Condition (2026)",
+          url: "https://stratechery.com/2026/ai-and-the-human-condition/",
+        },
+        {
+          text: "Mowshowitz: Dos Capital (2026)",
+          url: "https://thezvi.substack.com/p/dos-capital",
+        },
+        {
+          text: "Trammell & Korinek: Economic Growth under Transformative AI",
+          url: "https://www.nber.org/papers/w31815",
+        },
+        {
+          text: "Piketty: Capital in the Twenty-First Century",
+          url: "https://www.hup.harvard.edu/books/9780674430006",
+        },
+      ],
+    },
+    {
       title: "UBI & Automation Tax Modeling",
       description:
         "CMU research shows AI needs 5-6x productivity for 11% GDP UBI. RAND recommends asymmetric automation policy: incentivize vertical automation while moderating horizontal expansion. Proposals include robot taxes, sovereign AI wealth funds, and AI capital taxation.",
