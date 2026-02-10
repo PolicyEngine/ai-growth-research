@@ -120,6 +120,30 @@ function Approach() {
           </div>
         ))}
       </div>
+
+      <div className="uncertainty-box">
+        <h3>Quantifying uncertainty</h3>
+        <p>
+          Traditional policy analysis reports only point estimates (e.g., CBO
+          baseline forecasts). AI-driven economic change involves profound
+          uncertainty. We model ranges of scenarios to show how policy impacts
+          vary across different AI trajectories.
+        </p>
+        <div className="uncertainty-stats">
+          <div className="uncertainty-stat">
+            <div className="uncertainty-value">Multiple</div>
+            <div className="uncertainty-label">AI scenarios</div>
+          </div>
+          <div className="uncertainty-stat">
+            <div className="uncertainty-value">Probabilistic</div>
+            <div className="uncertainty-label">Forecasts</div>
+          </div>
+          <div className="uncertainty-stat">
+            <div className="uncertainty-value">Robust</div>
+            <div className="uncertainty-label">Policy analysis</div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

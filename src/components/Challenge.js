@@ -42,7 +42,7 @@ function Challenge() {
           As AI increases returns to capital, the labor share of income could
           decline{" "}
           <Source href="https://www.nber.org/papers/w28453">
-            0.5-1.6% per doubling of AI innovation
+            0.5-1.6 percentage points per doubling of AI innovation
           </Source>
           . The{" "}
           <Source href="https://www.imf.org/en/Publications/WP/Issues/2025/04/04/AI-Adoption-and-Inequality-565729">
