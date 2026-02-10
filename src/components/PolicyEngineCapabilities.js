@@ -93,6 +93,14 @@ function PolicyEngineCapabilities() {
               >
                 Read our research →
               </a>
+              <a
+                href="https://policyengine.org/us/model"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="capability-link"
+              >
+                Explore the model →
+              </a>
             </div>
           </div>
         </div>

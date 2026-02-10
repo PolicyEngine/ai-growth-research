@@ -118,7 +118,7 @@ function Ecosystem() {
         {
           name: "PolicyEngine",
           desc: "Open-source microsimulation for US, UK, Canada. This project.",
-          url: "https://policyengine.org",
+          url: "https://policyengine.org/us/model",
         },
         {
           name: "OG-USA (DeBacker & Evans)",
