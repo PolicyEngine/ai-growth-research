@@ -48,7 +48,7 @@ function Header() {
 
         <div className="header-right">
           <a
-            href="https://github.com/PolicyEngine/ai-growth-research"
+            href="https://github.com/PolicyEngine/ai-inequality"
             className="github-link"
             target="_blank"
             rel="noopener noreferrer"

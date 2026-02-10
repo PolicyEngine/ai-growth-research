@@ -28,7 +28,7 @@ function Footer() {
             </li>
             <li>
               <a
-                href="https://github.com/PolicyEngine/ai-growth-research"
+                href="https://github.com/PolicyEngine/ai-inequality"
                 target="_blank"
                 rel="noopener noreferrer"
               >
