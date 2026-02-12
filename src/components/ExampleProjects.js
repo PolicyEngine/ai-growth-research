@@ -20,12 +20,12 @@ function ExampleProjects() {
       type: "AI integration",
     },
     {
-      title: "Household benefit eligibility API",
+      title: "Multi-agent AI for policy modeling",
       description:
-        "Programmatic access to calculate tax liabilities and benefit eligibility for any household configuration.",
-      image: `${process.env.PUBLIC_URL}/images/how-developers-can-explore-the-policyengine-api.jpg`,
-      url: "https://policyengine.org/us/research/how-developers-can-explore-the-policyengine-api",
-      type: "Developer API",
+        "AI agent teams that research, encode, test, and validate state benefit programs into production microsimulation code.",
+      image: `${process.env.PUBLIC_URL}/images/multi-agent-ai-policy.png`,
+      url: "https://policyengine.org/us/research/multi-agent-workflows-policy-research",
+      type: "AI infrastructure",
     },
     {
       title: "Enhanced CPS microdata",

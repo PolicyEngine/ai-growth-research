@@ -131,16 +131,16 @@ function Approach() {
         </p>
         <div className="uncertainty-stats">
           <div className="uncertainty-stat">
-            <div className="uncertainty-value">Multiple</div>
-            <div className="uncertainty-label">AI scenarios</div>
+            <div className="uncertainty-value">5+</div>
+            <div className="uncertainty-label">AI economic scenarios modeled</div>
           </div>
           <div className="uncertainty-stat">
-            <div className="uncertainty-value">Probabilistic</div>
-            <div className="uncertainty-label">Forecasts</div>
+            <div className="uncertainty-value">10,000+</div>
+            <div className="uncertainty-label">Policy parameters encoded</div>
           </div>
           <div className="uncertainty-stat">
-            <div className="uncertainty-value">Robust</div>
-            <div className="uncertainty-label">Policy analysis</div>
+            <div className="uncertainty-value">151M</div>
+            <div className="uncertainty-label">Workers simulated</div>
           </div>
         </div>
       </div>
