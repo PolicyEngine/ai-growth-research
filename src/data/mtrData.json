@@ -6,27 +6,27 @@
     {
       "source": "Emp",
       "key": "employment_income",
-      "mtr": 0.3232
+      "mtr": 0.3196
     },
     {
       "source": "Self-emp",
       "key": "self_employment_income",
-      "mtr": 0.6002
+      "mtr": 0.551
     },
     {
       "source": "LTCG",
       "key": "long_term_capital_gains",
-      "mtr": 0.2387
+      "mtr": 0.2371
     },
     {
       "source": "STCG",
       "key": "short_term_capital_gains",
-      "mtr": -0.0275
+      "mtr": -0.021
     },
     {
       "source": "Qual div",
       "key": "qualified_dividend_income",
-      "mtr": 0.1617
+      "mtr": 0.1672
     }
   ]
 }
