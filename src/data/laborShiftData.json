@@ -3,52 +3,67 @@
     {
       "label": "Baseline",
       "shiftPct": 0,
-      "marketGini": 0.6419,
-      "netGini": 0.5488,
-      "povertyRate": 0.2098,
-      "fedRevenue": 2438,
-      "top10Share": 0.4316,
-      "bottom10Share": -0.002
+      "marketGini": 0.8252,
+      "netGini": 0.5948,
+      "povertyRate": 0.2347,
+      "fedRevenue": 2430,
+      "stateRevenue": 558,
+      "totalRevenue": 2987,
+      "top10Share": 0.4729,
+      "bottom10Share": -0.0104,
+      "meanNetIncome": 127358.4765432265
     },
     {
       "label": "10% shift",
       "shiftPct": 10,
-      "marketGini": 0.6581,
-      "netGini": 0.5663,
-      "povertyRate": 0.2299,
-      "fedRevenue": 2417,
-      "top10Share": 0.4585,
-      "bottom10Share": 0.0006
+      "marketGini": 0.8345,
+      "netGini": 0.6139,
+      "povertyRate": 0.2579,
+      "fedRevenue": 2397,
+      "stateRevenue": 554,
+      "totalRevenue": 2950,
+      "top10Share": 0.5033,
+      "bottom10Share": -0.0071,
+      "meanNetIncome": 128723.05715754445
     },
     {
       "label": "25% shift",
       "shiftPct": 25,
-      "marketGini": 0.6888,
-      "netGini": 0.5981,
-      "povertyRate": 0.271,
-      "fedRevenue": 2421,
-      "top10Share": 0.5011,
-      "bottom10Share": 0.0019
+      "marketGini": 0.8525,
+      "netGini": 0.6478,
+      "povertyRate": 0.2939,
+      "fedRevenue": 2375,
+      "stateRevenue": 551,
+      "totalRevenue": 2925,
+      "top10Share": 0.5522,
+      "bottom10Share": -0.0042,
+      "meanNetIncome": 130552.48490393454
     },
     {
       "label": "50% shift",
       "shiftPct": 50,
-      "marketGini": 0.751,
-      "netGini": 0.6596,
-      "povertyRate": 0.3685,
-      "fedRevenue": 2500,
-      "top10Share": 0.5705,
-      "bottom10Share": 0.0017
+      "marketGini": 0.8902,
+      "netGini": 0.7126,
+      "povertyRate": 0.4204,
+      "fedRevenue": 2411,
+      "stateRevenue": 553,
+      "totalRevenue": 2964,
+      "top10Share": 0.6363,
+      "bottom10Share": -0.0036,
+      "meanNetIncome": 133309.05165105776
     },
     {
       "label": "50% shift + UBI",
       "shiftPct": 50,
-      "marketGini": 0.751,
-      "netGini": 0.6577,
-      "povertyRate": 0.3609,
-      "fedRevenue": 2498,
-      "top10Share": 0.5689,
-      "bottom10Share": 0.0019
+      "marketGini": 0.8902,
+      "netGini": 0.7111,
+      "povertyRate": 0.4166,
+      "fedRevenue": 2411,
+      "stateRevenue": 553,
+      "totalRevenue": 2964,
+      "top10Share": 0.635,
+      "bottom10Share": -0.0034,
+      "meanNetIncome": 133625.99517371625
     }
   ],
   "deciles": {
@@ -65,44 +80,44 @@
       "D10"
     ],
     "baseline": [
-      -0.002,
-      0.0243,
-      0.0333,
-      0.0462,
-      0.0564,
-      0.0725,
-      0.0864,
-      0.1096,
-      0.1416,
-      0.4316
+      -0.0104,
+      0.0202,
+      0.0299,
+      0.0422,
+      0.0546,
+      0.0674,
+      0.0841,
+      0.1044,
+      0.1348,
+      0.4729
     ],
     "50pctShift": [
-      0.0017,
-      0.0156,
-      0.0239,
-      0.0335,
-      0.0428,
-      0.0524,
-      0.065,
-      0.0813,
-      0.1133,
-      0.5705
+      -0.0036,
+      0.0144,
+      0.0214,
+      0.0298,
+      0.0375,
+      0.0451,
+      0.0551,
+      0.0669,
+      0.0971,
+      0.6363
     ],
     "50pctUBI": [
-      0.0019,
-      0.0158,
-      0.0241,
-      0.0337,
-      0.043,
-      0.0526,
-      0.0651,
-      0.0818,
-      0.1129,
-      0.5689
+      -0.0034,
+      0.0145,
+      0.0216,
+      0.0299,
+      0.0375,
+      0.0453,
+      0.0552,
+      0.0671,
+      0.0972,
+      0.635
     ]
   },
   "metadata": {
     "year": 2026,
-    "description": "Employment and self-employment income reduced by X%, redistributed to capital income (including employer payroll savings) at constant total employer cost. Models AI-driven automation shifting labor income to capital owners."
+    "description": "Employment and self-employment income reduced by X%, redistributed to capital income proportional to existing holdings at constant total income. Models AI-driven automation shifting labor income to capital owners."
   }
 }
