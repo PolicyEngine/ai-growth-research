@@ -26,10 +26,10 @@
       "revenue_change_b": -37,
       "income_tax_change_b": -33.225692464400254,
       "employee_payroll_change_b": -68.75052831453218,
-      "employer_payroll_change_b": -68.75052831453218,
+      "employer_payroll_change_b": -65.71732124124026,
       "eitc_change_b": 2.0444410742845065,
       "ctc_change_b": 0.992391481154641,
-      "snap_change_b": 3.9486082097954025
+      "snap_change_b": 3.9571369566962957
     },
     {
       "shift_pct": 20,
@@ -41,10 +41,10 @@
       "revenue_change_b": -58,
       "income_tax_change_b": -51.729718219120514,
       "employee_payroll_change_b": -139.02301525993187,
-      "employer_payroll_change_b": -139.02301525993187,
+      "employer_payroll_change_b": -133.1392777260569,
       "eitc_change_b": 4.567645275090044,
       "ctc_change_b": 1.8091943897333351,
-      "snap_change_b": 9.188535876970462
+      "snap_change_b": 9.197184439906941
     },
     {
       "shift_pct": 30,
@@ -56,10 +56,10 @@
       "revenue_change_b": -63,
       "income_tax_change_b": -54.42518891343843,
       "employee_payroll_change_b": -209.92499950158657,
-      "employer_payroll_change_b": -209.92499950158657,
+      "employer_payroll_change_b": -201.51826406848693,
       "eitc_change_b": 8.280610699449397,
       "ctc_change_b": 2.1140794137060084,
-      "snap_change_b": 16.164644029006332
+      "snap_change_b": 16.172963152762094
     },
     {
       "shift_pct": 50,
@@ -71,10 +71,10 @@
       "revenue_change_b": -24,
       "income_tax_change_b": -18.36769553589511,
       "employee_payroll_change_b": -357.0072355041322,
-      "employer_payroll_change_b": -357.0072355041322,
+      "employer_payroll_change_b": -344.824848433044,
       "eitc_change_b": 21.186936969672807,
       "ctc_change_b": 2.3748084059962764,
-      "snap_change_b": 35.795405054855486
+      "snap_change_b": 35.79814730427137
     },
     {
       "shift_pct": 100,
@@ -86,10 +86,10 @@
       "revenue_change_b": 727,
       "income_tax_change_b": 630.4244462689267,
       "employee_payroll_change_b": -711.9055203279413,
-      "employer_payroll_change_b": -711.9055203279413,
+      "employer_payroll_change_b": -694.9226781591165,
       "eitc_change_b": -54.493365911901016,
       "ctc_change_b": 3.0635235015919875,
-      "snap_change_b": 206.51997713270686
+      "snap_change_b": 206.52086404556636
     }
   ]
 }

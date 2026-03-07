@@ -4,10 +4,10 @@
   "baseline": {
     "income_tax_b": 2429.7399051579087,
     "employee_payroll_b": 717.0806270536601,
-    "employer_payroll_b": 717.0806270536601,
+    "employer_payroll_b": 694.9226781591165,
     "eitc_cost_b": 54.493365911901016,
     "ctc_cost_b": 136.2759422156914,
-    "snap_cost_b": 50.79601730315493,
+    "snap_cost_b": 50.79844737438381,
     "decile_shares": [
       -0.0104,
       0.0202,
@@ -23,17 +23,17 @@
     "market_gini": 0.8252,
     "net_gini": 0.5948,
     "spm_poverty_rate": 0.2347,
-    "mean_net_income": 127358.4765432265,
+    "mean_net_income": 127358.49401651796,
     "fed_revenue_b": 2430,
     "state_revenue_b": 558
   },
   "doubled": {
     "income_tax_b": 2936.5685582650367,
     "employee_payroll_b": 717.0806270536601,
-    "employer_payroll_b": 717.0806270536601,
+    "employer_payroll_b": 694.9226781591165,
     "eitc_cost_b": 54.17348319454189,
     "ctc_cost_b": 135.860727724155,
-    "snap_cost_b": 50.30999209286458,
+    "snap_cost_b": 50.3124221641695,
     "decile_shares": [
       -0.0052,
       0.0183,
@@ -52,11 +52,11 @@
     "employer_payroll_change_b": 0.0,
     "eitc_change_b": -0.3198827173591283,
     "ctc_change_b": -0.41521449153640333,
-    "snap_change_b": -0.4860252102903502,
+    "snap_change_b": -0.486025210214315,
     "market_gini": 0.8385,
     "net_gini": 0.6315,
     "spm_poverty_rate": 0.229,
-    "mean_net_income": 147040.55264803008,
+    "mean_net_income": 147040.5701213184,
     "fed_revenue_b": 2937,
     "state_revenue_b": 674
   }
