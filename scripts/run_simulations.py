@@ -151,7 +151,11 @@ def detailed_metrics(sim):
         sim.calc("employee_payroll_tax", period=YEAR).sum() / 1e9
     )
     m["employer_payroll_b"] = float(
-        sim.calc("employee_payroll_tax", period=YEAR).sum() / 1e9
+        (
+            sim.calc("employer_medicare_tax", period=YEAR).sum()
+            + sim.calc("employer_social_security_tax", period=YEAR).sum()
+        )
+        / 1e9
     )
     m["eitc_cost_b"] = float(sim.calc("eitc", period=YEAR).sum() / 1e9)
     m["ctc_cost_b"] = float(sim.calc("ctc", period=YEAR).sum() / 1e9)
