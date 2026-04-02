@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import Hero from "../components/Hero";
 import Challenge from "../components/Challenge";
 import Approach from "../components/Approach";
@@ -26,15 +27,15 @@ function Home() {
           examine the policy scenarios we can analyze.
         </p>
         <div className="dive-deeper-links">
-          <a href="/research" className="cta-button primary">
+          <Link to="/research" className="cta-button primary">
             Research context {"\u2192"}
-          </a>
-          <a href="/policy-analysis" className="cta-button primary">
+          </Link>
+          <Link to="/policy-analysis" className="cta-button primary">
             Policy analysis {"\u2192"}
-          </a>
-          <a href="/references" className="cta-button secondary">
+          </Link>
+          <Link to="/references" className="cta-button secondary">
             References {"\u2192"}
-          </a>
+          </Link>
         </div>
       </div>
     </main>

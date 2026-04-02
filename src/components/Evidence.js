@@ -15,7 +15,7 @@ function Evidence() {
       title: "11.7% of the US labor market automatable by AI",
       detail:
         "AI currently capable of automating 11.7% of the US labor market (~$1.2T in wage value). Simulated 151 million workers across 32,000+ skills.",
-      url: "https://mitfuturetech.mit.edu/iceberg-index",
+      url: "https://iceberg.mit.edu",
     },
     {
       source: "IMF Working Paper (2025)",

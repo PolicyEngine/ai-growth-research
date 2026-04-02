@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import PolicyScenarios from "../components/PolicyScenarios";
 import PolicyEngineCapabilities from "../components/PolicyEngineCapabilities";
 import CapitalIncomeCliff from "../components/CapitalIncomeCliff";
@@ -43,8 +44,8 @@ function PolicyAnalysis() {
         className="section"
         style={{ textAlign: "center", padding: "3rem 2rem" }}
       >
-        <a
-          href="/"
+        <Link
+          to="/"
           style={{
             color: "#319795",
             fontSize: "1.1rem",
@@ -52,7 +53,7 @@ function PolicyAnalysis() {
           }}
         >
           ← Back to Home
-        </a>
+        </Link>
       </div>
     </>
   );
