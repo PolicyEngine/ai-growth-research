@@ -1,52 +1,204 @@
 import React, { useState } from "react";
 import {
-  LineChart,
+  CartesianGrid,
   Line,
+  LineChart,
+  ReferenceLine,
+  ResponsiveContainer,
+  Tooltip,
   XAxis,
   YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-  Legend,
-  ReferenceLine,
 } from "recharts";
 import { IconArrowsExchange, IconInfoCircle } from "@tabler/icons-react";
 import sweepData from "../data/shiftSweepData.json";
-import capitalData from "../data/capitalDoublingData.json";
-import { TOOLTIP_STYLE, pct as pctFmt } from "../utils/chartStyles";
+import { TOOLTIP_STYLE } from "../utils/chartStyles";
+import { niceTicks } from "../utils/chartTicks";
+import { policyEngineLabel } from "../utils/modelMetadata";
 import "./AnalysisSection.css";
 import "./ShiftSweep.css";
 
-const TABS = [
-  { key: "inequality", label: "Inequality" },
-  { key: "revenue", label: "Tax revenue" },
-  { key: "compare", label: "Shift vs. doubling" },
-];
+const bFmt = (value) => `$${value >= 0 ? "+" : ""}${value.toFixed(0)}B`;
+const bTooltipFmt = (value) =>
+  `$${value >= 0 ? "+" : ""}${value.toFixed(1)}B`;
+const axisPctFmt = (value) => `${Math.round(value * 100)}%`;
+const shareTooltipFmt = (value) => `${(value * 100).toFixed(1)}%`;
+const shareFmt = (value) => {
+  const pct = value * 100;
+  if (Math.abs(pct) >= 10) {
+    return `${pct.toFixed(0)}%`;
+  }
+  if (Math.abs(pct) >= 1) {
+    return `${pct.toFixed(1)}%`;
+  }
+  return `${pct.toFixed(2)}%`;
+};
 
-const bFmt = (v) => `$${v >= 0 ? "+" : ""}${v.toFixed(0)}B`;
+const metadata = sweepData.metadata ?? {};
+const docsUrl = metadata.model_url ?? "https://www.policyengine.org/us/model";
+const modelLabel = policyEngineLabel(metadata);
 
-const chartData = sweepData.scenarios.map((s) => ({
-  shift: s.shift_pct,
-  marketGini: s.market_gini,
-  netGini: s.net_gini,
-  poverty: s.spm_poverty_rate,
-  revenue: s.revenue_change_b,
-  incomeTax: s.income_tax_change_b,
-  employeePayroll: s.employee_payroll_change_b,
-  employerPayroll: s.employer_payroll_change_b,
-  totalPayroll: s.employee_payroll_change_b + s.employer_payroll_change_b,
-  eitc: s.eitc_change_b,
-  snap: s.snap_change_b,
+const PROPORTION_TICKS = [0, 0.2, 0.4, 0.6, 0.8, 1];
+
+const CONCEPTS = {
+  market: {
+    label: "Market income",
+    color: "#DD6B20",
+    description: "pre-tax, pre-transfer household market income",
+  },
+  net: {
+    label: "Net income",
+    color: "#319795",
+    description: "household net income after taxes and transfers",
+  },
+};
+
+const MEASURES = {
+  gini: {
+    label: "Gini coefficient",
+    field: "Gini",
+    axisLabel: "Gini coefficient",
+    valueFormatter: (value) => value.toFixed(4),
+    tooltipFormatter: (value) => value.toFixed(4),
+    description:
+      "Inequality on a 0-1 scale, where higher values mean income is more concentrated.",
+  },
+  top10: {
+    label: "Top 10% share",
+    field: "Top10",
+    axisLabel: "Share of income",
+    valueFormatter: shareFmt,
+    tooltipFormatter: shareTooltipFmt,
+    description: "Share of household income received by the top 10% of households.",
+  },
+  top1: {
+    label: "Top 1% share",
+    field: "Top1",
+    axisLabel: "Share of income",
+    valueFormatter: shareFmt,
+    tooltipFormatter: shareTooltipFmt,
+    description: "Share of household income received by the top 1% of households.",
+  },
+  top0_1: {
+    label: "Top 0.1% share",
+    field: "Top0_1",
+    axisLabel: "Share of income",
+    valueFormatter: shareFmt,
+    tooltipFormatter: shareTooltipFmt,
+    description: "Share of household income received by the top 0.1% of households.",
+  },
+  revenue: {
+    label: "Net federal revenue change",
+    field: "Revenue",
+    dataKey: "revenue",
+    color: "#2C6496",
+    axisLabel: "Change vs baseline ($B)",
+    valueFormatter: bFmt,
+    tooltipFormatter: bTooltipFmt,
+    description:
+      "Federal effect including income tax, employee payroll tax, employer payroll tax, and EITC, CTC, and SNAP changes.",
+  },
+};
+
+const MEASURE_OPTIONS = ["gini", "top10", "top1", "top0_1", "revenue"];
+const CONCEPT_OPTIONS = ["market", "net"];
+
+const chartData = sweepData.scenarios.map((scenario) => ({
+  shift: scenario.shift_pct,
+  label: scenario.label,
+  marketGini: scenario.market_gini,
+  netGini: scenario.net_gini,
+  marketTop10: scenario.market_top_10_share,
+  marketTop1: scenario.market_top_1_share,
+  marketTop0_1: scenario.market_top_0_1_share,
+  netTop10: scenario.net_top_10_share,
+  netTop1: scenario.net_top_1_share,
+  netTop0_1: scenario.net_top_0_1_share,
+  revenue: scenario.revenue_change_b,
 }));
 
-// Pre-compute scenario lookups used in the compare tab and callouts
-const baseline = sweepData.scenarios[0];
-const shift50 = sweepData.scenarios.find((s) => s.shift_pct === 50);
-const shift100 = sweepData.scenarios.find((s) => s.shift_pct === 100);
+const shiftTicks = niceTicks(
+  chartData[0].shift,
+  chartData[chartData.length - 1].shift,
+  11,
+);
+const shift50 = sweepData.scenarios.find((scenario) => scenario.shift_pct === 50);
+const shift100 = sweepData.scenarios.find(
+  (scenario) => scenario.shift_pct === 100,
+);
 
+function metricConfig(measureKey, conceptKey) {
+  const measure = MEASURES[measureKey];
+  if (measureKey === "revenue") {
+    return measure;
+  }
+
+  const concept = CONCEPTS[conceptKey];
+  return {
+    ...measure,
+    label: `${concept.label} ${measure.label}`,
+    dataKey: `${conceptKey}${measure.field}`,
+    color: concept.color,
+    description: `${measure.description} Uses ${concept.description}.`,
+  };
+}
+
+function yTicksForConfig(config) {
+  if (config.dataKey !== "revenue") {
+    return PROPORTION_TICKS;
+  }
+
+  const values = chartData.map((point) => point[config.dataKey]);
+  const min = Math.min(0, ...values);
+  const max = Math.max(0, ...values);
+  return niceTicks(min, max, 6);
+}
+
+function summaryForMetric(measureKey, conceptKey, config) {
+  const basePoint = chartData[0];
+  const endPoint = chartData[chartData.length - 1];
+  const startValue = basePoint?.[config.dataKey];
+  const endValue = endPoint?.[config.dataKey];
+
+  if (measureKey === "gini") {
+    return (
+      <>
+        {config.label} rises from {startValue.toFixed(3)} at baseline to{" "}
+        {endValue.toFixed(3)} at a 100% shift.{" "}
+        {conceptKey === "net"
+          ? "Current law dampens the shock, but it does not come close to offsetting it."
+          : "This is the pre-tax, pre-transfer distributional effect of routing labor income through existing capital holdings."}
+      </>
+    );
+  }
+
+  if (measureKey !== "revenue") {
+    const direction = endValue >= startValue ? "rises" : "falls";
+    return (
+      <>
+        {config.label} {direction} from {config.valueFormatter(startValue)} at
+        baseline to {config.valueFormatter(endValue)} at a 100% shift. This
+        shows how quickly the distribution concentrates when labor income is
+        rerouted through existing capital holdings.
+      </>
+    );
+  }
+
+  return (
+    <>
+      Net federal revenue change reaches {bFmt(shift50?.revenue_change_b ?? 0)}
+      {" "}at a 50% shift and {bFmt(shift100?.revenue_change_b ?? 0)} at a
+      100% shift. Payroll-tax losses outweigh the income-tax gains all the way
+      across the sweep.
+    </>
+  );
+}
 
 function ShiftSweep() {
-  const [activeTab, setActiveTab] = useState("inequality");
+  const [selectedMeasure, setSelectedMeasure] = useState("gini");
+  const [selectedConcept, setSelectedConcept] = useState("net");
+  const config = metricConfig(selectedMeasure, selectedConcept);
+  const yTicks = yTicksForConfig(config);
+  const isRevenue = selectedMeasure === "revenue";
 
   return (
     <div id="shift-sweep" className="analysis-section">
@@ -54,249 +206,141 @@ function ShiftSweep() {
         <div className="analysis-icon-wrapper">
           <IconArrowsExchange size={28} stroke={1.5} />
         </div>
-        <h2>Labor-to-capital shift: sensitivity across shift magnitudes</h2>
+        <h2>Labor-to-capital shift experiment</h2>
         <p className="analysis-subtitle">
-          How inequality, poverty, and tax revenue change as a growing share of
-          labor income is replaced by capital income — holding total GDP constant
+          Sweep the shock from 0% to 100% of positive labor income shifted into
+          positive capital income, and switch the chart between inequality, top
+          shares, and fiscal outcomes.
         </p>
       </div>
 
       <div className="analysis-card">
         <div className="analysis-controls">
-          <div className="analysis-tabs">
-            {TABS.map((tab) => (
-              <button
-                key={tab.key}
-                className={`analysis-tab ${activeTab === tab.key ? "active" : ""}`}
-                onClick={() => setActiveTab(tab.key)}
+          <div className="shift-sweep-controls">
+            <div className="shift-sweep-control-group">
+              <div className="shift-sweep-label">Measure</div>
+              <div
+                className="analysis-tabs shift-sweep-tabs"
+                role="radiogroup"
+                aria-label="Measure"
               >
-                {tab.label}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {activeTab === "inequality" && (
-          <ResponsiveContainer width="100%" height={400}>
-            <LineChart
-              data={chartData}
-              margin={{ left: 20, right: 30, top: 10, bottom: 35 }}
-            >
-              <CartesianGrid stroke="#e2e8f0" strokeDasharray="3 3" />
-              <XAxis
-                dataKey="shift"
-                tickFormatter={(v) => `${v}%`}
-                tick={{ fontSize: 12 }}
-                label={{
-                  value: "Share of labor income shifted to capital",
-                  position: "bottom",
-                  offset: 0,
-                  style: { fontSize: 13 },
-                }}
-              />
-              <YAxis
-                domain={[0, 1]}
-                tickFormatter={(v) => v.toFixed(2)}
-                tick={{ fontSize: 12 }}
-                label={{
-                  value: "Gini / poverty rate",
-                  angle: -90,
-                  position: "insideLeft",
-                  offset: -5,
-                  style: { fontSize: 13 },
-                }}
-              />
-              <Tooltip
-                contentStyle={TOOLTIP_STYLE}
-                formatter={(value, name) => [value.toFixed(4), name]}
-                labelFormatter={(v) => `${v}% shift`}
-              />
-              <Legend />
-              <Line
-                type="monotone"
-                dataKey="marketGini"
-                name="Market Gini"
-                stroke="#e07b39"
-                strokeWidth={2}
-                dot={{ r: 4 }}
-              />
-              <Line
-                type="monotone"
-                dataKey="netGini"
-                name="Net Gini"
-                stroke="#319795"
-                strokeWidth={3}
-                dot={{ r: 4 }}
-              />
-              <Line
-                type="monotone"
-                dataKey="poverty"
-                name="SPM poverty rate"
-                stroke="#805AD5"
-                strokeWidth={2}
-                strokeDasharray="5 5"
-                dot={{ r: 4 }}
-              />
-            </LineChart>
-          </ResponsiveContainer>
-        )}
-
-        {activeTab === "revenue" && (
-          <ResponsiveContainer width="100%" height={400}>
-            <LineChart
-              data={chartData}
-              margin={{ left: 20, right: 30, top: 10, bottom: 35 }}
-            >
-              <CartesianGrid stroke="#e2e8f0" strokeDasharray="3 3" />
-              <XAxis
-                dataKey="shift"
-                tickFormatter={(v) => `${v}%`}
-                tick={{ fontSize: 12 }}
-                label={{
-                  value: "Share of labor income shifted to capital",
-                  position: "bottom",
-                  offset: 0,
-                  style: { fontSize: 13 },
-                }}
-              />
-              <YAxis
-                tickFormatter={(v) => `$${v >= 0 ? "+" : ""}${v.toFixed(0)}B`}
-                tick={{ fontSize: 12 }}
-                label={{
-                  value: "Revenue change vs baseline ($B)",
-                  angle: -90,
-                  position: "insideLeft",
-                  offset: -10,
-                  style: { fontSize: 13 },
-                }}
-              />
-              <ReferenceLine y={0} stroke="#718096" strokeDasharray="4 4" />
-              <Tooltip
-                contentStyle={TOOLTIP_STYLE}
-                formatter={(value, name) => [bFmt(value), name]}
-                labelFormatter={(v) => `${v}% shift`}
-              />
-              <Legend />
-              <Line
-                type="monotone"
-                dataKey="revenue"
-                name="Net revenue change"
-                stroke="#319795"
-                strokeWidth={3}
-                dot={{ r: 5 }}
-              />
-              <Line
-                type="monotone"
-                dataKey="incomeTax"
-                name="Income tax change"
-                stroke="#2C6496"
-                strokeWidth={2}
-                dot={{ r: 3 }}
-              />
-              <Line
-                type="monotone"
-                dataKey="totalPayroll"
-                name="Payroll tax change (employee + employer)"
-                stroke="#e07b39"
-                strokeWidth={2}
-                dot={{ r: 3 }}
-              />
-            </LineChart>
-          </ResponsiveContainer>
-        )}
-
-        {activeTab === "compare" && (
-          <div className="compare-grid">
-            <table className="compare-table">
-              <thead>
-                <tr>
-                  <th>Scenario</th>
-                  <th>GDP effect</th>
-                  <th>Net Gini</th>
-                  <th>SPM poverty</th>
-                  <th>Revenue change</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>Baseline</td>
-                  <td>—</td>
-                  <td>{baseline?.net_gini.toFixed(4)}</td>
-                  <td>{pctFmt(baseline?.spm_poverty_rate)}</td>
-                  <td>—</td>
-                </tr>
-                <tr className="compare-row-shift">
-                  <td>50% labor→capital shift</td>
-                  <td>Neutral (GDP constant)</td>
-                  <td>{shift50?.net_gini.toFixed(4)}</td>
-                  <td>{pctFmt(shift50?.spm_poverty_rate)}</td>
-                  <td>{bFmt(shift50?.revenue_change_b)}</td>
-                </tr>
-                <tr className="compare-row-shift">
-                  <td>100% labor→capital shift</td>
-                  <td>Neutral (GDP constant)</td>
-                  <td>{shift100?.net_gini.toFixed(4)}</td>
-                  <td>{pctFmt(shift100?.spm_poverty_rate)}</td>
-                  <td>{bFmt(shift100?.revenue_change_b)}</td>
-                </tr>
-                <tr className="compare-row-double">
-                  <td>Capital income doubled</td>
-                  <td>+GDP (capital more productive)</td>
-                  <td>{capitalData.doubled.net_gini.toFixed(4)}</td>
-                  <td>{pctFmt(capitalData.doubled.spm_poverty_rate)}</td>
-                  <td>{bFmt(capitalData.doubled.revenue_change_b)}</td>
-                </tr>
-              </tbody>
-            </table>
-
-            <div className="analysis-callout">
-              <IconInfoCircle size={20} stroke={1.5} />
-              <div>
-                The two AI scenarios have sharply different distributional
-                consequences. When AI displaces workers (shift scenario), most
-                households lose labor income they cannot replace with capital
-                income they do not own — the bottom nine deciles hold only 14.5%
-                of positive capital income. When AI boosts capital productivity
-                (doubling scenario), total incomes rise and poverty barely
-                changes, though the top decile captures most gains.
+                {MEASURE_OPTIONS.map((key) => (
+                  <button
+                    key={key}
+                    type="button"
+                    role="radio"
+                    aria-checked={selectedMeasure === key}
+                    className={`analysis-tab ${selectedMeasure === key ? "active" : ""}`}
+                    onClick={() => setSelectedMeasure(key)}
+                  >
+                    {MEASURES[key].label}
+                  </button>
+                ))}
               </div>
             </div>
+            {!isRevenue && (
+              <div className="shift-sweep-control-group">
+                <div className="shift-sweep-label">Income concept</div>
+                <div
+                  className="analysis-tabs shift-sweep-tabs"
+                  role="radiogroup"
+                  aria-label="Income concept"
+                >
+                  {CONCEPT_OPTIONS.map((key) => (
+                    <button
+                      key={key}
+                      type="button"
+                      role="radio"
+                      aria-checked={selectedConcept === key}
+                      className={`analysis-tab ${selectedConcept === key ? "active" : ""}`}
+                      onClick={() => setSelectedConcept(key)}
+                    >
+                      {CONCEPTS[key].label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
-        )}
+          <p className="shift-sweep-description">{config.description}</p>
+        </div>
 
-        {activeTab !== "compare" && (
-          <div className="analysis-callout">
-            <IconInfoCircle size={20} stroke={1.5} />
-            {activeTab === "inequality" && (
-              <div>
-                Inequality and poverty rise monotonically with the shift magnitude.
-                At 50%, SPM poverty reaches{" "}
-                {pctFmt(shift50?.spm_poverty_rate)}{" "}
-                and the net Gini rises from{" "}
-                {baseline?.net_gini.toFixed(3)} to{" "}
-                {shift50?.net_gini.toFixed(3)}.
-                At 100%, poverty reaches{" "}
-                {pctFmt(shift100?.spm_poverty_rate)}
-                {" "}— reflecting that most households have negligible capital income
-                to replace lost wages.
-              </div>
+        <h3 className="analysis-chart-title">{config.label} by shift level</h3>
+        <ResponsiveContainer width="100%" height={400}>
+          <LineChart
+            data={chartData}
+            margin={{ left: 20, right: 30, top: 10, bottom: 35 }}
+          >
+            <CartesianGrid stroke="#e2e8f0" strokeDasharray="3 3" />
+            <XAxis
+              type="number"
+              dataKey="shift"
+              domain={[shiftTicks[0], shiftTicks[shiftTicks.length - 1]]}
+              ticks={shiftTicks}
+              tickFormatter={(value) => `${value}%`}
+              tick={{ fontSize: 12 }}
+              label={{
+                value: "Share of labor income shifted to capital",
+                position: "bottom",
+                offset: 0,
+                style: { fontSize: 13 },
+              }}
+            />
+            <YAxis
+              ticks={yTicks}
+              domain={isRevenue ? [yTicks[0], yTicks[yTicks.length - 1]] : [0, 1]}
+              tickFormatter={isRevenue ? bFmt : axisPctFmt}
+              tick={{ fontSize: 12 }}
+              label={{
+                value: config.axisLabel,
+                angle: -90,
+                position: "insideLeft",
+                offset: -10,
+                style: { fontSize: 13 },
+              }}
+            />
+            {isRevenue && (
+              <ReferenceLine y={0} stroke="#718096" strokeDasharray="4 4" />
             )}
-            {activeTab === "revenue" && (
-              <div>
-                Including both employee and employer payroll taxes, the
-                labor-to-capital shift is revenue-negative at every magnitude.
-                Although income tax revenue rises (capital income faces higher
-                income tax rates than wages alone), the combined payroll tax loss
-                from both sides more than offsets it. Employer payroll tax losses
-                roughly mirror employee losses at each shift level.
-              </div>
-            )}
-          </div>
-        )}
+            <Tooltip
+              contentStyle={TOOLTIP_STYLE}
+              formatter={(value) => [
+                config.tooltipFormatter(value),
+                config.label,
+              ]}
+              labelFormatter={(value) =>
+                chartData.find((row) => row.shift === value)?.label ??
+                `${value}% shift`
+              }
+            />
+            <Line
+              type="monotone"
+              dataKey={config.dataKey}
+              name={config.label}
+              stroke={config.color}
+              strokeWidth={3}
+              dot={{ r: 4 }}
+              activeDot={{ r: 6 }}
+            />
+          </LineChart>
+        </ResponsiveContainer>
+
+        <div className="analysis-callout">
+          <IconInfoCircle size={20} stroke={1.5} />
+          <div>{summaryForMetric(selectedMeasure, selectedConcept, config)}</div>
+        </div>
 
         <p className="analysis-metadata">
-          PolicyEngine US microsimulation, 2026. Labor→capital shift holds total
-          GDP constant; capital doubling adds new income. Static analysis only.
+          {modelLabel}, {metadata.year ?? sweepData.year} baseline.{" "}
+          <a
+            className="shift-sweep-link"
+            href={docsUrl}
+            target="_blank"
+            rel="noreferrer"
+          >
+            Learn more about the model
+          </a>
+          .
         </p>
       </div>
     </div>
