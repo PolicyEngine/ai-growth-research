@@ -50,8 +50,7 @@ function LaborShift() {
     shiftPct: s.shift_pct,
     label: s.label,
     "Market Gini": s.market_gini,
-    [overviewNetLabel]:
-      s.net_gini_including_health_benefits ?? s.net_gini,
+    [overviewNetLabel]: s.net_gini_including_health_benefits ?? s.net_gini,
   }));
   const overviewShiftTicks = niceTicks(
     giniData[0].shiftPct,
@@ -149,10 +148,10 @@ function LaborShift() {
                   <Tooltip
                     contentStyle={TOOLTIP_STYLE}
                     formatter={(v, name) => [v.toFixed(4), name]}
-                    labelFormatter={(value) => (
+                    labelFormatter={(value) =>
                       giniData.find((row) => row.shiftPct === value)?.label ??
                       `${value}% shift`
-                    )}
+                    }
                   />
                   <Legend />
                   <Line
@@ -231,24 +230,26 @@ function LaborShift() {
           <div>
             <strong>Key finding</strong>: A 50% labor-to-capital shift raises
             the top decile's share of household resources from{" "}
-            {pct(baseline?.top10Share)} to {pct(shift50?.top10Share)}.
-            {" "}Health coverage support changes from{" "}
+            {pct(baseline?.top10Share)} to {pct(shift50?.top10Share)}. Health
+            coverage support changes from{" "}
             {dollars(baseline?.healthcareBenefitValue ?? 0)} to{" "}
-            {dollars(shift50?.healthcareBenefitValue ?? 0)}
-            {" "}({healthDelta >= 0 ? "+" : ""}
+            {dollars(shift50?.healthcareBenefitValue ?? 0)} (
+            {healthDelta >= 0 ? "+" : ""}
             {dollars(healthDelta)}), with the 50% shift scenario carrying{" "}
             {dollars(shift50?.medicaidBenefits ?? 0)} in Medicaid,{" "}
             {dollars(shift50?.chipBenefits ?? 0)} in CHIP, and{" "}
             {dollars(shift50?.acaBenefits ?? 0)} in ACA premium support.
             {hasUbiScenario ? (
               <>
-                {" "}The additional fiscal space funds{" "}
+                {" "}
+                The additional fiscal space funds{" "}
                 {fmt(shift50Ubi?.ubiPerPerson)} per person per year in UBI.
               </>
             ) : (
               <>
-                {" "}Once payroll tax losses and transfer changes are counted,
-                this scenario does not generate enough fiscal space for a
+                {" "}
+                Once payroll tax losses and transfer changes are counted, this
+                scenario does not generate enough fiscal space for a
                 budget-neutral UBI.
               </>
             )}

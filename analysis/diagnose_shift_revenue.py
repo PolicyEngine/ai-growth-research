@@ -12,7 +12,7 @@ import numpy as np
 from policyengine_us import Microsimulation
 from .constants import CAPITAL_INCOME_VARS, YEAR
 from .labor_capital_shift import _apply_shift
-from .compute_shift_sweep import _revenue_components, net_fiscal_impact
+from .fiscal import net_fiscal_impact, revenue_components
 
 SHIFT_PCT = 0.50
 
@@ -24,13 +24,13 @@ def main():
 
     baseline = Microsimulation()
     branch, total_freed = _apply_shift(baseline, "shift_50", SHIFT_PCT)
-    print(f"\nTotal freed (wages + employer payroll): ${total_freed/1e12:.2f}T")
+    print(f"\nTotal freed labor income: ${total_freed/1e12:.2f}T")
 
     # --- Revenue decomposition ---
     print("\n--- Revenue decomposition ---")
 
-    base_rev = _revenue_components(baseline)
-    shift_rev = _revenue_components(branch)
+    base_rev = revenue_components(baseline)
+    shift_rev = revenue_components(branch)
     delta = net_fiscal_impact(shift_rev, base_rev)
 
     print(f"{'Component':<30} {'Baseline':>12} {'Shift':>12} {'Change':>12}")

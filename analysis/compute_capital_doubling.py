@@ -14,8 +14,8 @@ import numpy as np
 from policyengine_us import Microsimulation
 
 from .constants import CAPITAL_INCOME_VARS, YEAR
+from .fiscal import net_fiscal_impact, revenue_components
 from .metrics import extract_results as _extract_results
-from .compute_shift_sweep import _revenue_components, net_fiscal_impact
 
 OUTPUT_PATH = os.path.join(os.path.dirname(__file__), "outputs", "capital_doubling.json")
 
@@ -31,15 +31,16 @@ def main():
     branch = baseline.get_branch("doubled_capital")
     for var in CAPITAL_INCOME_VARS:
         original = baseline.calculate(var, period=YEAR)
-        branch.set_input(var, YEAR, np.array(original) * 2)
+        raw = np.array(original)
+        branch.set_input(var, YEAR, np.where(raw >= 0, raw * 2, raw))
 
     print("\nComputing baseline metrics...")
     base_metrics = _extract_results(baseline, "Baseline")
-    base_rev = _revenue_components(baseline)
+    base_rev = revenue_components(baseline)
 
     print("\nComputing doubled capital metrics...")
     doubled_metrics = _extract_results(branch, "Doubled capital")
-    doubled_rev = _revenue_components(branch)
+    doubled_rev = revenue_components(branch)
     delta = net_fiscal_impact(doubled_rev, base_rev)
 
     # Total capital income added (weighted sum of additions)
@@ -48,7 +49,7 @@ def main():
         vals = baseline.calculate(var, period=YEAR)
         raw = np.array(vals)
         w = np.array(vals.weights)
-        total_cap_added += float((raw * w).sum())  # Adding same amount again = doubling
+        total_cap_added += float((np.where(raw >= 0, raw, 0) * w).sum())
 
     def _fmt(metrics, rev, delta=None):
         row = {

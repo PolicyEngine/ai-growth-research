@@ -1,100 +1,201 @@
 """Sensitivity sweep of labor→capital shift at multiple magnitudes.
 
-Runs the shift at 0%, 10%, 20%, 30%, 50%, 100% and records:
+Runs the shift at 0%, 10%, 20%, ..., 100% and records:
   - Net income Gini and market Gini
   - SPM poverty rate
   - Revenue decomposition: income tax, payroll, EITC, CTC, SNAP
 """
 
+import gc
 import json
 import os
-import numpy as np
-from policyengine_us import Microsimulation
+from importlib.metadata import PackageNotFoundError, version
 
-from .constants import YEAR
+import numpy as np
+
+from .constants import CAPITAL_INCOME_VARS, YEAR
+from .fiscal import net_fiscal_impact, revenue_components
 from .labor_capital_shift import _apply_shift
 from .metrics import extract_results as _extract_results
+from .microdata_export import (
+    write_microdata_manifest,
+    write_scenario_household_microdata,
+)
+from .policyengine_runtime import managed_us_microsimulation, policyengine_bundle
 
-SHIFT_LEVELS = [0.0, 0.10, 0.20, 0.30, 0.50, 1.00]
+SHIFT_LEVELS = [pct / 100 for pct in range(0, 101, 10)]
 OUTPUT_PATH = os.path.join(os.path.dirname(__file__), "outputs", "shift_sweep.json")
+MICRODATA_OUTPUT_DIR = os.path.join(
+    os.path.dirname(__file__), "outputs", "shift_sweep_microdata"
+)
+MODEL_URL = "https://www.policyengine.org/us/model"
+SHIFT_SWEEP_DESCRIPTION = (
+    "Positive employment and self-employment income are reduced by the selected "
+    "share, and the same weighted total is redistributed to positive capital "
+    "income in proportion to existing holdings. This is a static current-law "
+    "microsimulation; it is not a behavioral forecast."
+)
 
 
-def _revenue_components(sim):
-    """Return raw revenue/cost totals (in dollars) for a sim/branch."""
-    income_tax = float(sim.calculate("income_tax", map_to="household", period=YEAR).sum())
-    employee_payroll = float(
-        sim.calculate("employee_social_security_tax", map_to="household", period=YEAR).sum()
-        + sim.calculate("employee_medicare_tax", map_to="household", period=YEAR).sum()
-    )
-    employer_payroll = float(
-        sim.calculate("employer_social_security_tax", map_to="household", period=YEAR).sum()
-        + sim.calculate("employer_medicare_tax", map_to="household", period=YEAR).sum()
-    )
-    eitc = float(sim.calculate("eitc", map_to="household", period=YEAR).sum())
-    ctc = float(sim.calculate("ctc", map_to="household", period=YEAR).sum())
-    snap = float(sim.calculate("snap", map_to="household", period=YEAR).sum())
+def _package_version(package_name):
+    try:
+        return version(package_name)
+    except PackageNotFoundError:
+        return None
+
+
+POLICYENGINE_PACKAGE = "policyengine"
+POLICYENGINE_VERSION = (
+    _package_version(POLICYENGINE_PACKAGE)
+    or _package_version("policyengine-core")
+    or "unknown"
+)
+POLICYENGINE_US_VERSION = _package_version("policyengine-us") or "unknown"
+
+
+def _baseline_facts(sim):
+    """Return high-level baseline totals used in the website explainer."""
+    try:
+        employment_income = sim.calculate("employment_income", period=YEAR)
+        self_employment_income = sim.calculate(
+            "self_employment_income", period=YEAR
+        )
+        employment_raw = np.asarray(employment_income, dtype=float)
+        employment_weights = np.asarray(employment_income.weights, dtype=float)
+        self_employment_raw = np.asarray(self_employment_income, dtype=float)
+        self_employment_weights = np.asarray(
+            self_employment_income.weights,
+            dtype=float,
+        )
+        positive_labor_income = float(
+            (np.where(employment_raw > 0, employment_raw, 0) * employment_weights).sum()
+            + (
+                np.where(self_employment_raw > 0, self_employment_raw, 0)
+                * self_employment_weights
+            ).sum()
+        )
+
+        positive_capital_income = 0.0
+        for var in CAPITAL_INCOME_VARS:
+            values = sim.calculate(var, period=YEAR)
+            raw = np.asarray(values, dtype=float)
+            weights = np.asarray(values.weights, dtype=float)
+            positive_capital_income += float(
+                (np.where(raw > 0, raw, 0) * weights).sum()
+            )
+
+        household_weight = np.asarray(
+            sim.calculate("household_weight", period=YEAR), dtype=float
+        )
+        household_positive_capital = np.zeros_like(household_weight, dtype=float)
+        for var in CAPITAL_INCOME_VARS:
+            household_values = np.asarray(
+                sim.calculate(var, period=YEAR, map_to="household"),
+                dtype=float,
+            )
+            household_positive_capital += np.where(
+                household_values > 0, household_values, 0
+            )
+
+        households_with_positive_capital_income_share = float(
+            household_weight[household_positive_capital > 0].sum()
+            / household_weight.sum()
+        )
+
+        return {
+            "labor_income_t": positive_labor_income / 1e12,
+            "positive_labor_income_t": positive_labor_income / 1e12,
+            "positive_capital_income_t": positive_capital_income / 1e12,
+            "households_with_positive_capital_income_share": (
+                households_with_positive_capital_income_share
+            ),
+        }
+    except Exception:
+        return {}
+
+
+def _metadata(baseline):
+    bundle = policyengine_bundle(baseline)
     return {
-        "income_tax": income_tax,
-        "employee_payroll": employee_payroll,
-        "employer_payroll": employer_payroll,
-        "eitc": eitc,
-        "ctc": ctc,
-        "snap": snap,
+        "year": YEAR,
+        "description": SHIFT_SWEEP_DESCRIPTION,
+        "model_url": MODEL_URL,
+        "policyengine_package": POLICYENGINE_PACKAGE,
+        "policyengine_version": (
+            bundle.get("policyengine_version") or POLICYENGINE_VERSION
+        ),
+        "country_model_package": (
+            bundle.get("model_package") or "policyengine-us"
+        ),
+        "country_model_version": (
+            bundle.get("model_version") or POLICYENGINE_US_VERSION
+        ),
+        "policyengine_us_version": (
+            bundle.get("model_version") or POLICYENGINE_US_VERSION
+        ),
+        "data_package": bundle.get("data_package"),
+        "data_version": bundle.get("data_version"),
+        "dataset_name": (
+            bundle.get("runtime_dataset")
+            or getattr(getattr(baseline, "dataset", None), "name", None)
+        ),
+        "dataset_uri": bundle.get("runtime_dataset_uri"),
+        "policyengine_bundle": bundle or None,
+        "baseline_facts": _baseline_facts(baseline),
     }
 
 
-def net_fiscal_impact(components, baseline_components):
-    """Net revenue change vs baseline (positive = government gains)."""
-    delta_income_tax = components["income_tax"] - baseline_components["income_tax"]
-    delta_employee_payroll = components["employee_payroll"] - baseline_components["employee_payroll"]
-    delta_employer_payroll = components["employer_payroll"] - baseline_components["employer_payroll"]
-    # Increases in EITC/CTC/SNAP are costs (negative for government)
-    delta_eitc = -(components["eitc"] - baseline_components["eitc"])
-    delta_ctc = -(components["ctc"] - baseline_components["ctc"])
-    delta_snap = -(components["snap"] - baseline_components["snap"])
-    total = (delta_income_tax + delta_employee_payroll + delta_employer_payroll
-             + delta_eitc + delta_ctc + delta_snap)
-    return {
-        "income_tax_change": delta_income_tax,
-        "employee_payroll_change": delta_employee_payroll,
-        "employer_payroll_change": delta_employer_payroll,
-        "eitc_change": delta_eitc,
-        "ctc_change": delta_ctc,
-        "snap_change": delta_snap,
-        "total_change": total,
-    }
+def run_shift_sweep(
+    shift_levels=None,
+    microsim_factory=managed_us_microsimulation,
+    verbose=False,
+    microdata_output_dir=MICRODATA_OUTPUT_DIR,
+):
+    """Run the labor→capital shift sweep and return website/export-ready rows.
 
+    Each shift level is simulated from a fresh baseline microsimulation. This
+    avoids retaining many live PolicyEngine branches in memory at once, which
+    becomes expensive when sweeping the full 0–100% grid.
+    """
+    if shift_levels is None:
+        shift_levels = SHIFT_LEVELS
 
-def main():
-    print("=" * 60)
-    print("LABOR→CAPITAL SHIFT SWEEP")
-    print("=" * 60)
-
-    baseline = Microsimulation()
-
-    # Create all branches BEFORE computing any downstream variables
-    branches = {}
-    for pct in SHIFT_LEVELS:
-        if pct == 0.0:
-            continue
-        name = f"sweep_{int(pct * 100)}"
-        print(f"Setting up {int(pct * 100)}% shift branch...")
-        branch, freed = _apply_shift(baseline, name, pct)
-        branches[pct] = branch
-
-    # Now compute downstream variables
-    print("\nComputing baseline metrics...")
+    baseline = microsim_factory()
+    if verbose:
+        print("\nComputing baseline metrics...")
     base_metrics = _extract_results(baseline, "Baseline")
-    base_rev = _revenue_components(baseline)
+    base_rev = revenue_components(baseline)
+    metadata = _metadata(baseline)
+    microdata_files = []
+    if microdata_output_dir:
+        if verbose:
+            print(f"Writing baseline household microdata to {microdata_output_dir}...")
+        microdata_files.append(
+            write_scenario_household_microdata(
+                baseline,
+                microdata_output_dir,
+                "Baseline",
+                0,
+            )
+        )
+    del baseline
 
     scenarios = []
 
-    # Baseline (0% shift)
     scenarios.append({
         "shift_pct": 0,
         "label": "Baseline",
         "net_gini": base_metrics["net_gini"],
+        "net_gini_including_health_benefits": (
+            base_metrics["net_gini_including_health_benefits"]
+        ),
         "market_gini": base_metrics["market_gini"],
+        "net_top_10_share": base_metrics["top_10_share"],
+        "net_top_1_share": base_metrics["top_1_share"],
+        "net_top_0_1_share": base_metrics["top_0_1_share"],
+        "market_top_10_share": base_metrics["market_top_10_share"],
+        "market_top_1_share": base_metrics["market_top_1_share"],
+        "market_top_0_1_share": base_metrics["market_top_0_1_share"],
         "spm_poverty_rate": base_metrics["spm_poverty_rate"],
         "fed_revenue_b": base_metrics["fed_revenue"] / 1e9,
         "revenue_change_b": 0.0,
@@ -106,22 +207,44 @@ def main():
         "snap_change_b": 0.0,
     })
 
-    for pct in SHIFT_LEVELS:
+    for pct in shift_levels:
         if pct == 0.0:
             continue
-        branch = branches[pct]
         label = f"{int(pct * 100)}% shift"
-        print(f"\nComputing {label} metrics...")
+        if verbose:
+            print(f"\nComputing {label} metrics...")
 
+        sim = microsim_factory()
+        branch, _ = _apply_shift(sim, f"sweep_{int(pct * 100)}", pct)
         metrics = _extract_results(branch, label)
-        rev = _revenue_components(branch)
+        rev = revenue_components(branch)
         delta = net_fiscal_impact(rev, base_rev)
+        if microdata_output_dir:
+            if verbose:
+                print(f"  Writing household microdata for {label}...")
+            microdata_files.append(
+                write_scenario_household_microdata(
+                    branch,
+                    microdata_output_dir,
+                    label,
+                    int(pct * 100),
+                )
+            )
 
         scenarios.append({
             "shift_pct": int(pct * 100),
             "label": label,
             "net_gini": metrics["net_gini"],
+            "net_gini_including_health_benefits": (
+                metrics["net_gini_including_health_benefits"]
+            ),
             "market_gini": metrics["market_gini"],
+            "net_top_10_share": metrics["top_10_share"],
+            "net_top_1_share": metrics["top_1_share"],
+            "net_top_0_1_share": metrics["top_0_1_share"],
+            "market_top_10_share": metrics["market_top_10_share"],
+            "market_top_1_share": metrics["market_top_1_share"],
+            "market_top_0_1_share": metrics["market_top_0_1_share"],
             "spm_poverty_rate": metrics["spm_poverty_rate"],
             "fed_revenue_b": metrics["fed_revenue"] / 1e9,
             "revenue_change_b": delta["total_change"] / 1e9,
@@ -133,11 +256,31 @@ def main():
             "snap_change_b": delta["snap_change"] / 1e9,
         })
 
-        print(f"  Net Gini: {metrics['net_gini']:.4f}  Market Gini: {metrics['market_gini']:.4f}")
-        print(f"  Poverty: {metrics['spm_poverty_rate']:.2%}")
-        print(f"  Revenue change: ${delta['total_change']/1e9:+.1f}B")
+        if verbose:
+            print(f"  Net Gini: {metrics['net_gini']:.4f}  Market Gini: {metrics['market_gini']:.4f}")
+            print(f"  Poverty: {metrics['spm_poverty_rate']:.2%}")
+            print(f"  Revenue change: ${delta['total_change']/1e9:+.1f}B")
 
-    result = {"year": YEAR, "scenarios": scenarios}
+        del branch
+        del sim
+        gc.collect()
+
+    if microdata_output_dir:
+        write_microdata_manifest(
+            microdata_output_dir,
+            metadata,
+            microdata_files,
+        )
+
+    return {"year": YEAR, "metadata": metadata, "scenarios": scenarios}
+
+
+def main():
+    print("=" * 60)
+    print("LABOR→CAPITAL SHIFT SWEEP")
+    print("=" * 60)
+
+    result = run_shift_sweep(verbose=True)
 
     os.makedirs(os.path.dirname(OUTPUT_PATH), exist_ok=True)
     with open(OUTPUT_PATH, "w") as f:
@@ -148,7 +291,7 @@ def main():
     print("\n" + "=" * 75)
     print(f"{'Shift':>7} {'Market Gini':>12} {'Net Gini':>10} {'Poverty':>9} {'Rev Chg':>10}")
     print("-" * 75)
-    for s in scenarios:
+    for s in result["scenarios"]:
         print(
             f"{s['shift_pct']:>6}%"
             f"  {s['market_gini']:.4f}"
