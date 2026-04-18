@@ -621,6 +621,144 @@ function FederalMtrChart({ sweepData, metric }) {
   );
 }
 
+function DecileImpactChart({ sweepData, unit = "dollars" }) {
+  const [selectedShift, setSelectedShift] = useState(50);
+  const decileImpacts =
+    sweepData?.metadata?.baseline_facts?.decile_impacts ?? null;
+  const availableShifts = useMemo(
+    () =>
+      (decileImpacts?.scenarios ?? [])
+        .map((s) => s.shift_pct)
+        .filter((pct) => pct > 0),
+    [decileImpacts],
+  );
+  const rows = useMemo(() => {
+    if (!decileImpacts) return [];
+    const scenario =
+      decileImpacts.scenarios.find((s) => s.shift_pct === selectedShift) ??
+      decileImpacts.scenarios[decileImpacts.scenarios.length - 1];
+    if (!scenario) return [];
+    return scenario.deciles
+      .filter((d) => Number.isFinite(d.pct_change))
+      .map((d) => ({
+        decile: `D${d.decile}`,
+        pct: d.pct_change,
+        dollars_b: (d.delta_mean_net * d.weight) / 1e9,
+        delta_mean: d.delta_mean_net,
+        baseline_mean: d.baseline_mean_net,
+      }));
+  }, [decileImpacts, selectedShift]);
+
+  if (!decileImpacts || rows.length === 0) {
+    return null;
+  }
+
+  const field = unit === "share" ? "pct" : "dollars_b";
+  const values = rows.map((r) => r[field]);
+  const absMax =
+    Math.max(Math.abs(Math.min(0, ...values)), Math.abs(Math.max(0, ...values))) || 1;
+  const ticks = niceTicks(-absMax, absMax, 7);
+
+  return (
+    <div className="shift-sweep-state-exposure">
+      <div className="shift-sweep-state-header">
+        <h3 className="analysis-chart-title">
+          Household net-income change by market-income decile, at{" "}
+          {selectedShift}% shift
+        </h3>
+        <div
+          className="analysis-tabs shift-sweep-tabs"
+          role="radiogroup"
+          aria-label="Shift percentage"
+        >
+          {availableShifts
+            .filter((pct) => pct % 20 === 0 && pct > 0)
+            .map((pct) => (
+              <button
+                key={pct}
+                type="button"
+                role="radio"
+                aria-checked={selectedShift === pct}
+                className={`analysis-tab ${selectedShift === pct ? "active" : ""}`}
+                onClick={() => setSelectedShift(pct)}
+              >
+                {pct}%
+              </button>
+            ))}
+        </div>
+      </div>
+      <p className="shift-sweep-description">
+        Households are bucketed into deciles by weighted baseline market
+        income; decile membership is held fixed across scenarios.
+        {unit === "share"
+          ? " Bars show the change in each decile's mean household net income as % of its baseline mean. D1 is omitted because its baseline mean is negative (losses dominate)."
+          : " Bars show the aggregate dollar change in each decile's total net income ($B)."}
+      </p>
+      <ResponsiveContainer width="100%" height={360}>
+        <BarChart
+          data={rows}
+          margin={{ left: 10, right: 30, top: 10, bottom: 40 }}
+        >
+          <CartesianGrid stroke="#e2e8f0" strokeDasharray="3 3" />
+          <XAxis
+            dataKey="decile"
+            tick={{ fontSize: 12, fontWeight: 600 }}
+            label={{
+              value: "Baseline market-income decile",
+              position: "bottom",
+              offset: 0,
+              style: { fontSize: 13 },
+            }}
+          />
+          <YAxis
+            ticks={ticks}
+            domain={[ticks[0], ticks[ticks.length - 1]]}
+            tickFormatter={(v) =>
+              unit === "share"
+                ? `${v >= 0 ? "+" : ""}${v.toFixed(0)}%`
+                : `$${v >= 0 ? "+" : ""}${v.toFixed(0)}B`
+            }
+            tick={{ fontSize: 12 }}
+            label={{
+              value:
+                unit === "share"
+                  ? "Change in mean household net income (%)"
+                  : "Change in decile-total net income ($B)",
+              angle: -90,
+              position: "insideLeft",
+              offset: -10,
+              style: { fontSize: 13 },
+            }}
+          />
+          <ReferenceLine y={0} stroke="#718096" />
+          <Tooltip
+            contentStyle={TOOLTIP_STYLE}
+            formatter={(value, name) => [
+              unit === "share"
+                ? `${value >= 0 ? "+" : ""}${value.toFixed(1)}%`
+                : `$${value >= 0 ? "+" : ""}${value.toFixed(1)}B`,
+              name,
+            ]}
+            labelFormatter={(label) => label}
+          />
+          <Bar
+            dataKey={field}
+            name="Net income change"
+            isAnimationActive={false}
+          >
+            {rows.map((row, i) => (
+              <Cell
+                key={`cell-${i}`}
+                fill={row[field] >= 0 ? "#227773" : "#DD6B20"}
+              />
+            ))}
+          </Bar>
+        </BarChart>
+      </ResponsiveContainer>
+    </div>
+  );
+}
+
 function StateExposureChart({ sweepData, currencySymbol, unit = "dollars" }) {
   const [selectedShift, setSelectedShift] = useState(50);
   const baselineTotals = sweepData?.metadata?.baseline_facts?.totals;
@@ -1082,6 +1220,10 @@ function ShiftSweep({ sweepData = defaultSweepData }) {
               metric="fed_income_plus_payroll_tax_mtr"
             />
           )}
+
+        {isRevenue && (
+          <DecileImpactChart sweepData={sweepData} unit={selectedUnit} />
+        )}
 
         {isRevenue && hasStateDeltas && (
           <StateExposureChart
