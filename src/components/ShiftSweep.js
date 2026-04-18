@@ -399,9 +399,8 @@ function RevenueDecompositionChart({
       .reduce((a, b) => a + b, 0);
     return [pos, neg, showTotalLine ? row.revenue : 0];
   });
-  const dataMin = Math.min(0, ...values);
-  const dataMax = Math.max(0, ...values);
-  const ticks = niceTicks(dataMin, dataMax, 6);
+  const absMax = Math.max(Math.abs(Math.min(0, ...values)), Math.abs(Math.max(0, ...values))) || 1;
+  const ticks = niceTicks(-absMax, absMax, 7);
 
   const tickFormatter = (v) =>
     unit === "share"
@@ -675,9 +674,8 @@ function StateExposureChart({ sweepData, currencySymbol, unit = "dollars" }) {
 
   const display = ranked;
   const values = display.map((r) => r.stateNet);
-  const dataMin = Math.min(0, ...values);
-  const dataMax = Math.max(0, ...values);
-  const ticks = niceTicks(dataMin, dataMax, 6);
+  const absMax = Math.max(Math.abs(Math.min(0, ...values)), Math.abs(Math.max(0, ...values))) || 1;
+  const ticks = niceTicks(-absMax, absMax, 7);
 
   return (
     <div className="shift-sweep-state-exposure">
