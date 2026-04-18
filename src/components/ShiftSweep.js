@@ -108,7 +108,7 @@ function measuresForMetadata(metadata) {
         billionFmt(value, { precision: 1, currencySymbol }),
       description:
         metadata.revenue_description ??
-        "Federal effect including income tax, employee payroll tax, employer payroll tax, and EITC, CTC, and SNAP changes.",
+        "Net government revenue change = taxes (household tax before refundable credits + employer payroll) minus transfers (refundable credits + benefits). Reconciles to the household net-income identity.",
     },
   };
 }

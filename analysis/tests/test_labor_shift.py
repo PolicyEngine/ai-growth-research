@@ -105,28 +105,35 @@ class TestUBICalculation:
         assert ubi == 0
 
     def test_ubi_uses_total_fiscal_change_not_income_tax_only(self):
-        """Available UBI budget should reflect taxes and transfer changes."""
+        """Available UBI budget should reflect taxes and transfer changes.
+
+        Net fiscal impact = Δ(household_tax_before_refundable_credits)
+                            + Δ(employer_payroll_tax)
+                            - Δ(household_refundable_tax_credits)
+                            - Δ(household_benefits)
+        """
         baseline = {
-            "income_tax": 100.0,
-            "employee_payroll": 50.0,
-            "employer_payroll": 50.0,
-            "eitc": 10.0,
-            "ctc": 8.0,
-            "snap": 4.0,
+            "household_tax_before_refundable_credits": 150.0,
+            "employer_payroll_tax": 50.0,
+            "household_refundable_tax_credits": 18.0,
+            "household_benefits": 4.0,
+            "household_market_income": 1000.0,
+            "household_net_income": 872.0,
         }
         shifted = {
-            "income_tax": 130.0,
-            "employee_payroll": 35.0,
-            "employer_payroll": 35.0,
-            "eitc": 8.0,
-            "ctc": 7.0,
-            "snap": 3.0,
+            "household_tax_before_refundable_credits": 165.0,
+            "employer_payroll_tax": 35.0,
+            "household_refundable_tax_credits": 15.0,
+            "household_benefits": 3.0,
+            "household_market_income": 1000.0,
+            "household_net_income": 853.0,
         }
 
         delta = net_fiscal_impact(shifted, baseline)
 
-        assert delta["income_tax_change"] == pytest.approx(30.0)
+        assert delta["household_tax_before_refundable_credits_change"] == pytest.approx(15.0)
         assert delta["total_change"] == pytest.approx(4.0)
+        assert delta["_identity_residual"] == pytest.approx(0.0, abs=1e-9)
         assert compute_ubi_amount(delta["total_change"], 2.0) == pytest.approx(2.0)
 
 

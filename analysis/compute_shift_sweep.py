@@ -14,7 +14,11 @@ from importlib.metadata import PackageNotFoundError, version
 import numpy as np
 
 from .constants import CAPITAL_INCOME_VARS, YEAR
-from .fiscal import net_fiscal_impact, revenue_components
+from .fiscal import (
+    net_fiscal_impact,
+    revenue_components,
+    state_revenue_components,
+)
 from .labor_capital_shift import _apply_shift
 from .metrics import extract_results as _extract_results
 from .microdata_export import (
@@ -24,6 +28,131 @@ from .microdata_export import (
 from .policyengine_runtime import managed_us_microsimulation, policyengine_bundle
 
 SHIFT_LEVELS = [pct / 100 for pct in range(0, 101, 10)]
+
+# Fiscal fields attached to each scenario row. The bucket names are the
+# storytelling primitives for the website chart and the EA Forum post.
+_FISCAL_FIELDS = [
+    ("total_rev_change_b", "total_change"),
+    # Non-overlapping top-line aggregates.
+    ("household_tax_change_b", "household_tax_before_refundable_credits_change"),
+    ("refundable_credits_change_b", "household_refundable_tax_credits_change"),
+    ("benefits_change_b", "household_benefits_change"),
+    ("employer_payroll_change_b", "employer_payroll_tax_change"),
+    # Federal income-tax attribution (already inside household_tax_before...).
+    ("fed_income_tax_before_refundable_credits_change_b",
+     "fed_income_tax_before_refundable_credits_change"),
+    ("fed_main_rates_change_b", "fed_income_tax_main_rates_change"),
+    ("fed_capital_gains_tax_change_b", "fed_capital_gains_tax_change"),
+    ("fed_amt_change_b", "fed_alternative_minimum_tax_change"),
+    ("fed_niit_change_b", "fed_net_investment_income_tax_change"),
+    ("fed_nonrefundable_credits_change_b", "fed_nonrefundable_credits_change"),
+    # Payroll / self-employment (already inside household_tax_before...).
+    ("employee_ss_tax_change_b", "employee_social_security_tax_change"),
+    ("employee_medicare_tax_change_b", "employee_medicare_tax_change"),
+    ("employer_ss_tax_change_b", "employer_social_security_tax_change"),
+    ("employer_medicare_tax_change_b", "employer_medicare_tax_change"),
+    ("self_employment_tax_change_b", "self_employment_tax_change"),
+    # State (already inside household_tax_before... / refundable / benefits).
+    ("state_tax_before_refundable_credits_change_b",
+     "state_tax_before_refundable_credits_change"),
+    ("state_refundable_credits_change_b", "state_refundable_credits_change"),
+    ("state_benefits_change_b", "state_benefits_change"),
+    # Federal refundable credit attribution.
+    ("eitc_change_b", "eitc_change"),
+    ("refundable_ctc_change_b", "refundable_ctc_change"),
+    # Benefit attribution.
+    ("snap_change_b", "snap_change"),
+    ("ssi_change_b", "ssi_change"),
+    ("tanf_change_b", "tanf_change"),
+    ("wic_change_b", "wic_change"),
+    ("health_benefits_change_b", "health_benefits_change"),
+    # Identity diagnostics.
+    ("market_income_change_b", "household_market_income_change"),
+    ("net_income_change_b", "household_net_income_change"),
+    ("identity_residual_b", "_identity_residual"),
+]
+
+# Legacy aliases preserved so downstream code/tests reading older keys still
+# works. These all equal one of the new fields above.
+_LEGACY_ALIASES = {
+    # The website previously read "revenue_change_b"; keep it.
+    "revenue_change_b": "total_rev_change_b",
+    "income_tax_change_b": "fed_income_tax_before_refundable_credits_change_b",
+}
+
+
+def _fiscal_row(delta):
+    row = {name: delta.get(key, 0.0) / 1e9 for name, key in _FISCAL_FIELDS}
+    for alias, source in _LEGACY_ALIASES.items():
+        row[alias] = row[source]
+    return row
+
+
+def _zero_fiscal_row():
+    row = {name: 0.0 for name, _ in _FISCAL_FIELDS}
+    for alias in _LEGACY_ALIASES:
+        row[alias] = 0.0
+    return row
+
+
+def _state_delta_rows(scenario_states, baseline_states):
+    """Return per-state delta dicts keyed by two-letter state code, in $B."""
+    codes = set(scenario_states) | set(baseline_states)
+    rows = {}
+    for code in codes:
+        scen = scenario_states.get(code, {})
+        base = baseline_states.get(code, {})
+        state_tax = (
+            scen.get("household_state_tax_before_refundable_credits", 0.0)
+            - base.get("household_state_tax_before_refundable_credits", 0.0)
+        )
+        state_credits = (
+            scen.get("household_refundable_state_tax_credits", 0.0)
+            - base.get("household_refundable_state_tax_credits", 0.0)
+        )
+        state_benefits = (
+            scen.get("household_state_benefits", 0.0)
+            - base.get("household_state_benefits", 0.0)
+        )
+        fed_tax_before = (
+            scen.get("household_tax_before_refundable_credits", 0.0)
+            - base.get("household_tax_before_refundable_credits", 0.0)
+        )
+        fed_refundable = (
+            scen.get("household_refundable_tax_credits", 0.0)
+            - base.get("household_refundable_tax_credits", 0.0)
+        )
+        hh_benefits = (
+            scen.get("household_benefits", 0.0) - base.get("household_benefits", 0.0)
+        )
+        rows[code] = {
+            "state_tax_before_refundable_credits_change_b": state_tax / 1e9,
+            "state_refundable_credits_change_b": state_credits / 1e9,
+            "state_benefits_change_b": state_benefits / 1e9,
+            "state_net_change_b": (state_tax - state_credits - state_benefits) / 1e9,
+            "household_tax_before_refundable_credits_change_b": fed_tax_before / 1e9,
+            "household_refundable_tax_credits_change_b": fed_refundable / 1e9,
+            "household_benefits_change_b": hh_benefits / 1e9,
+            "eitc_change_b": (scen.get("eitc", 0.0) - base.get("eitc", 0.0)) / 1e9,
+            "snap_change_b": (scen.get("snap", 0.0) - base.get("snap", 0.0)) / 1e9,
+            "capital_gains_tax_change_b": (
+                scen.get("capital_gains_tax", 0.0)
+                - base.get("capital_gains_tax", 0.0)
+            ) / 1e9,
+            "amt_change_b": (
+                scen.get("alternative_minimum_tax", 0.0)
+                - base.get("alternative_minimum_tax", 0.0)
+            ) / 1e9,
+            "niit_change_b": (
+                scen.get("net_investment_income_tax", 0.0)
+                - base.get("net_investment_income_tax", 0.0)
+            ) / 1e9,
+            "household_weight": scen.get(
+                "household_weight", base.get("household_weight", 0.0)
+            ),
+        }
+    return rows
+
 OUTPUT_PATH = os.path.join(os.path.dirname(__file__), "outputs", "shift_sweep.json")
 MICRODATA_OUTPUT_DIR = os.path.join(
     os.path.dirname(__file__), "outputs", "shift_sweep_microdata"
@@ -165,6 +294,7 @@ def run_shift_sweep(
         print("\nComputing baseline metrics...")
     base_metrics = _extract_results(baseline, "Baseline")
     base_rev = revenue_components(baseline)
+    base_states = state_revenue_components(baseline)
     metadata = _metadata(baseline)
     microdata_files = []
     if microdata_output_dir:
@@ -182,7 +312,7 @@ def run_shift_sweep(
 
     scenarios = []
 
-    scenarios.append({
+    baseline_scenario = {
         "shift_pct": 0,
         "label": "Baseline",
         "net_gini": base_metrics["net_gini"],
@@ -198,14 +328,10 @@ def run_shift_sweep(
         "market_top_0_1_share": base_metrics["market_top_0_1_share"],
         "spm_poverty_rate": base_metrics["spm_poverty_rate"],
         "fed_revenue_b": base_metrics["fed_revenue"] / 1e9,
-        "revenue_change_b": 0.0,
-        "income_tax_change_b": 0.0,
-        "employee_payroll_change_b": 0.0,
-        "employer_payroll_change_b": 0.0,
-        "eitc_change_b": 0.0,
-        "ctc_change_b": 0.0,
-        "snap_change_b": 0.0,
-    })
+        "state_deltas": {},
+    }
+    baseline_scenario.update(_zero_fiscal_row())
+    scenarios.append(baseline_scenario)
 
     for pct in shift_levels:
         if pct == 0.0:
@@ -219,6 +345,8 @@ def run_shift_sweep(
         metrics = _extract_results(branch, label)
         rev = revenue_components(branch)
         delta = net_fiscal_impact(rev, base_rev)
+        scenario_states = state_revenue_components(branch)
+        state_deltas = _state_delta_rows(scenario_states, base_states)
         if microdata_output_dir:
             if verbose:
                 print(f"  Writing household microdata for {label}...")
@@ -231,7 +359,7 @@ def run_shift_sweep(
                 )
             )
 
-        scenarios.append({
+        row = {
             "shift_pct": int(pct * 100),
             "label": label,
             "net_gini": metrics["net_gini"],
@@ -247,19 +375,16 @@ def run_shift_sweep(
             "market_top_0_1_share": metrics["market_top_0_1_share"],
             "spm_poverty_rate": metrics["spm_poverty_rate"],
             "fed_revenue_b": metrics["fed_revenue"] / 1e9,
-            "revenue_change_b": delta["total_change"] / 1e9,
-            "income_tax_change_b": delta["income_tax_change"] / 1e9,
-            "employee_payroll_change_b": delta["employee_payroll_change"] / 1e9,
-            "employer_payroll_change_b": delta["employer_payroll_change"] / 1e9,
-            "eitc_change_b": delta["eitc_change"] / 1e9,
-            "ctc_change_b": delta["ctc_change"] / 1e9,
-            "snap_change_b": delta["snap_change"] / 1e9,
-        })
+            "state_deltas": state_deltas,
+        }
+        row.update(_fiscal_row(delta))
+        scenarios.append(row)
 
         if verbose:
             print(f"  Net Gini: {metrics['net_gini']:.4f}  Market Gini: {metrics['market_gini']:.4f}")
             print(f"  Poverty: {metrics['spm_poverty_rate']:.2%}")
             print(f"  Revenue change: ${delta['total_change']/1e9:+.1f}B")
+            print(f"  Identity residual: ${delta['_identity_residual']/1e9:+.2f}B")
 
         del branch
         del sim
@@ -297,7 +422,7 @@ def main():
             f"  {s['market_gini']:.4f}"
             f"  {s['net_gini']:.4f}"
             f"  {s['spm_poverty_rate']:.2%}"
-            f"  ${s['revenue_change_b']:>+.1f}B"
+            f"  ${s['total_rev_change_b']:>+.1f}B"
         )
 
 

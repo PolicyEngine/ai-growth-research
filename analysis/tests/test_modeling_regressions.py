@@ -224,41 +224,35 @@ def test_shift_sweep_uses_fresh_simulation_for_each_shift_level():
 
     def fake_revenue_components(sim):
         pct = sim.shift_pct
+        # Minimal stub matching the new aggregate-based schema.
         return {
-            "income_tax": 1_000 + pct * 100,
-            "employee_payroll_tax": 500 - pct * 50,
+            "household_tax_before_refundable_credits": 2_000 + pct * 100,
+            "household_refundable_tax_credits": 300 + pct * 20,
+            "household_benefits": 800 + pct * 20,
             "employer_payroll_tax": 500 - pct * 50,
-            "eitc": 100 + pct * 10,
-            "ctc": 200 + pct * 10,
-            "snap": 300 + pct * 10,
         }
 
     def fake_net_fiscal_impact(rev, base_rev):
-        return {
-            "total_change": (
-                (rev["income_tax"] - base_rev["income_tax"])
-                + (rev["employee_payroll_tax"] - base_rev["employee_payroll_tax"])
-                + (rev["employer_payroll_tax"] - base_rev["employer_payroll_tax"])
-                - (rev["eitc"] - base_rev["eitc"])
-                - (rev["ctc"] - base_rev["ctc"])
-                - (rev["snap"] - base_rev["snap"])
-            ),
-            "income_tax_change": rev["income_tax"] - base_rev["income_tax"],
-            "employee_payroll_change": (
-                rev["employee_payroll_tax"] - base_rev["employee_payroll_tax"]
-            ),
-            "employer_payroll_change": (
-                rev["employer_payroll_tax"] - base_rev["employer_payroll_tax"]
-            ),
-            "eitc_change": rev["eitc"] - base_rev["eitc"],
-            "ctc_change": rev["ctc"] - base_rev["ctc"],
-            "snap_change": rev["snap"] - base_rev["snap"],
+        delta = {
+            f"{k}_change": rev.get(k, 0) - base_rev.get(k, 0) for k in rev
         }
+        delta["total_change"] = (
+            delta["household_tax_before_refundable_credits_change"]
+            + delta["employer_payroll_tax_change"]
+            - delta["household_refundable_tax_credits_change"]
+            - delta["household_benefits_change"]
+        )
+        delta["_identity_residual"] = 0.0
+        return delta
+
+    def fake_state_revenue_components(sim):
+        return {}
 
     sweep._apply_shift = fake_apply_shift
     sweep._extract_results = fake_extract_results
     sweep.revenue_components = fake_revenue_components
     sweep.net_fiscal_impact = fake_net_fiscal_impact
+    sweep.state_revenue_components = fake_state_revenue_components
 
     result = sweep.run_shift_sweep(
         shift_levels=[0.0, 0.1, 0.2],
@@ -280,9 +274,18 @@ def test_shift_sweep_uses_fresh_simulation_for_each_shift_level():
     assert result["metadata"]["model_url"] == sweep.MODEL_URL
     assert result["metadata"]["policyengine_version"]
     assert result["metadata"]["policyengine_us_version"]
-    assert result["scenarios"][0]["revenue_change_b"] == pytest.approx(0.0)
-    assert result["scenarios"][1]["income_tax_change_b"] == pytest.approx(10 / 1e9)
-    assert result["scenarios"][2]["revenue_change_b"] == pytest.approx(-6 / 1e9)
+    assert result["scenarios"][0]["total_rev_change_b"] == pytest.approx(0.0)
+    # At pct=0.1: Δtax=+10, Δrefundable=+2, Δbenefits=+2, Δemployer=-5
+    # total = 10 + (-5) - 2 - 2 = +1
+    assert result["scenarios"][1]["household_tax_change_b"] == pytest.approx(10 / 1e9)
+    assert result["scenarios"][1]["total_rev_change_b"] == pytest.approx(1 / 1e9)
+    # At pct=0.2: Δtax=+20, Δrefundable=+4, Δbenefits=+4, Δemployer=-10
+    # total = 20 + (-10) - 4 - 4 = +2
+    assert result["scenarios"][2]["total_rev_change_b"] == pytest.approx(2 / 1e9)
+    # Legacy aliases still populated.
+    assert result["scenarios"][1]["revenue_change_b"] == pytest.approx(
+        result["scenarios"][1]["total_rev_change_b"]
+    )
     assert created[0].kind == "baseline"
     assert created[1].kind == "sweep_10"
     assert created[2].kind == "sweep_20"
