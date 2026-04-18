@@ -25,32 +25,29 @@ import "./ShiftSweep.css";
 
 const REVENUE_BUCKETS = [
   {
-    key: "rev_hh_tax",
-    label: "Household tax before refundable credits",
-    color: "#227773",
-    description:
-      "Federal income tax before refundable credits + state income tax before refundable credits + employee payroll + self-employment tax.",
+    key: "rev_fed_income_tax",
+    label: "Federal income tax (before refundable credits)",
+    color: "#17354F",
   },
   {
-    key: "rev_employer",
-    label: "Employer payroll tax",
-    color: "#5DD4CF",
-    description:
-      "Employer-side Social Security and Medicare tax; falls as wages are stripped out.",
+    key: "rev_state_tax",
+    label: "State income tax (before refundable credits)",
+    color: "#2C6496",
+  },
+  {
+    key: "rev_payroll_all",
+    label: "Payroll tax (employee + employer + self-employment)",
+    color: "#DD6B20",
   },
   {
     key: "rev_refundable",
     label: "Refundable credits (negated)",
-    color: "#DD6B20",
-    description:
-      "Federal + state refundable tax credits. Shown as a negative contribution to government revenue.",
+    color: "#F59E0B",
   },
   {
     key: "rev_benefits",
     label: "Benefits (negated)",
-    color: "#F59E0B",
-    description:
-      "All federal + state + local benefits (SNAP, SSI, TANF, Medicaid, housing, etc.). Shown as a negative contribution.",
+    color: "#B45309",
   },
 ];
 
@@ -194,8 +191,17 @@ function dataForChart(sweepData) {
     netTop0_1: scenario.net_top_0_1_share,
     revenue: scenario.revenue_change_b,
     // Decomposition (positive = net contribution to government revenue).
-    rev_hh_tax: scenario.household_tax_change_b ?? 0,
-    rev_employer: scenario.employer_payroll_change_b ?? 0,
+    // Buckets are chosen so each line is monotone in the shift (the only
+    // real sign reversal is refundable credits at 100%, driven by EITC
+    // collapse once earned income hits zero).
+    rev_fed_income_tax:
+      scenario.fed_income_tax_before_refundable_credits_change_b ?? 0,
+    rev_state_tax: scenario.state_tax_before_refundable_credits_change_b ?? 0,
+    rev_payroll_all:
+      (scenario.employer_payroll_change_b ?? 0) +
+      (scenario.employee_ss_tax_change_b ?? 0) +
+      (scenario.employee_medicare_tax_change_b ?? 0) +
+      (scenario.self_employment_tax_change_b ?? 0),
     rev_refundable: -(scenario.refundable_credits_change_b ?? 0),
     rev_benefits: -(scenario.benefits_change_b ?? 0),
     // Federal income-tax attribution (signed; nonref is flipped so positive
@@ -309,26 +315,19 @@ function RevenueDecompositionChart({
   axisLabel,
   showTotalLine = true,
 }) {
-  const stackValues = chartData.flatMap((row) => {
-    const pos = buckets
-      .map((b) => row[b.key])
-      .filter((v) => v > 0)
-      .reduce((a, b) => a + b, 0);
-    const neg = buckets
-      .map((b) => row[b.key])
-      .filter((v) => v < 0)
-      .reduce((a, b) => a + b, 0);
-    return [pos, neg, row.revenue];
+  const values = chartData.flatMap((row) => {
+    const bucketValues = buckets.map((b) => row[b.key]).filter((v) => Number.isFinite(v));
+    return showTotalLine ? [...bucketValues, row.revenue] : bucketValues;
   });
-  const dataMin = Math.min(0, ...stackValues);
-  const dataMax = Math.max(0, ...stackValues);
+  const dataMin = Math.min(0, ...values);
+  const dataMax = Math.max(0, ...values);
   const ticks = niceTicks(dataMin, dataMax, 6);
 
   return (
     <>
       <h3 className="analysis-chart-title">{title}</h3>
       <ResponsiveContainer width="100%" height={420}>
-        <ComposedChart
+        <LineChart
           data={chartData}
           margin={{ left: 20, right: 30, top: 10, bottom: 40 }}
         >
@@ -347,7 +346,9 @@ function RevenueDecompositionChart({
           <YAxis
             ticks={ticks}
             domain={[ticks[0], ticks[ticks.length - 1]]}
-            tickFormatter={(v) => `${currencySymbol}${v >= 0 ? "+" : ""}${v.toFixed(0)}B`}
+            tickFormatter={(v) =>
+              `${currencySymbol}${v >= 0 ? "+" : ""}${v.toFixed(0)}B`
+            }
             tick={{ fontSize: 12 }}
             label={{
               value: axisLabel,
@@ -371,11 +372,14 @@ function RevenueDecompositionChart({
           />
           <Legend wrapperStyle={{ fontSize: 12, paddingTop: 8 }} />
           {buckets.map((bucket) => (
-            <Bar
+            <Line
               key={bucket.key}
+              type="monotone"
               dataKey={bucket.key}
-              stackId="decomposition"
-              fill={bucket.color}
+              stroke={bucket.color}
+              strokeWidth={2}
+              dot={{ r: 2.5 }}
+              activeDot={{ r: 4 }}
               name={bucket.label}
               isAnimationActive={false}
             />
@@ -385,14 +389,15 @@ function RevenueDecompositionChart({
               type="monotone"
               dataKey="revenue"
               stroke="#1a202c"
-              strokeWidth={2.5}
+              strokeWidth={3}
+              strokeDasharray="4 2"
               dot={{ r: 3, fill: "#1a202c" }}
               activeDot={{ r: 5 }}
-              name="Net revenue change (total)"
+              name="Net (sum of components)"
               isAnimationActive={false}
             />
           )}
-        </ComposedChart>
+        </LineChart>
       </ResponsiveContainer>
     </>
   );
