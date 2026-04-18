@@ -195,8 +195,22 @@ MTR_SOURCES = [
 ]
 
 MTR_TAX_TARGETS = [
-    ("income_tax", "fed_income_tax"),
-    ("income_tax_before_refundable_credits", "fed_income_tax_before_refundable_credits"),
+    # (output_key, [PE variable(s) to sum]).
+    ("fed_income_tax", ["income_tax"]),
+    (
+        "fed_income_tax_before_refundable_credits",
+        ["income_tax_before_refundable_credits"],
+    ),
+    (
+        "fed_income_plus_payroll_tax",
+        [
+            "income_tax",
+            "employer_payroll_tax",
+            "employee_social_security_tax",
+            "employee_medicare_tax",
+            "self_employment_tax",
+        ],
+    ),
 ]
 
 MTR_DELTA_PCT = 0.01
@@ -245,11 +259,19 @@ def _federal_mtrs(sim, branch_prefix="mtr"):
         if not branches:
             return []
 
-        base_totals = {
-            target: float(
-                sim.calculate(target, map_to="household", period=YEAR).sum()
+        def _sum_vars(source_sim, variables):
+            return sum(
+                float(
+                    source_sim.calculate(
+                        v, map_to="household", period=YEAR
+                    ).sum()
+                )
+                for v in variables
             )
-            for target, _ in MTR_TAX_TARGETS
+
+        base_totals = {
+            key: _sum_vars(sim, variables)
+            for key, variables in MTR_TAX_TARGETS
         }
 
         rows = []
@@ -261,11 +283,9 @@ def _federal_mtrs(sim, branch_prefix="mtr"):
                 "label": labels[source_var],
                 "positive_total_t": positive_total / 1e12,
             }
-            for target, key in MTR_TAX_TARGETS:
-                bumped_total = float(
-                    branch.calculate(target, map_to="household", period=YEAR).sum()
-                )
-                delta_tax = bumped_total - base_totals[target]
+            for key, variables in MTR_TAX_TARGETS:
+                bumped_total = _sum_vars(branch, variables)
+                delta_tax = bumped_total - base_totals[key]
                 row[f"{key}_mtr"] = (
                     delta_tax / delta_gross if delta_gross else None
                 )

@@ -541,21 +541,27 @@ function FederalMtrChart({ sweepData, metric }) {
   const dataMax = Math.max(...values);
   const ticks = niceTicks(dataMin, Math.max(dataMax, 0.05), 6);
 
-  const title =
-    metric === "fed_income_tax_mtr"
-      ? "Dollar-weighted federal income tax MTR (after refundable credits)"
-      : "Dollar-weighted federal income tax MTR (before refundable credits)";
+  const titleByMetric = {
+    fed_income_tax_mtr:
+      "Dollar-weighted federal income tax MTR (after refundable credits)",
+    fed_income_tax_before_refundable_credits_mtr:
+      "Dollar-weighted federal income tax MTR (before refundable credits)",
+    fed_income_plus_payroll_tax_mtr:
+      "Dollar-weighted federal income + payroll tax MTR",
+  };
+  const title = titleByMetric[metric] ?? "Dollar-weighted federal MTR";
+  const descriptionByMetric = {
+    fed_income_plus_payroll_tax_mtr:
+      "Each line shows the dollar-weighted marginal tax rate on a +1% bump in that income source against federal income tax (after refundable credits) + employer + employee payroll + self-employment tax. Labor sources now bear FICA on top of income tax; capital sources don't, so the gap reverses relative to income-tax-only.",
+  };
+  const description =
+    descriptionByMetric[metric] ??
+    "Each line shows the dollar-weighted marginal tax rate on a +1% bump in that income source. Labor sources typically pay lower rates than concentrated capital sources when measured on income tax alone because capital income is held predominantly by top-bracket households.";
 
   return (
     <div className="shift-sweep-mtr-chart">
       <h3 className="analysis-chart-title">{title}</h3>
-      <p className="shift-sweep-description">
-        Each line shows the dollar-weighted marginal tax rate on a marginal 1%
-        bump in that income source, evaluated at each shift level. Labor
-        sources (orange) typically pay lower rates than concentrated capital
-        sources (blue/teal) because capital income is held predominantly by
-        top-bracket households.
-      </p>
+      <p className="shift-sweep-description">{description}</p>
       <ResponsiveContainer width="100%" height={380}>
         <LineChart
           data={chartData}
@@ -1073,7 +1079,7 @@ function ShiftSweep({ sweepData = defaultSweepData }) {
           ) && (
             <FederalMtrChart
               sweepData={sweepData}
-              metric="fed_income_tax_mtr"
+              metric="fed_income_plus_payroll_tax_mtr"
             />
           )}
 
