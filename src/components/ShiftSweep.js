@@ -374,11 +374,23 @@ function RevenueDecompositionChart({
   title,
   axisLabel,
   showTotalLine = true,
+  unit = "dollars",
+  denominatorB = null, // denominator in $B, used when unit === "share"
 }) {
-  // Separate positive and negative stack totals per row so y-domain covers
-  // the full visible area. Each bucket is monotone on one side (refundable
-  // credits wobble near zero but are classified with the other transfers).
-  const values = chartData.flatMap((row) => {
+  // Share mode scales each bucket value by 100 / denominatorB.
+  const scale = unit === "share" && denominatorB ? 100 / denominatorB : 1;
+  const scaledData = chartData.map((row) => {
+    const next = { ...row };
+    for (const bucket of buckets) {
+      if (row[bucket.key] != null) {
+        next[bucket.key] = row[bucket.key] * scale;
+      }
+    }
+    if (row.revenue != null) next.revenue = row.revenue * scale;
+    return next;
+  });
+
+  const values = scaledData.flatMap((row) => {
     const pos = buckets
       .map((b) => Math.max(0, row[b.key] ?? 0))
       .reduce((a, b) => a + b, 0);
@@ -391,12 +403,25 @@ function RevenueDecompositionChart({
   const dataMax = Math.max(0, ...values);
   const ticks = niceTicks(dataMin, dataMax, 6);
 
+  const tickFormatter = (v) =>
+    unit === "share"
+      ? `${v >= 0 ? "+" : ""}${v.toFixed(1)}%`
+      : `${currencySymbol}${v >= 0 ? "+" : ""}${v.toFixed(0)}B`;
+  const tooltipFormatter = (v) =>
+    unit === "share"
+      ? `${v >= 0 ? "+" : ""}${v.toFixed(2)}%`
+      : `${currencySymbol}${v >= 0 ? "+" : ""}${v.toFixed(1)}B`;
+  const resolvedAxisLabel =
+    unit === "share"
+      ? "Change vs baseline (% of income + payroll tax revenue)"
+      : axisLabel;
+
   return (
     <>
       <h3 className="analysis-chart-title">{title}</h3>
       <ResponsiveContainer width="100%" height={420}>
         <ComposedChart
-          data={chartData}
+          data={scaledData}
           margin={{ left: 20, right: 30, top: 10, bottom: 40 }}
           stackOffset="sign"
         >
@@ -415,12 +440,10 @@ function RevenueDecompositionChart({
           <YAxis
             ticks={ticks}
             domain={[ticks[0], ticks[ticks.length - 1]]}
-            tickFormatter={(v) =>
-              `${currencySymbol}${v >= 0 ? "+" : ""}${v.toFixed(0)}B`
-            }
+            tickFormatter={tickFormatter}
             tick={{ fontSize: 12 }}
             label={{
-              value: axisLabel,
+              value: resolvedAxisLabel,
               angle: -90,
               position: "insideLeft",
               offset: -10,
@@ -430,12 +453,9 @@ function RevenueDecompositionChart({
           <ReferenceLine y={0} stroke="#718096" strokeDasharray="4 4" />
           <Tooltip
             contentStyle={TOOLTIP_STYLE}
-            formatter={(value, name) => [
-              `${currencySymbol}${value >= 0 ? "+" : ""}${value.toFixed(1)}B`,
-              name,
-            ]}
+            formatter={(value, name) => [tooltipFormatter(value), name]}
             labelFormatter={(value) =>
-              chartData.find((row) => row.shift === value)?.label ??
+              scaledData.find((row) => row.shift === value)?.label ??
               `${value}% shift`
             }
           />
@@ -596,8 +616,9 @@ function FederalMtrChart({ sweepData, metric }) {
   );
 }
 
-function StateExposureChart({ sweepData, currencySymbol }) {
+function StateExposureChart({ sweepData, currencySymbol, unit = "dollars" }) {
   const [selectedShift, setSelectedShift] = useState(50);
+  const baselineTotals = sweepData?.metadata?.baseline_facts?.totals;
 
   const { ranked, availableShifts } = useMemo(() => {
     const withDeltas = sweepData.scenarios.filter(
@@ -609,31 +630,50 @@ function StateExposureChart({ sweepData, currencySymbol }) {
     if (!scenario) {
       return { ranked: [], availableShifts: shifts };
     }
-    const rows = Object.entries(scenario.state_deltas).map(([code, d]) => ({
-      state: code,
-      stateTax: d.state_tax_before_refundable_credits_change_b ?? 0,
-      stateRef: d.state_refundable_credits_change_b ?? 0,
-      stateBen: d.state_benefits_change_b ?? 0,
-      stateNet:
-        (d.state_tax_before_refundable_credits_change_b ?? 0) -
-        (d.state_refundable_credits_change_b ?? 0) -
-        (d.state_benefits_change_b ?? 0),
-      capGains: d.capital_gains_tax_change_b ?? 0,
-      niit: d.niit_change_b ?? 0,
-      amt: d.amt_change_b ?? 0,
-      householdTax: d.household_tax_before_refundable_credits_change_b ?? 0,
-    }));
-    rows.sort((a, b) => b.stateNet - a.stateNet);
-    return { ranked: rows, availableShifts: shifts };
-  }, [sweepData, selectedShift]);
+    const rows = Object.entries(scenario.state_deltas).map(([code, d]) => {
+      const stateTax = d.state_tax_before_refundable_credits_change_b ?? 0;
+      const stateRef = d.state_refundable_credits_change_b ?? 0;
+      const stateBen = d.state_benefits_change_b ?? 0;
+      const netDollarsB = stateTax - stateRef - stateBen;
+      // Denominator in $B for share mode: state's own baseline net state
+      // revenue (tax − refundable credits − state benefits).
+      const baseline = baselineTotals?.per_state?.[code];
+      const denominatorB = baseline
+        ? ((baseline.household_state_tax_before_refundable_credits ?? 0) -
+            (baseline.household_refundable_state_tax_credits ?? 0) -
+            (baseline.household_state_benefits ?? 0)) /
+          1e9
+        : null;
+      const shareValue =
+        unit === "share" && denominatorB && denominatorB !== 0
+          ? (netDollarsB / denominatorB) * 100
+          : null;
+      return {
+        state: code,
+        stateTax,
+        stateRef,
+        stateBen,
+        stateNet: unit === "share" && shareValue != null
+          ? shareValue
+          : netDollarsB,
+        stateNetDollarsB: netDollarsB,
+        stateNetShare: shareValue,
+        denominatorB,
+      };
+    });
+    // Drop states with no meaningful denominator in share mode.
+    const valid = rows.filter(
+      (r) => unit !== "share" || Number.isFinite(r.stateNetShare),
+    );
+    valid.sort((a, b) => b.stateNet - a.stateNet);
+    return { ranked: valid, availableShifts: shifts };
+  }, [sweepData, selectedShift, baselineTotals, unit]);
 
   if (ranked.length === 0) {
     return null;
   }
 
-  const top = ranked.slice(0, 10);
-  const bottom = ranked.slice(-5).reverse();
-  const display = [...top, ...bottom];
+  const display = ranked;
   const values = display.map((r) => r.stateNet);
   const dataMin = Math.min(0, ...values);
   const dataMax = Math.max(0, ...values);
@@ -667,15 +707,19 @@ function StateExposureChart({ sweepData, currencySymbol }) {
         </div>
       </div>
       <p className="shift-sweep-description">
-        Net change in state revenue by state: state income tax before refundable
-        credits, minus refundable state credits, minus state-funded benefits.
-        Top 10 gainers and 5 largest losers shown.
+        All states with a state income tax, sorted descending by net change
+        in state revenue at the selected shift level. Net = state income tax
+        before refundable credits − refundable state credits − state-funded
+        benefits. Teal gains, orange loses.
+        {unit === "share"
+          ? " In share mode, each state's change is expressed as % of its own baseline net state revenue — states without income tax (FL, TX, etc.) are dropped."
+          : ""}
       </p>
-      <ResponsiveContainer width="100%" height={Math.max(320, display.length * 26)}>
+      <ResponsiveContainer width="100%" height={Math.max(320, display.length * 22)}>
         <BarChart
           data={display}
           layout="vertical"
-          margin={{ left: 10, right: 30, top: 10, bottom: 20 }}
+          margin={{ left: 10, right: 30, top: 10, bottom: 30 }}
         >
           <CartesianGrid stroke="#e2e8f0" strokeDasharray="3 3" />
           <XAxis
@@ -683,21 +727,35 @@ function StateExposureChart({ sweepData, currencySymbol }) {
             ticks={ticks}
             domain={[ticks[0], ticks[ticks.length - 1]]}
             tickFormatter={(v) =>
-              `${currencySymbol}${v >= 0 ? "+" : ""}${v.toFixed(0)}B`
+              unit === "share"
+                ? `${v >= 0 ? "+" : ""}${v.toFixed(0)}%`
+                : `${currencySymbol}${v >= 0 ? "+" : ""}${v.toFixed(0)}B`
             }
             tick={{ fontSize: 12 }}
+            label={{
+              value:
+                unit === "share"
+                  ? "Change in state net revenue vs baseline (% of own baseline)"
+                  : `Change in state net revenue vs baseline (${currencySymbol}B)`,
+              position: "bottom",
+              offset: 0,
+              style: { fontSize: 13 },
+            }}
           />
           <YAxis
             type="category"
             dataKey="state"
             width={40}
-            tick={{ fontSize: 12, fontWeight: 600 }}
+            interval={0}
+            tick={{ fontSize: 11, fontWeight: 600 }}
           />
           <ReferenceLine x={0} stroke="#718096" />
           <Tooltip
             contentStyle={TOOLTIP_STYLE}
             formatter={(value, name) => [
-              `${currencySymbol}${value >= 0 ? "+" : ""}${value.toFixed(2)}B`,
+              unit === "share"
+                ? `${value >= 0 ? "+" : ""}${value.toFixed(2)}%`
+                : `${currencySymbol}${value >= 0 ? "+" : ""}${value.toFixed(2)}B`,
               name,
             ]}
             labelFormatter={(label) => `State: ${label}`}
@@ -720,10 +778,40 @@ function StateExposureChart({ sweepData, currencySymbol }) {
   );
 }
 
+const UNIT_OPTIONS = [
+  { key: "dollars", label: "$ billions" },
+  { key: "share", label: "% of income + payroll tax revenue" },
+];
+
+function federalBaseDenominator(totals) {
+  if (!totals?.national) return null;
+  const n = totals.national;
+  return (
+    (n.fed_income_tax ?? 0) +
+    (n.employer_payroll_tax ?? 0) +
+    (n.employee_social_security_tax ?? 0) +
+    (n.employee_medicare_tax ?? 0) +
+    (n.self_employment_tax ?? 0)
+  );
+}
+
+function stateBaseDenominator(totals, code) {
+  const state = totals?.per_state?.[code];
+  if (!state) return null;
+  const own = (
+    (state.household_state_tax_before_refundable_credits ?? 0) -
+    (state.household_refundable_state_tax_credits ?? 0) -
+    (state.household_state_benefits ?? 0)
+  );
+  // Fall back to federal base if the state has no income tax (e.g. TX, FL).
+  return own > 0 ? own : null;
+}
+
 function ShiftSweep({ sweepData = defaultSweepData }) {
   const [selectedMeasure, setSelectedMeasure] = useState("gini");
   const [selectedConcept, setSelectedConcept] = useState("net");
   const [selectedJurisdiction, setSelectedJurisdiction] = useState("federal");
+  const [selectedUnit, setSelectedUnit] = useState("dollars");
   const measureNav = useRovingRadioGroup(MEASURE_OPTIONS, selectedMeasure);
   const conceptNav = useRovingRadioGroup(CONCEPT_OPTIONS, selectedConcept);
   const metadata = sweepData.metadata ?? {};
@@ -755,6 +843,12 @@ function ShiftSweep({ sweepData = defaultSweepData }) {
   const hasStateDeltas = sweepData.scenarios.some(
     (s) => s.state_deltas && Object.keys(s.state_deltas).length > 0,
   );
+  const baselineTotals = metadata?.baseline_facts?.totals;
+  const hasBaselineTotals = Boolean(baselineTotals?.national);
+  const decompositionDenominatorB =
+    selectedJurisdiction === "federal"
+      ? federalBaseDenominator(baselineTotals) / 1e9
+      : stateBaseDenominator(baselineTotals, selectedJurisdiction) / 1e9;
 
   return (
     <div id="shift-sweep" className="analysis-section">
@@ -848,6 +942,29 @@ function ShiftSweep({ sweepData = defaultSweepData }) {
                 </select>
               </div>
             )}
+            {isRevenue && hasBaselineTotals && (
+              <div className="shift-sweep-control-group">
+                <div className="shift-sweep-label">Units</div>
+                <div
+                  className="analysis-tabs shift-sweep-tabs"
+                  role="radiogroup"
+                  aria-label="Units"
+                >
+                  {UNIT_OPTIONS.map((option) => (
+                    <button
+                      key={option.key}
+                      type="button"
+                      role="radio"
+                      aria-checked={selectedUnit === option.key}
+                      className={`analysis-tab ${selectedUnit === option.key ? "active" : ""}`}
+                      onClick={() => setSelectedUnit(option.key)}
+                    >
+                      {option.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
           <p className="shift-sweep-description">{config.description}</p>
         </div>
@@ -867,6 +984,8 @@ function ShiftSweep({ sweepData = defaultSweepData }) {
                 : `${selectedJurisdiction} state revenue decomposition`
             }
             axisLabel={config.axisLabel}
+            unit={selectedUnit}
+            denominatorB={decompositionDenominatorB}
           />
         ) : (
           <>
@@ -940,6 +1059,12 @@ function ShiftSweep({ sweepData = defaultSweepData }) {
             title="Federal income tax decomposition"
             axisLabel={`Change vs baseline (${currencySymbol}B)`}
             showTotalLine={false}
+            unit={selectedUnit}
+            denominatorB={
+              selectedUnit === "share"
+                ? federalBaseDenominator(baselineTotals) / 1e9
+                : null
+            }
           />
         )}
 
@@ -958,6 +1083,7 @@ function ShiftSweep({ sweepData = defaultSweepData }) {
           <StateExposureChart
             sweepData={sweepData}
             currencySymbol={currencySymbol}
+            unit={selectedUnit}
           />
         )}
 
