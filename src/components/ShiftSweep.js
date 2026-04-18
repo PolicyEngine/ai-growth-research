@@ -409,7 +409,7 @@ function RevenueDecompositionChart({
       : `${currencySymbol}${v >= 0 ? "+" : ""}${v.toFixed(0)}B`;
   const tooltipFormatter = (v) =>
     unit === "share"
-      ? `${v >= 0 ? "+" : ""}${v.toFixed(2)}%`
+      ? `${v >= 0 ? "+" : ""}${v.toFixed(1)}%`
       : `${currencySymbol}${v >= 0 ? "+" : ""}${v.toFixed(1)}B`;
   const resolvedAxisLabel =
     unit === "share"
@@ -728,7 +728,7 @@ function StateExposureChart({ sweepData, currencySymbol, unit = "dollars" }) {
             domain={[ticks[0], ticks[ticks.length - 1]]}
             tickFormatter={(v) =>
               unit === "share"
-                ? `${v >= 0 ? "+" : ""}${v.toFixed(0)}%`
+                ? `${v >= 0 ? "+" : ""}${v.toFixed(1)}%`
                 : `${currencySymbol}${v >= 0 ? "+" : ""}${v.toFixed(0)}B`
             }
             tick={{ fontSize: 12 }}
@@ -754,7 +754,7 @@ function StateExposureChart({ sweepData, currencySymbol, unit = "dollars" }) {
             contentStyle={TOOLTIP_STYLE}
             formatter={(value, name) => [
               unit === "share"
-                ? `${value >= 0 ? "+" : ""}${value.toFixed(2)}%`
+                ? `${value >= 0 ? "+" : ""}${value.toFixed(1)}%`
                 : `${currencySymbol}${value >= 0 ? "+" : ""}${value.toFixed(2)}B`,
               name,
             ]}
