@@ -83,6 +83,17 @@ const FED_INCOME_TAX_BUCKETS = [
   },
 ];
 
+const MTR_SOURCE_COLORS = {
+  employment_income: "#DD6B20",
+  self_employment_income: "#B45309",
+  long_term_capital_gains: "#17354F",
+  short_term_capital_gains: "#2C6496",
+  qualified_dividend_income: "#39C6C0",
+  non_qualified_dividend_income: "#227773",
+  taxable_interest_income: "#5DD4CF",
+  rental_income: "#8B5CF6",
+};
+
 const billionFmt = (value, { precision = 0, currencySymbol = "$" } = {}) => {
   const sign = value >= 0 ? "+" : "";
   return `${currencySymbol}${sign}${value.toFixed(precision)}B`;
@@ -455,6 +466,127 @@ function RevenueDecompositionChart({
   );
 }
 
+function FederalMtrChart({ sweepData, metric }) {
+  // metric: "fed_income_tax_mtr" (after refundable credits) or
+  //         "fed_income_tax_before_refundable_credits_mtr"
+  const scenarios = sweepData.scenarios ?? [];
+  const perSource = useMemo(() => {
+    const bySource = new Map();
+    for (const scenario of scenarios) {
+      const shift = scenario.shift_pct;
+      const mtrs = scenario.federal_mtrs ?? [];
+      for (const row of mtrs) {
+        const key = row.source;
+        if (!bySource.has(key)) {
+          bySource.set(key, { source: key, label: row.label, points: [] });
+        }
+        const value = row[metric];
+        if (Number.isFinite(value)) {
+          bySource.get(key).points.push({ shift, value });
+        }
+      }
+    }
+    return Array.from(bySource.values());
+  }, [scenarios, metric]);
+
+  const chartData = scenarios
+    .filter((s) => (s.federal_mtrs ?? []).length > 0)
+    .map((s) => {
+      const row = { shift: s.shift_pct, label: s.label };
+      for (const mtrRow of s.federal_mtrs ?? []) {
+        const value = mtrRow[metric];
+        if (Number.isFinite(value)) {
+          row[mtrRow.source] = value;
+        }
+      }
+      return row;
+    });
+
+  if (perSource.length === 0 || chartData.length === 0) {
+    return null;
+  }
+
+  const values = chartData.flatMap((r) =>
+    perSource.map((s) => r[s.source]).filter((v) => Number.isFinite(v)),
+  );
+  const dataMin = Math.min(0, ...values);
+  const dataMax = Math.max(...values);
+  const ticks = niceTicks(dataMin, Math.max(dataMax, 0.05), 6);
+
+  const title =
+    metric === "fed_income_tax_mtr"
+      ? "Dollar-weighted federal income tax MTR (after refundable credits)"
+      : "Dollar-weighted federal income tax MTR (before refundable credits)";
+
+  return (
+    <div className="shift-sweep-mtr-chart">
+      <h3 className="analysis-chart-title">{title}</h3>
+      <p className="shift-sweep-description">
+        Each line shows the dollar-weighted marginal tax rate on a marginal 1%
+        bump in that income source, evaluated at each shift level. Labor
+        sources (orange) typically pay lower rates than concentrated capital
+        sources (blue/teal) because capital income is held predominantly by
+        top-bracket households.
+      </p>
+      <ResponsiveContainer width="100%" height={380}>
+        <LineChart
+          data={chartData}
+          margin={{ left: 20, right: 30, top: 10, bottom: 40 }}
+        >
+          <CartesianGrid stroke="#e2e8f0" strokeDasharray="3 3" />
+          <XAxis
+            dataKey="shift"
+            tickFormatter={(value) => `${value}%`}
+            tick={{ fontSize: 12 }}
+            label={{
+              value: "Share of labor income shifted to capital",
+              position: "bottom",
+              offset: 0,
+              style: { fontSize: 13 },
+            }}
+          />
+          <YAxis
+            ticks={ticks}
+            domain={[ticks[0], ticks[ticks.length - 1]]}
+            tickFormatter={(v) => `${(v * 100).toFixed(0)}%`}
+            tick={{ fontSize: 12 }}
+            label={{
+              value: "Dollar-weighted MTR",
+              angle: -90,
+              position: "insideLeft",
+              offset: -10,
+              style: { fontSize: 13 },
+            }}
+          />
+          <ReferenceLine y={0} stroke="#718096" strokeDasharray="4 4" />
+          <Tooltip
+            contentStyle={TOOLTIP_STYLE}
+            formatter={(value, name) => [`${(value * 100).toFixed(1)}%`, name]}
+            labelFormatter={(value) =>
+              chartData.find((row) => row.shift === value)?.label ??
+              `${value}% shift`
+            }
+          />
+          <Legend wrapperStyle={{ fontSize: 12, paddingTop: 8 }} />
+          {perSource.map((s) => (
+            <Line
+              key={s.source}
+              type="monotone"
+              dataKey={s.source}
+              stroke={MTR_SOURCE_COLORS[s.source] ?? "#4a5568"}
+              strokeWidth={2}
+              dot={{ r: 2.5 }}
+              activeDot={{ r: 4 }}
+              name={s.label}
+              isAnimationActive={false}
+            />
+          ))}
+        </LineChart>
+      </ResponsiveContainer>
+    </div>
+  );
+}
+
 function StateExposureChart({ sweepData, currencySymbol }) {
   const [selectedShift, setSelectedShift] = useState(50);
 
@@ -801,6 +933,17 @@ function ShiftSweep({ sweepData = defaultSweepData }) {
             showTotalLine={false}
           />
         )}
+
+        {isRevenue &&
+          selectedJurisdiction === "federal" &&
+          sweepData.scenarios.some(
+            (s) => (s.federal_mtrs ?? []).length > 0,
+          ) && (
+            <FederalMtrChart
+              sweepData={sweepData}
+              metric="fed_income_tax_mtr"
+            />
+          )}
 
         {isRevenue && hasStateDeltas && (
           <StateExposureChart

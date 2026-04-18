@@ -182,6 +182,79 @@ POLICYENGINE_VERSION = (
 POLICYENGINE_US_VERSION = _package_version("policyengine-us") or "unknown"
 
 
+MTR_SOURCES = [
+    ("employment_income", "Employment"),
+    ("self_employment_income", "Self-employment"),
+    ("long_term_capital_gains", "Long-term capital gains"),
+    ("short_term_capital_gains", "Short-term capital gains"),
+    ("qualified_dividend_income", "Qualified dividends"),
+    ("non_qualified_dividend_income", "Ordinary dividends"),
+    ("taxable_interest_income", "Taxable interest"),
+    ("rental_income", "Rental income"),
+]
+
+MTR_TAX_TARGETS = [
+    ("income_tax", "fed_income_tax"),
+    ("income_tax_before_refundable_credits", "fed_income_tax_before_refundable_credits"),
+]
+
+MTR_DELTA_PCT = 0.01
+
+
+def _federal_mtrs(sim, branch_prefix="mtr"):
+    """Dollar-weighted federal income tax MTRs by income source.
+
+    Each source is bumped by +1% of its (positive) values on a fresh
+    sub-branch, then the change in federal income tax is divided by the
+    weighted dollar change in the source to get a dollar-weighted MTR.
+    `branch_prefix` lets the caller keep per-scenario branches from
+    clashing.
+    """
+    try:
+        rows = []
+        base_totals = {
+            target: float(
+                sim.calculate(target, map_to="household", period=YEAR).sum()
+            )
+            for target, _ in MTR_TAX_TARGETS
+        }
+
+        for source_var, source_label in MTR_SOURCES:
+            try:
+                original = sim.calculate(source_var, period=YEAR)
+            except Exception:
+                continue
+            raw = np.asarray(original, dtype=float)
+            weights = np.asarray(original.weights, dtype=float)
+            positive = np.where(raw > 0, raw, 0)
+            positive_total = float((positive * weights).sum())
+            if positive_total <= 0:
+                continue
+
+            branch_name = f"{branch_prefix}_{source_var}"[:48]
+            branch = sim.get_branch(branch_name)
+            branch.set_input(source_var, YEAR, raw + positive * MTR_DELTA_PCT)
+            delta_gross = positive_total * MTR_DELTA_PCT
+
+            row = {
+                "source": source_var,
+                "label": source_label,
+                "positive_total_t": positive_total / 1e12,
+            }
+            for target, key in MTR_TAX_TARGETS:
+                bumped_total = float(
+                    branch.calculate(target, map_to="household", period=YEAR).sum()
+                )
+                delta_tax = bumped_total - base_totals[target]
+                row[f"{key}_mtr"] = (
+                    delta_tax / delta_gross if delta_gross else None
+                )
+            rows.append(row)
+        return rows
+    except Exception:
+        return []
+
+
 def _baseline_facts(sim):
     """Return high-level baseline totals used in the website explainer."""
     try:
@@ -296,6 +369,7 @@ def run_shift_sweep(
     base_rev = revenue_components(baseline)
     base_states = state_revenue_components(baseline)
     metadata = _metadata(baseline)
+    baseline_mtrs = _federal_mtrs(baseline, branch_prefix="mtr_base")
     microdata_files = []
     if microdata_output_dir:
         if verbose:
@@ -329,6 +403,7 @@ def run_shift_sweep(
         "spm_poverty_rate": base_metrics["spm_poverty_rate"],
         "fed_revenue_b": base_metrics["fed_revenue"] / 1e9,
         "state_deltas": {},
+        "federal_mtrs": baseline_mtrs,
     }
     baseline_scenario.update(_zero_fiscal_row())
     scenarios.append(baseline_scenario)
@@ -347,6 +422,9 @@ def run_shift_sweep(
         delta = net_fiscal_impact(rev, base_rev)
         scenario_states = state_revenue_components(branch)
         state_deltas = _state_delta_rows(scenario_states, base_states)
+        scenario_mtrs = _federal_mtrs(
+            branch, branch_prefix=f"mtr_{int(pct * 100)}"
+        )
         if microdata_output_dir:
             if verbose:
                 print(f"  Writing household microdata for {label}...")
@@ -376,6 +454,7 @@ def run_shift_sweep(
             "spm_poverty_rate": metrics["spm_poverty_rate"],
             "fed_revenue_b": metrics["fed_revenue"] / 1e9,
             "state_deltas": state_deltas,
+            "federal_mtrs": scenario_mtrs,
         }
         row.update(_fiscal_row(delta))
         scenarios.append(row)
