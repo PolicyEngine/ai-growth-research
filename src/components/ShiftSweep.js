@@ -1,6 +1,11 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import {
+  Bar,
+  BarChart,
   CartesianGrid,
+  Cell,
+  ComposedChart,
+  Legend,
   Line,
   LineChart,
   ReferenceLine,
@@ -17,6 +22,65 @@ import { policyEngineLabel } from "../utils/modelMetadata";
 import { useRovingRadioGroup } from "../utils/useRovingRadioGroup";
 import "./AnalysisSection.css";
 import "./ShiftSweep.css";
+
+const REVENUE_BUCKETS = [
+  {
+    key: "rev_hh_tax",
+    label: "Household tax before refundable credits",
+    color: "#227773",
+    description:
+      "Federal income tax before refundable credits + state income tax before refundable credits + employee payroll + self-employment tax.",
+  },
+  {
+    key: "rev_employer",
+    label: "Employer payroll tax",
+    color: "#5DD4CF",
+    description:
+      "Employer-side Social Security and Medicare tax; falls as wages are stripped out.",
+  },
+  {
+    key: "rev_refundable",
+    label: "Refundable credits (negated)",
+    color: "#DD6B20",
+    description:
+      "Federal + state refundable tax credits. Shown as a negative contribution to government revenue.",
+  },
+  {
+    key: "rev_benefits",
+    label: "Benefits (negated)",
+    color: "#F59E0B",
+    description:
+      "All federal + state + local benefits (SNAP, SSI, TANF, Medicaid, housing, etc.). Shown as a negative contribution.",
+  },
+];
+
+const FED_INCOME_TAX_BUCKETS = [
+  {
+    key: "rev_fed_main",
+    label: "Main ordinary-rate tax",
+    color: "#17354F",
+  },
+  {
+    key: "rev_fed_capgains",
+    label: "Preferential capital gains / qualified div tax",
+    color: "#2C6496",
+  },
+  {
+    key: "rev_fed_amt",
+    label: "Alternative minimum tax",
+    color: "#39C6C0",
+  },
+  {
+    key: "rev_fed_niit",
+    label: "Net investment income tax (3.8%)",
+    color: "#227773",
+  },
+  {
+    key: "rev_fed_nonref",
+    label: "Nonrefundable credits reduction (−Δ)",
+    color: "#D7F6F4",
+  },
+];
 
 const billionFmt = (value, { precision = 0, currencySymbol = "$" } = {}) => {
   const sign = value >= 0 ? "+" : "";
@@ -129,6 +193,19 @@ function dataForChart(sweepData) {
     netTop1: scenario.net_top_1_share,
     netTop0_1: scenario.net_top_0_1_share,
     revenue: scenario.revenue_change_b,
+    // Decomposition (positive = net contribution to government revenue).
+    rev_hh_tax: scenario.household_tax_change_b ?? 0,
+    rev_employer: scenario.employer_payroll_change_b ?? 0,
+    rev_refundable: -(scenario.refundable_credits_change_b ?? 0),
+    rev_benefits: -(scenario.benefits_change_b ?? 0),
+    // Federal income-tax attribution (signed; nonref is flipped so positive
+    // means more tax collected because fewer credits were applied).
+    rev_fed_main: scenario.fed_main_rates_change_b ?? 0,
+    rev_fed_capgains: scenario.fed_capital_gains_tax_change_b ?? 0,
+    rev_fed_amt: scenario.fed_amt_change_b ?? 0,
+    rev_fed_niit: scenario.fed_niit_change_b ?? 0,
+    rev_fed_nonref: -(scenario.fed_nonrefundable_credits_change_b ?? 0),
+    state_deltas: scenario.state_deltas ?? {},
   }));
 }
 
@@ -208,14 +285,240 @@ function summaryForMetric(measureKey, conceptKey, config, chartData, metadata) {
     );
   }
 
+  const trough = chartData.reduce(
+    (min, row) => (row.revenue < min.revenue ? row : min),
+    chartData[0],
+  );
   return (
     <>
       {config.label} reaches {config.valueFormatter(shift50?.revenue ?? 0)} at a
-      50% shift and {config.valueFormatter(shift100?.revenue ?? 0)} at a 100%
-      shift.{" "}
+      50% shift, bottoms out at {config.valueFormatter(trough?.revenue ?? 0)} at
+      a {trough?.shift ?? 80}% shift, and rebounds to{" "}
+      {config.valueFormatter(shift100?.revenue ?? 0)} at a 100% shift.{" "}
       {metadata.revenue_summary_note ??
-        "Payroll-tax losses outweigh the income-tax gains all the way across the sweep."}
+        "Capital-gains tax and NIIT accelerate at the top of the sweep, while EITC and refundable CTC collapse once labor income approaches zero."}
     </>
+  );
+}
+
+function RevenueDecompositionChart({
+  chartData,
+  currencySymbol,
+  buckets,
+  title,
+  axisLabel,
+  showTotalLine = true,
+}) {
+  const stackValues = chartData.flatMap((row) => {
+    const pos = buckets
+      .map((b) => row[b.key])
+      .filter((v) => v > 0)
+      .reduce((a, b) => a + b, 0);
+    const neg = buckets
+      .map((b) => row[b.key])
+      .filter((v) => v < 0)
+      .reduce((a, b) => a + b, 0);
+    return [pos, neg, row.revenue];
+  });
+  const dataMin = Math.min(0, ...stackValues);
+  const dataMax = Math.max(0, ...stackValues);
+  const ticks = niceTicks(dataMin, dataMax, 6);
+
+  return (
+    <>
+      <h3 className="analysis-chart-title">{title}</h3>
+      <ResponsiveContainer width="100%" height={420}>
+        <ComposedChart
+          data={chartData}
+          margin={{ left: 20, right: 30, top: 10, bottom: 40 }}
+        >
+          <CartesianGrid stroke="#e2e8f0" strokeDasharray="3 3" />
+          <XAxis
+            dataKey="shift"
+            tickFormatter={(value) => `${value}%`}
+            tick={{ fontSize: 12 }}
+            label={{
+              value: "Share of labor income shifted to capital",
+              position: "bottom",
+              offset: 0,
+              style: { fontSize: 13 },
+            }}
+          />
+          <YAxis
+            ticks={ticks}
+            domain={[ticks[0], ticks[ticks.length - 1]]}
+            tickFormatter={(v) => `${currencySymbol}${v >= 0 ? "+" : ""}${v.toFixed(0)}B`}
+            tick={{ fontSize: 12 }}
+            label={{
+              value: axisLabel,
+              angle: -90,
+              position: "insideLeft",
+              offset: -10,
+              style: { fontSize: 13 },
+            }}
+          />
+          <ReferenceLine y={0} stroke="#718096" strokeDasharray="4 4" />
+          <Tooltip
+            contentStyle={TOOLTIP_STYLE}
+            formatter={(value, name) => [
+              `${currencySymbol}${value >= 0 ? "+" : ""}${value.toFixed(1)}B`,
+              name,
+            ]}
+            labelFormatter={(value) =>
+              chartData.find((row) => row.shift === value)?.label ??
+              `${value}% shift`
+            }
+          />
+          <Legend wrapperStyle={{ fontSize: 12, paddingTop: 8 }} />
+          {buckets.map((bucket) => (
+            <Bar
+              key={bucket.key}
+              dataKey={bucket.key}
+              stackId="decomposition"
+              fill={bucket.color}
+              name={bucket.label}
+              isAnimationActive={false}
+            />
+          ))}
+          {showTotalLine && (
+            <Line
+              type="monotone"
+              dataKey="revenue"
+              stroke="#1a202c"
+              strokeWidth={2.5}
+              dot={{ r: 3, fill: "#1a202c" }}
+              activeDot={{ r: 5 }}
+              name="Net revenue change (total)"
+              isAnimationActive={false}
+            />
+          )}
+        </ComposedChart>
+      </ResponsiveContainer>
+    </>
+  );
+}
+
+function StateExposureChart({ sweepData, currencySymbol }) {
+  const [selectedShift, setSelectedShift] = useState(50);
+
+  const { ranked, availableShifts } = useMemo(() => {
+    const withDeltas = sweepData.scenarios.filter(
+      (s) => s.state_deltas && Object.keys(s.state_deltas).length > 0,
+    );
+    const shifts = withDeltas.map((s) => s.shift_pct);
+    const scenario =
+      withDeltas.find((s) => s.shift_pct === selectedShift) ?? withDeltas[0];
+    if (!scenario) {
+      return { ranked: [], availableShifts: shifts };
+    }
+    const rows = Object.entries(scenario.state_deltas).map(([code, d]) => ({
+      state: code,
+      stateTax: d.state_tax_before_refundable_credits_change_b ?? 0,
+      stateRef: d.state_refundable_credits_change_b ?? 0,
+      stateBen: d.state_benefits_change_b ?? 0,
+      stateNet:
+        (d.state_tax_before_refundable_credits_change_b ?? 0) -
+        (d.state_refundable_credits_change_b ?? 0) -
+        (d.state_benefits_change_b ?? 0),
+      capGains: d.capital_gains_tax_change_b ?? 0,
+      niit: d.niit_change_b ?? 0,
+      amt: d.amt_change_b ?? 0,
+      householdTax: d.household_tax_before_refundable_credits_change_b ?? 0,
+    }));
+    rows.sort((a, b) => b.stateNet - a.stateNet);
+    return { ranked: rows, availableShifts: shifts };
+  }, [sweepData, selectedShift]);
+
+  if (ranked.length === 0) {
+    return null;
+  }
+
+  const top = ranked.slice(0, 10);
+  const bottom = ranked.slice(-5).reverse();
+  const display = [...top, ...bottom];
+  const values = display.map((r) => r.stateNet);
+  const dataMin = Math.min(0, ...values);
+  const dataMax = Math.max(0, ...values);
+  const ticks = niceTicks(dataMin, dataMax, 6);
+
+  return (
+    <div className="shift-sweep-state-exposure">
+      <div className="shift-sweep-state-header">
+        <h3 className="analysis-chart-title">
+          State revenue exposure at {selectedShift}% shift
+        </h3>
+        <div
+          className="analysis-tabs shift-sweep-tabs"
+          role="radiogroup"
+          aria-label="Shift percentage"
+        >
+          {availableShifts
+            .filter((pct) => pct % 20 === 0 && pct > 0)
+            .map((pct) => (
+              <button
+                key={pct}
+                type="button"
+                role="radio"
+                aria-checked={selectedShift === pct}
+                className={`analysis-tab ${selectedShift === pct ? "active" : ""}`}
+                onClick={() => setSelectedShift(pct)}
+              >
+                {pct}%
+              </button>
+            ))}
+        </div>
+      </div>
+      <p className="shift-sweep-description">
+        Net change in state revenue by state: state income tax before refundable
+        credits, minus refundable state credits, minus state-funded benefits.
+        Top 10 gainers and 5 largest losers shown.
+      </p>
+      <ResponsiveContainer width="100%" height={Math.max(320, display.length * 26)}>
+        <BarChart
+          data={display}
+          layout="vertical"
+          margin={{ left: 10, right: 30, top: 10, bottom: 20 }}
+        >
+          <CartesianGrid stroke="#e2e8f0" strokeDasharray="3 3" />
+          <XAxis
+            type="number"
+            ticks={ticks}
+            domain={[ticks[0], ticks[ticks.length - 1]]}
+            tickFormatter={(v) =>
+              `${currencySymbol}${v >= 0 ? "+" : ""}${v.toFixed(0)}B`
+            }
+            tick={{ fontSize: 12 }}
+          />
+          <YAxis
+            type="category"
+            dataKey="state"
+            width={40}
+            tick={{ fontSize: 12, fontWeight: 600 }}
+          />
+          <ReferenceLine x={0} stroke="#718096" />
+          <Tooltip
+            contentStyle={TOOLTIP_STYLE}
+            formatter={(value, name) => [
+              `${currencySymbol}${value >= 0 ? "+" : ""}${value.toFixed(2)}B`,
+              name,
+            ]}
+            labelFormatter={(label) => `State: ${label}`}
+          />
+          <Bar
+            dataKey="stateNet"
+            name="Net state revenue change"
+            isAnimationActive={false}
+          >
+            {display.map((row, i) => (
+              <Cell
+                key={`cell-${i}`}
+                fill={row.stateNet >= 0 ? "#227773" : "#DD6B20"}
+              />
+            ))}
+          </Bar>
+        </BarChart>
+      </ResponsiveContainer>
+    </div>
   );
 }
 
@@ -240,6 +543,10 @@ function ShiftSweep({ sweepData = defaultSweepData }) {
   );
   const isRevenue = selectedMeasure === "revenue";
   const revenueFormatter = measures.revenue.valueFormatter;
+  const currencySymbol = metadata.currency_symbol ?? "$";
+  const hasStateDeltas = sweepData.scenarios.some(
+    (s) => s.state_deltas && Object.keys(s.state_deltas).length > 0,
+  );
 
   return (
     <div id="shift-sweep" className="analysis-section">
@@ -312,6 +619,16 @@ function ShiftSweep({ sweepData = defaultSweepData }) {
           <p className="shift-sweep-description">{config.description}</p>
         </div>
 
+        {isRevenue ? (
+          <RevenueDecompositionChart
+            chartData={chartData}
+            currencySymbol={currencySymbol}
+            buckets={REVENUE_BUCKETS}
+            title={`${config.label} by shift level`}
+            axisLabel={config.axisLabel}
+          />
+        ) : (
+          <>
         <h3 className="analysis-chart-title">{config.label} by shift level</h3>
         <ResponsiveContainer width="100%" height={400}>
           <LineChart
@@ -371,6 +688,26 @@ function ShiftSweep({ sweepData = defaultSweepData }) {
             />
           </LineChart>
         </ResponsiveContainer>
+          </>
+        )}
+
+        {isRevenue && (
+          <RevenueDecompositionChart
+            chartData={chartData}
+            currencySymbol={currencySymbol}
+            buckets={FED_INCOME_TAX_BUCKETS}
+            title="Federal income tax decomposition"
+            axisLabel={`Change vs baseline (${currencySymbol}B)`}
+            showTotalLine={false}
+          />
+        )}
+
+        {isRevenue && hasStateDeltas && (
+          <StateExposureChart
+            sweepData={sweepData}
+            currencySymbol={currencySymbol}
+          />
+        )}
 
         <div className="analysis-callout">
           <IconInfoCircle size={20} stroke={1.5} />

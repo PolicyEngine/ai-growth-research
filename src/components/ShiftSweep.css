@@ -39,6 +39,21 @@
   text-decoration: underline;
 }
 
+.shift-sweep-state-exposure {
+  margin-top: var(--space-8);
+  padding-top: var(--space-6);
+  border-top: 1px solid var(--pe-gray-200);
+}
+
+.shift-sweep-state-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  margin-bottom: var(--space-3);
+}
+
 @media (max-width: 768px) {
   .shift-sweep-description {
     max-width: none;
@@ -46,5 +61,10 @@
 
   .shift-sweep-tabs {
     width: 100%;
+  }
+
+  .shift-sweep-state-header {
+    flex-direction: column;
+    align-items: flex-start;
   }
 }
