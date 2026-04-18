@@ -475,7 +475,10 @@ function RevenueDecompositionChart({
 function FederalMtrChart({ sweepData, metric }) {
   // metric: "fed_income_tax_mtr" (after refundable credits) or
   //         "fed_income_tax_before_refundable_credits_mtr"
-  const scenarios = sweepData.scenarios ?? [];
+  const scenarios = useMemo(
+    () => sweepData.scenarios ?? [],
+    [sweepData],
+  );
   const perSource = useMemo(() => {
     const bySource = new Map();
     for (const scenario of scenarios) {
