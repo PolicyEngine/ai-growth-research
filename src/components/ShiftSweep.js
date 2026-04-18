@@ -81,6 +81,11 @@ const FED_INCOME_TAX_BUCKETS = [
     label: "Nonrefundable credits reduction (−Δ)",
     color: "#D7F6F4",
   },
+  {
+    key: "rev_fed_other",
+    label: "Other (recapture, unreported payroll, retirement penalty)",
+    color: "#85E0DC",
+  },
 ];
 
 const MTR_SOURCE_COLORS = {
@@ -255,6 +260,7 @@ function dataForChart(sweepData) {
     rev_fed_amt: scenario.fed_amt_change_b ?? 0,
     rev_fed_niit: scenario.fed_niit_change_b ?? 0,
     rev_fed_nonref: -(scenario.fed_nonrefundable_credits_change_b ?? 0),
+    rev_fed_other: scenario.fed_other_income_tax_items_change_b ?? 0,
     _scenario: scenario,
   }));
 }

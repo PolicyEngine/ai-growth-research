@@ -46,6 +46,7 @@ _FISCAL_FIELDS = [
     ("fed_amt_change_b", "fed_alternative_minimum_tax_change"),
     ("fed_niit_change_b", "fed_net_investment_income_tax_change"),
     ("fed_nonrefundable_credits_change_b", "fed_nonrefundable_credits_change"),
+    ("fed_other_income_tax_items_change_b", "fed_other_income_tax_items_change"),
     # Payroll / self-employment (already inside household_tax_before...).
     ("employee_ss_tax_change_b", "employee_social_security_tax_change"),
     ("employee_medicare_tax_change_b", "employee_medicare_tax_change"),
@@ -209,16 +210,19 @@ def _federal_mtrs(sim, branch_prefix="mtr"):
     weighted dollar change in the source to get a dollar-weighted MTR.
     `branch_prefix` lets the caller keep per-scenario branches from
     clashing.
+
+    Branches must be created (with modified inputs) BEFORE any downstream
+    variable is computed on the parent sim, otherwise PE's memoization
+    propagates the parent value to child branches and all MTRs come out
+    zero. Phases:
+      1. Create all branches + set modified inputs
+      2. Compute base totals on parent sim
+      3. Compute bumped totals on each branch
     """
     try:
-        rows = []
-        base_totals = {
-            target: float(
-                sim.calculate(target, map_to="household", period=YEAR).sum()
-            )
-            for target, _ in MTR_TAX_TARGETS
-        }
-
+        branches = {}
+        positive_totals = {}
+        labels = {}
         for source_var, source_label in MTR_SOURCES:
             try:
                 original = sim.calculate(source_var, period=YEAR)
@@ -234,11 +238,27 @@ def _federal_mtrs(sim, branch_prefix="mtr"):
             branch_name = f"{branch_prefix}_{source_var}"[:48]
             branch = sim.get_branch(branch_name)
             branch.set_input(source_var, YEAR, raw + positive * MTR_DELTA_PCT)
-            delta_gross = positive_total * MTR_DELTA_PCT
+            branches[source_var] = branch
+            positive_totals[source_var] = positive_total
+            labels[source_var] = source_label
 
+        if not branches:
+            return []
+
+        base_totals = {
+            target: float(
+                sim.calculate(target, map_to="household", period=YEAR).sum()
+            )
+            for target, _ in MTR_TAX_TARGETS
+        }
+
+        rows = []
+        for source_var, branch in branches.items():
+            positive_total = positive_totals[source_var]
+            delta_gross = positive_total * MTR_DELTA_PCT
             row = {
                 "source": source_var,
-                "label": source_label,
+                "label": labels[source_var],
                 "positive_total_t": positive_total / 1e12,
             }
             for target, key in MTR_TAX_TARGETS:
@@ -365,11 +385,14 @@ def run_shift_sweep(
     baseline = microsim_factory()
     if verbose:
         print("\nComputing baseline metrics...")
+    # Compute MTRs FIRST on fresh sim — PE memoizes downstream variables
+    # on the parent, and once they're cached the MTR sub-branches return
+    # the parent value instead of recomputing against the bumped input.
+    baseline_mtrs = _federal_mtrs(baseline, branch_prefix="mtr_base")
     base_metrics = _extract_results(baseline, "Baseline")
     base_rev = revenue_components(baseline)
     base_states = state_revenue_components(baseline)
     metadata = _metadata(baseline)
-    baseline_mtrs = _federal_mtrs(baseline, branch_prefix="mtr_base")
     microdata_files = []
     if microdata_output_dir:
         if verbose:
@@ -417,14 +440,16 @@ def run_shift_sweep(
 
         sim = microsim_factory()
         branch, _ = _apply_shift(sim, f"sweep_{int(pct * 100)}", pct)
+        # Compute MTRs on a freshly-shifted branch before any downstream
+        # metrics populate PE's memoization cache.
+        scenario_mtrs = _federal_mtrs(
+            branch, branch_prefix=f"mtr_{int(pct * 100)}"
+        )
         metrics = _extract_results(branch, label)
         rev = revenue_components(branch)
         delta = net_fiscal_impact(rev, base_rev)
         scenario_states = state_revenue_components(branch)
         state_deltas = _state_delta_rows(scenario_states, base_states)
-        scenario_mtrs = _federal_mtrs(
-            branch, branch_prefix=f"mtr_{int(pct * 100)}"
-        )
         if microdata_output_dir:
             if verbose:
                 print(f"  Writing household microdata for {label}...")

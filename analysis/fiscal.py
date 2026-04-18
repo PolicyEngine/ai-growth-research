@@ -87,6 +87,16 @@ def revenue_components(sim):
         "fed_nonrefundable_credits": _tu_sum(
             sim, "income_tax_capped_non_refundable_credits"
         ),
+        # Catch-all for the three minor additive items inside
+        # income_tax_before_refundable_credits that don't get their own line:
+        # recapture of investment credit, unreported payroll tax,
+        # qualified-retirement penalty. Near-zero in current law, but
+        # exposed so the 5-bucket decomposition stays MECE for any reform.
+        "fed_other_income_tax_items": (
+            _tu_sum(sim, "recapture_of_investment_credit")
+            + _tu_sum(sim, "unreported_payroll_tax")
+            + _tu_sum(sim, "qualified_retirement_penalty")
+        ),
         "fed_income_tax_before_refundable_credits": _tu_sum(
             sim, "income_tax_before_refundable_credits"
         ),
