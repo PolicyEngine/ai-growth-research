@@ -1,5 +1,6 @@
 import React, { useMemo, useState } from "react";
 import {
+  Area,
   Bar,
   BarChart,
   CartesianGrid,
@@ -315,9 +316,17 @@ function RevenueDecompositionChart({
   axisLabel,
   showTotalLine = true,
 }) {
+  // Separate positive and negative stack totals per row so y-domain covers
+  // the full visible area. Each bucket is monotone on one side (refundable
+  // credits wobble near zero but are classified with the other transfers).
   const values = chartData.flatMap((row) => {
-    const bucketValues = buckets.map((b) => row[b.key]).filter((v) => Number.isFinite(v));
-    return showTotalLine ? [...bucketValues, row.revenue] : bucketValues;
+    const pos = buckets
+      .map((b) => Math.max(0, row[b.key] ?? 0))
+      .reduce((a, b) => a + b, 0);
+    const neg = buckets
+      .map((b) => Math.min(0, row[b.key] ?? 0))
+      .reduce((a, b) => a + b, 0);
+    return [pos, neg, showTotalLine ? row.revenue : 0];
   });
   const dataMin = Math.min(0, ...values);
   const dataMax = Math.max(0, ...values);
@@ -327,9 +336,10 @@ function RevenueDecompositionChart({
     <>
       <h3 className="analysis-chart-title">{title}</h3>
       <ResponsiveContainer width="100%" height={420}>
-        <LineChart
+        <ComposedChart
           data={chartData}
           margin={{ left: 20, right: 30, top: 10, bottom: 40 }}
+          stackOffset="sign"
         >
           <CartesianGrid stroke="#e2e8f0" strokeDasharray="3 3" />
           <XAxis
@@ -372,14 +382,14 @@ function RevenueDecompositionChart({
           />
           <Legend wrapperStyle={{ fontSize: 12, paddingTop: 8 }} />
           {buckets.map((bucket) => (
-            <Line
+            <Area
               key={bucket.key}
-              type="monotone"
+              type="linear"
               dataKey={bucket.key}
+              stackId="decomposition"
               stroke={bucket.color}
-              strokeWidth={2}
-              dot={{ r: 2.5 }}
-              activeDot={{ r: 4 }}
+              fill={bucket.color}
+              fillOpacity={0.75}
               name={bucket.label}
               isAnimationActive={false}
             />
@@ -397,7 +407,7 @@ function RevenueDecompositionChart({
               isAnimationActive={false}
             />
           )}
-        </LineChart>
+        </ComposedChart>
       </ResponsiveContainer>
     </>
   );
