@@ -39,6 +39,21 @@
   text-decoration: underline;
 }
 
+.shift-sweep-select {
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--pe-gray-300);
+  border-radius: var(--radius-md, 6px);
+  background: white;
+  font-size: 0.9rem;
+  color: var(--pe-gray-800);
+  cursor: pointer;
+}
+
+.shift-sweep-select:focus {
+  outline: 2px solid var(--pe-teal-500);
+  outline-offset: 1px;
+}
+
 .shift-sweep-state-exposure {
   margin-top: var(--space-8);
   padding-top: var(--space-6);

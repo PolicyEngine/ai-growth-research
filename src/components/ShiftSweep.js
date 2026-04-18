@@ -24,16 +24,11 @@ import { useRovingRadioGroup } from "../utils/useRovingRadioGroup";
 import "./AnalysisSection.css";
 import "./ShiftSweep.css";
 
-const REVENUE_BUCKETS = [
+const FEDERAL_BUCKETS = [
   {
-    key: "rev_fed_income_tax",
-    label: "Federal income tax (before refundable credits)",
+    key: "rev_fed_income_tax_net",
+    label: "Net federal income tax (after refundable credits)",
     color: "#17354F",
-  },
-  {
-    key: "rev_state_tax",
-    label: "State income tax (before refundable credits)",
-    color: "#2C6496",
   },
   {
     key: "rev_payroll_all",
@@ -41,13 +36,21 @@ const REVENUE_BUCKETS = [
     color: "#DD6B20",
   },
   {
-    key: "rev_refundable",
-    label: "Refundable credits (negated)",
-    color: "#F59E0B",
+    key: "rev_fed_benefits",
+    label: "Federal benefits (negated)",
+    color: "#B45309",
+  },
+];
+
+const STATE_BUCKETS = [
+  {
+    key: "rev_state_income_tax_net",
+    label: "Net state income tax (after refundable credits)",
+    color: "#17354F",
   },
   {
-    key: "rev_benefits",
-    label: "Benefits (negated)",
+    key: "rev_state_benefits",
+    label: "State benefits (negated)",
     color: "#B45309",
   },
 ];
@@ -178,6 +181,45 @@ function measuresForMetadata(metadata) {
 const MEASURE_OPTIONS = ["gini", "top10", "top1", "top0_1", "revenue"];
 const CONCEPT_OPTIONS = ["market", "net"];
 
+function buildFederalRow(scenario) {
+  const fedRefundable =
+    (scenario.refundable_credits_change_b ?? 0) -
+    (scenario.state_refundable_credits_change_b ?? 0);
+  const rev_fed_income_tax_net =
+    (scenario.fed_income_tax_before_refundable_credits_change_b ?? 0) -
+    fedRefundable;
+  const rev_payroll_all =
+    (scenario.employer_payroll_change_b ?? 0) +
+    (scenario.employee_ss_tax_change_b ?? 0) +
+    (scenario.employee_medicare_tax_change_b ?? 0) +
+    (scenario.self_employment_tax_change_b ?? 0);
+  // Federal benefits = total household benefits − state-funded benefits.
+  const fedBenefitsChange =
+    (scenario.benefits_change_b ?? 0) -
+    (scenario.state_benefits_change_b ?? 0);
+  const rev_fed_benefits = -fedBenefitsChange;
+  return {
+    rev_fed_income_tax_net,
+    rev_payroll_all,
+    rev_fed_benefits,
+    revenue:
+      rev_fed_income_tax_net + rev_payroll_all + rev_fed_benefits,
+  };
+}
+
+function buildStateRow(scenario, stateCode) {
+  const state = scenario.state_deltas?.[stateCode] ?? {};
+  const rev_state_income_tax_net =
+    (state.state_tax_before_refundable_credits_change_b ?? 0) -
+    (state.state_refundable_credits_change_b ?? 0);
+  const rev_state_benefits = -(state.state_benefits_change_b ?? 0);
+  return {
+    rev_state_income_tax_net,
+    rev_state_benefits,
+    revenue: rev_state_income_tax_net + rev_state_benefits,
+  };
+}
+
 function dataForChart(sweepData) {
   return sweepData.scenarios.map((scenario) => ({
     shift: scenario.shift_pct,
@@ -190,21 +232,11 @@ function dataForChart(sweepData) {
     netTop10: scenario.net_top_10_share,
     netTop1: scenario.net_top_1_share,
     netTop0_1: scenario.net_top_0_1_share,
+    // revenue here is fed+state overall — other charts use it; the
+    // decomposition chart recomputes the total for the selected
+    // jurisdiction.
     revenue: scenario.revenue_change_b,
-    // Decomposition (positive = net contribution to government revenue).
-    // Buckets are chosen so each line is monotone in the shift (the only
-    // real sign reversal is refundable credits at 100%, driven by EITC
-    // collapse once earned income hits zero).
-    rev_fed_income_tax:
-      scenario.fed_income_tax_before_refundable_credits_change_b ?? 0,
-    rev_state_tax: scenario.state_tax_before_refundable_credits_change_b ?? 0,
-    rev_payroll_all:
-      (scenario.employer_payroll_change_b ?? 0) +
-      (scenario.employee_ss_tax_change_b ?? 0) +
-      (scenario.employee_medicare_tax_change_b ?? 0) +
-      (scenario.self_employment_tax_change_b ?? 0),
-    rev_refundable: -(scenario.refundable_credits_change_b ?? 0),
-    rev_benefits: -(scenario.benefits_change_b ?? 0),
+    state_deltas: scenario.state_deltas ?? {},
     // Federal income-tax attribution (signed; nonref is flipped so positive
     // means more tax collected because fewer credits were applied).
     rev_fed_main: scenario.fed_main_rates_change_b ?? 0,
@@ -212,8 +244,18 @@ function dataForChart(sweepData) {
     rev_fed_amt: scenario.fed_amt_change_b ?? 0,
     rev_fed_niit: scenario.fed_niit_change_b ?? 0,
     rev_fed_nonref: -(scenario.fed_nonrefundable_credits_change_b ?? 0),
-    state_deltas: scenario.state_deltas ?? {},
+    _scenario: scenario,
   }));
+}
+
+function decompositionDataForJurisdiction(chartData, jurisdiction) {
+  return chartData.map((row) => {
+    const extras =
+      jurisdiction === "federal"
+        ? buildFederalRow(row._scenario)
+        : buildStateRow(row._scenario, jurisdiction);
+    return { ...row, ...extras };
+  });
 }
 
 function metricConfig(measures, measureKey, conceptKey) {
@@ -540,6 +582,7 @@ function StateExposureChart({ sweepData, currencySymbol }) {
 function ShiftSweep({ sweepData = defaultSweepData }) {
   const [selectedMeasure, setSelectedMeasure] = useState("gini");
   const [selectedConcept, setSelectedConcept] = useState("net");
+  const [selectedJurisdiction, setSelectedJurisdiction] = useState("federal");
   const measureNav = useRovingRadioGroup(MEASURE_OPTIONS, selectedMeasure);
   const conceptNav = useRovingRadioGroup(CONCEPT_OPTIONS, selectedConcept);
   const metadata = sweepData.metadata ?? {};
@@ -549,6 +592,15 @@ function ShiftSweep({ sweepData = defaultSweepData }) {
   const laborTitle = metadata.labor_title ?? "Labor";
   const measures = measuresForMetadata(metadata);
   const chartData = dataForChart(sweepData);
+  const jurisdictionData = useMemo(
+    () => decompositionDataForJurisdiction(chartData, selectedJurisdiction),
+    [chartData, selectedJurisdiction],
+  );
+  const stateOptions = useMemo(() => {
+    const last = sweepData.scenarios[sweepData.scenarios.length - 1];
+    const deltas = last?.state_deltas ?? {};
+    return Object.keys(deltas).sort();
+  }, [sweepData]);
   const config = metricConfig(measures, selectedMeasure, selectedConcept);
   const yTicks = yTicksForConfig(config, chartData);
   const shiftTicks = niceTicks(
@@ -630,16 +682,49 @@ function ShiftSweep({ sweepData = defaultSweepData }) {
                 </div>
               </div>
             )}
+            {isRevenue && stateOptions.length > 0 && (
+              <div className="shift-sweep-control-group">
+                <label
+                  htmlFor="jurisdiction-select"
+                  className="shift-sweep-label"
+                >
+                  Jurisdiction
+                </label>
+                <select
+                  id="jurisdiction-select"
+                  className="shift-sweep-select"
+                  value={selectedJurisdiction}
+                  onChange={(event) =>
+                    setSelectedJurisdiction(event.target.value)
+                  }
+                >
+                  <option value="federal">Federal</option>
+                  {stateOptions.map((code) => (
+                    <option key={code} value={code}>
+                      {code}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            )}
           </div>
           <p className="shift-sweep-description">{config.description}</p>
         </div>
 
         {isRevenue ? (
           <RevenueDecompositionChart
-            chartData={chartData}
+            chartData={jurisdictionData}
             currencySymbol={currencySymbol}
-            buckets={REVENUE_BUCKETS}
-            title={`${config.label} by shift level`}
+            buckets={
+              selectedJurisdiction === "federal"
+                ? FEDERAL_BUCKETS
+                : STATE_BUCKETS
+            }
+            title={
+              selectedJurisdiction === "federal"
+                ? "Federal revenue decomposition"
+                : `${selectedJurisdiction} state revenue decomposition`
+            }
             axisLabel={config.axisLabel}
           />
         ) : (
@@ -706,7 +791,7 @@ function ShiftSweep({ sweepData = defaultSweepData }) {
           </>
         )}
 
-        {isRevenue && (
+        {isRevenue && selectedJurisdiction === "federal" && (
           <RevenueDecompositionChart
             chartData={chartData}
             currencySymbol={currencySymbol}
