@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import {
   Area,
   Bar,
@@ -205,15 +205,20 @@ function measuresForMetadata(metadata) {
         "Share of household income received by the top 0.1% of households.",
     },
     poverty: {
-      label: "SPM poverty rate",
+      label:
+        metadata.country_id === "uk"
+          ? "Poverty rate (AHC)"
+          : "SPM poverty rate",
       field: "Poverty",
       dataKey: "poverty",
       color: "#DD6B20",
-      axisLabel: "Share of people in SPM poverty",
+      axisLabel: "Share of people in poverty",
       valueFormatter: shareFmt,
       tooltipFormatter: shareTooltipFmt,
       description:
-        "Share of people with household resources below the Supplemental Poverty Measure threshold.",
+        metadata.country_id === "uk"
+          ? "Share of people below the UK absolute poverty line, after housing costs."
+          : "Share of people with household resources below the Supplemental Poverty Measure threshold.",
     },
     revenue: {
       label: metadata.revenue_label ?? "Net federal revenue change",
@@ -434,6 +439,7 @@ function RevenueDecompositionChart({
   showTotalLine = true,
   unit = "dollars",
   denominatorB = null, // denominator in $B, used when unit === "share"
+  laborTerm = "labor",
 }) {
   // Share mode scales each bucket value by 100 / denominatorB.
   const scale = unit === "share" && denominatorB ? 100 / denominatorB : 1;
@@ -488,7 +494,7 @@ function RevenueDecompositionChart({
             tickFormatter={(value) => `${value}%`}
             tick={{ fontSize: 12 }}
             label={{
-              value: "Share of labor income shifted to capital",
+              value: `Share of ${laborTerm} income shifted to capital`,
               position: "bottom",
               offset: 0,
               style: { fontSize: 13 },
@@ -556,6 +562,7 @@ function FederalMtrChart({ sweepData, metric }) {
     () => sweepData.scenarios ?? [],
     [sweepData],
   );
+  const laborTerm = sweepData?.metadata?.labor_label ?? "labor";
   const perSource = useMemo(() => {
     const bySource = new Map();
     for (const scenario of scenarios) {
@@ -637,7 +644,7 @@ function FederalMtrChart({ sweepData, metric }) {
             tickFormatter={(value) => `${value}%`}
             tick={{ fontSize: 12 }}
             label={{
-              value: "Share of labor income shifted to capital",
+              value: `Share of ${laborTerm} income shifted to capital`,
               position: "bottom",
               offset: 0,
               style: { fontSize: 13 },
@@ -743,6 +750,7 @@ function DecileImpactChart({ sweepData, unit = "dollars" }) {
                 type="button"
                 role="radio"
                 aria-checked={selectedShift === pct}
+                tabIndex={selectedShift === pct ? 0 : -1}
                 className={`analysis-tab ${selectedShift === pct ? "active" : ""}`}
                 onClick={() => setSelectedShift(pct)}
               >
@@ -904,6 +912,7 @@ function StateExposureChart({ sweepData, currencySymbol, unit = "dollars" }) {
                 type="button"
                 role="radio"
                 aria-checked={selectedShift === pct}
+                tabIndex={selectedShift === pct ? 0 : -1}
                 className={`analysis-tab ${selectedShift === pct ? "active" : ""}`}
                 onClick={() => setSelectedShift(pct)}
               >
@@ -1018,43 +1027,85 @@ function ShiftSweep({ sweepData = defaultSweepData }) {
   const [selectedConcept, setSelectedConcept] = useState("net");
   const [selectedJurisdiction, setSelectedJurisdiction] = useState("federal");
   const [selectedUnit, setSelectedUnit] = useState("dollars");
-  const measureNav = useRovingRadioGroup(MEASURE_OPTIONS, selectedMeasure);
-  const conceptNav = useRovingRadioGroup(CONCEPT_OPTIONS, selectedConcept);
-  const metadata = sweepData.metadata ?? {};
+  const metadata = useMemo(() => sweepData.metadata ?? {}, [sweepData]);
   const docsUrl = metadata.model_url ?? "https://www.policyengine.org/us/model";
   const modelLabel = policyEngineLabel(metadata);
   const laborTerm = metadata.labor_label ?? "labor";
   const laborTitle = metadata.labor_title ?? "Labor";
-  const measures = measuresForMetadata(metadata);
-  const chartData = dataForChart(sweepData);
-  const jurisdictionData = useMemo(
-    () => decompositionDataForJurisdiction(chartData, selectedJurisdiction),
-    [chartData, selectedJurisdiction],
-  );
+  const measures = useMemo(() => measuresForMetadata(metadata), [metadata]);
+  const chartData = useMemo(() => dataForChart(sweepData), [sweepData]);
   const stateOptions = useMemo(() => {
     const last = sweepData.scenarios[sweepData.scenarios.length - 1];
     const deltas = last?.state_deltas ?? {};
     return Object.keys(deltas).sort();
   }, [sweepData]);
-  const config = metricConfig(measures, selectedMeasure, selectedConcept);
-  const yTicks = yTicksForConfig(config, chartData);
-  const shiftTicks = niceTicks(
-    chartData[0].shift,
-    chartData[chartData.length - 1].shift,
-    11,
+  const hasPovertyData = useMemo(
+    () => chartData.some((row) => Number.isFinite(row.poverty) && row.poverty > 0),
+    [chartData],
+  );
+  const measureOptions = useMemo(
+    () =>
+      hasPovertyData
+        ? MEASURE_OPTIONS
+        : MEASURE_OPTIONS.filter((k) => k !== "poverty"),
+    [hasPovertyData],
+  );
+  const measureNav = useRovingRadioGroup(measureOptions, selectedMeasure);
+  const conceptNav = useRovingRadioGroup(CONCEPT_OPTIONS, selectedConcept);
+  // Reset jurisdiction + measure when the sweep data swaps (e.g. country
+  // change) so a "CA" pick on US doesn't linger on UK, or a "poverty" pick
+  // on US doesn't linger on UK where poverty data isn't populated.
+  useEffect(() => {
+    if (
+      selectedJurisdiction !== "federal" &&
+      !stateOptions.includes(selectedJurisdiction)
+    ) {
+      setSelectedJurisdiction("federal");
+    }
+    if (!measureOptions.includes(selectedMeasure)) {
+      setSelectedMeasure("gini");
+    }
+  }, [stateOptions, measureOptions, selectedJurisdiction, selectedMeasure]);
+  const jurisdictionData = useMemo(
+    () => decompositionDataForJurisdiction(chartData, selectedJurisdiction),
+    [chartData, selectedJurisdiction],
+  );
+  const config = useMemo(
+    () => metricConfig(measures, selectedMeasure, selectedConcept),
+    [measures, selectedMeasure, selectedConcept],
+  );
+  const yTicks = useMemo(
+    () => yTicksForConfig(config, chartData),
+    [config, chartData],
+  );
+  const shiftTicks = useMemo(
+    () =>
+      niceTicks(
+        chartData[0].shift,
+        chartData[chartData.length - 1].shift,
+        11,
+      ),
+    [chartData],
   );
   const isRevenue = selectedMeasure === "revenue";
   const revenueFormatter = measures.revenue.valueFormatter;
   const currencySymbol = metadata.currency_symbol ?? "$";
-  const hasStateDeltas = sweepData.scenarios.some(
-    (s) => s.state_deltas && Object.keys(s.state_deltas).length > 0,
+  const hasStateDeltas = useMemo(
+    () =>
+      sweepData.scenarios.some(
+        (s) => s.state_deltas && Object.keys(s.state_deltas).length > 0,
+      ),
+    [sweepData],
   );
   const baselineTotals = metadata?.baseline_facts?.totals;
   const hasBaselineTotals = Boolean(baselineTotals?.national);
-  const decompositionDenominatorB =
-    selectedJurisdiction === "federal"
-      ? federalBaseDenominator(baselineTotals) / 1e9
-      : stateBaseDenominator(baselineTotals, selectedJurisdiction) / 1e9;
+  const decompositionDenominatorB = useMemo(() => {
+    const dollars =
+      selectedJurisdiction === "federal"
+        ? federalBaseDenominator(baselineTotals)
+        : stateBaseDenominator(baselineTotals, selectedJurisdiction);
+    return dollars ? dollars / 1e9 : null;
+  }, [baselineTotals, selectedJurisdiction]);
 
   return (
     <div id="shift-sweep" className="analysis-section">
@@ -1080,7 +1131,7 @@ function ShiftSweep({ sweepData = defaultSweepData }) {
                 role="radiogroup"
                 aria-label="Measure"
               >
-                {MEASURE_OPTIONS.map((key) => (
+                {measureOptions.map((key) => (
                   <button
                     key={key}
                     ref={measureNav.getRef(key)}
@@ -1196,6 +1247,7 @@ function ShiftSweep({ sweepData = defaultSweepData }) {
             axisLabel={config.axisLabel}
             unit={selectedUnit}
             denominatorB={decompositionDenominatorB}
+            laborTerm={laborTerm}
           />
         ) : (
           <>
@@ -1273,10 +1325,11 @@ function ShiftSweep({ sweepData = defaultSweepData }) {
               showTotalLine={false}
               unit={selectedUnit}
               denominatorB={
-                selectedUnit === "share"
+                selectedUnit === "share" && baselineTotals
                   ? federalBaseDenominator(baselineTotals) / 1e9
                   : null
               }
+              laborTerm={laborTerm}
             />
           )}
 

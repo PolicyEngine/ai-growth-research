@@ -291,7 +291,11 @@ def _federal_mtrs(sim, branch_prefix="mtr"):
                 )
             rows.append(row)
         return rows
-    except Exception:
+    except Exception as exc:  # noqa: BLE001
+        import traceback
+
+        print(f"  _federal_mtrs failed: {exc}", flush=True)
+        traceback.print_exc()
         return []
 
 

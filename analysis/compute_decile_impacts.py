@@ -53,10 +53,6 @@ def main():
     total = cum[-1]
     decile_edges = [np.searchsorted(cum, total * i / 10) for i in range(1, 10)]
     decile_labels = np.zeros_like(market, dtype=int)
-    for i, idx in enumerate(sorted_idx):
-        # decile_of[idx] = 1..10
-        pass
-    # Vectorized assignment.
     decile_of_sorted = np.digitize(
         np.arange(len(sorted_idx)), decile_edges, right=False
     ) + 1
