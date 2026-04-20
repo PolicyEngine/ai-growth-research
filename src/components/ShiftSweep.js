@@ -204,6 +204,17 @@ function measuresForMetadata(metadata) {
       description:
         "Share of household income received by the top 0.1% of households.",
     },
+    poverty: {
+      label: "SPM poverty rate",
+      field: "Poverty",
+      dataKey: "poverty",
+      color: "#DD6B20",
+      axisLabel: "Share of people in SPM poverty",
+      valueFormatter: shareFmt,
+      tooltipFormatter: shareTooltipFmt,
+      description:
+        "Share of people with household resources below the Supplemental Poverty Measure threshold.",
+    },
     revenue: {
       label: metadata.revenue_label ?? "Net federal revenue change",
       field: "Revenue",
@@ -222,7 +233,14 @@ function measuresForMetadata(metadata) {
   };
 }
 
-const MEASURE_OPTIONS = ["gini", "top10", "top1", "top0_1", "revenue"];
+const MEASURE_OPTIONS = [
+  "gini",
+  "top10",
+  "top1",
+  "top0_1",
+  "poverty",
+  "revenue",
+];
 const CONCEPT_OPTIONS = ["market", "net"];
 
 function buildFederalRow(scenario) {
@@ -280,6 +298,7 @@ function dataForChart(sweepData) {
     // decomposition chart recomputes the total for the selected
     // jurisdiction.
     revenue: scenario.revenue_change_b,
+    poverty: scenario.spm_poverty_rate,
     state_deltas: scenario.state_deltas ?? {},
     // Federal income-tax attribution (signed; nonref is flipped so positive
     // means more tax collected because fewer credits were applied).
@@ -305,7 +324,7 @@ function decompositionDataForJurisdiction(chartData, jurisdiction) {
 
 function metricConfig(measures, measureKey, conceptKey) {
   const measure = measures[measureKey];
-  if (measureKey === "revenue") {
+  if (measureKey === "revenue" || measureKey === "poverty") {
     return measure;
   }
 
@@ -363,6 +382,17 @@ function summaryForMetric(measureKey, conceptKey, config, chartData, metadata) {
         {conceptKey === "net"
           ? "Current law dampens the shock, but it does not come close to offsetting it."
           : `This is the pre-tax, pre-transfer distributional effect of routing ${laborTerm} income through existing capital holdings.`}
+      </>
+    );
+  }
+
+  if (measureKey === "poverty") {
+    return (
+      <>
+        The SPM poverty rate rises from {shareTooltipFmt(startValue)} at
+        baseline to {shareTooltipFmt(endValue)} at a 100% shift. Refundable
+        credits and benefits cushion the very bottom, but as wages disappear
+        an increasing share of households fall below the SPM threshold.
       </>
     );
   }
@@ -1067,7 +1097,7 @@ function ShiftSweep({ sweepData = defaultSweepData }) {
                 ))}
               </div>
             </div>
-            {!isRevenue && (
+            {!isRevenue && selectedMeasure !== "poverty" && (
               <div className="shift-sweep-control-group">
                 <div className="shift-sweep-label">Income concept</div>
                 <div
