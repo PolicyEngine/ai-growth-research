@@ -21,6 +21,60 @@ function formatShare(value) {
   return value == null ? "-" : `${Math.round(value * 100)}%`;
 }
 
+function formatBillionsChange(value, currencySymbol) {
+  if (value == null) return "-";
+  const sign = value >= 0 ? "+" : "-";
+  return `${sign}${currencySymbol}${Math.abs(value).toFixed(0)}B`;
+}
+
+function formatPct1(value) {
+  return value == null ? "-" : `${(value * 100).toFixed(1)}%`;
+}
+
+function headlineFindings(sweepData) {
+  const scenarios = sweepData?.scenarios ?? [];
+  const baseline = scenarios.find((s) => s.shift_pct === 0);
+  const hundred = scenarios.find((s) => s.shift_pct === 100);
+  if (!baseline || !hundred) return null;
+  const trough = scenarios.reduce(
+    (min, row) =>
+      (row.total_rev_change_b ?? row.revenue_change_b ?? 0) <
+      (min.total_rev_change_b ?? min.revenue_change_b ?? 0)
+        ? row
+        : min,
+    baseline,
+  );
+  const deciles =
+    sweepData?.metadata?.baseline_facts?.decile_impacts?.scenarios ?? [];
+  const lastDecileScen = deciles.find((s) => s.shift_pct === 100);
+  const topDecilePct =
+    lastDecileScen?.deciles?.find((d) => d.decile === 10)?.pct_change ?? null;
+  let worstDecile = null;
+  let worstPct = null;
+  for (const d of lastDecileScen?.deciles ?? []) {
+    if (
+      Number.isFinite(d.pct_change) &&
+      d.decile !== 10 &&
+      (worstPct == null || d.pct_change < worstPct)
+    ) {
+      worstPct = d.pct_change;
+      worstDecile = d.decile;
+    }
+  }
+  return {
+    baselineGini: baseline.net_gini,
+    hundredGini: hundred.net_gini,
+    baselinePoverty: baseline.spm_poverty_rate,
+    hundredPoverty: hundred.spm_poverty_rate,
+    troughRevenueB:
+      trough.total_rev_change_b ?? trough.revenue_change_b ?? null,
+    troughShift: trough.shift_pct,
+    topDecilePct,
+    worstDecile,
+    worstPct: worstPct != null ? worstPct / 100 : null,
+  };
+}
+
 function IncomeShift() {
   const [searchParams, setSearchParams] = useSearchParams();
   const countryKey = countryFromSearchParams(searchParams);
@@ -137,6 +191,68 @@ function IncomeShift() {
           />
         </div>
       </div>
+
+      {(() => {
+        const findings = headlineFindings(sweepData);
+        if (!findings) return null;
+        return (
+          <div className="section section-alt">
+            <div className="policy-analysis-brief">
+              <div className="policy-analysis-brief-card">
+                <h2>Inequality</h2>
+                <p>
+                  Net-income Gini rises from{" "}
+                  <strong>{findings.baselineGini?.toFixed(3)}</strong> at
+                  baseline to{" "}
+                  <strong>{findings.hundredGini?.toFixed(3)}</strong> at a 100%
+                  shift.
+                </p>
+              </div>
+              <div className="policy-analysis-brief-card">
+                <h2>Poverty</h2>
+                <p>
+                  SPM poverty rises from{" "}
+                  <strong>{formatPct1(findings.baselinePoverty)}</strong> to{" "}
+                  <strong>{formatPct1(findings.hundredPoverty)}</strong>.
+                </p>
+              </div>
+              <div className="policy-analysis-brief-card">
+                <h2>Government revenue</h2>
+                <p>
+                  Net revenue bottoms at{" "}
+                  <strong>
+                    {formatBillionsChange(
+                      findings.troughRevenueB,
+                      currencySymbol,
+                    )}
+                  </strong>{" "}
+                  at a {findings.troughShift}% shift under current law.
+                </p>
+              </div>
+              <div className="policy-analysis-brief-card">
+                <h2>Winners and losers</h2>
+                <p>
+                  At a 100% shift, the top decile's mean net income rises{" "}
+                  <strong>
+                    {findings.topDecilePct != null
+                      ? `+${findings.topDecilePct.toFixed(0)}%`
+                      : "-"}
+                  </strong>
+                  {findings.worstPct != null && findings.worstDecile ? (
+                    <>
+                      {" "}
+                      while decile {findings.worstDecile} loses{" "}
+                      <strong>{formatPct1(findings.worstPct)}</strong>.
+                    </>
+                  ) : (
+                    "."
+                  )}
+                </p>
+              </div>
+            </div>
+          </div>
+        );
+      })()}
 
       <ShiftSweep sweepData={sweepData} />
     </>
