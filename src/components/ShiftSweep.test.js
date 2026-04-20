@@ -61,5 +61,5 @@ test("switches the single sweep chart between inequality and revenue outcomes", 
   expect(document.body).toHaveTextContent(
     formatBillions(shift100.revenue_change_b),
   );
-  expect(document.body).toHaveTextContent(/payroll-tax losses/i);
+  expect(document.body).toHaveTextContent(/capital-gains tax and niit/i);
 });
