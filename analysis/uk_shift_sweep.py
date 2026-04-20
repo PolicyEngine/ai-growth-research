@@ -154,16 +154,23 @@ def _baseline_facts(sim, baseline_metrics):
 def revenue_components(sim):
     """Non-overlapping revenue/transfer aggregates for UK.
 
-    UK's tax schedule is simpler than US: `income_tax` is already net of
-    credits, National Insurance is a single variable summing employee +
-    employer + self-employed contributions, and `household_benefits`
-    captures all modelled transfers. There is no state layer and no
-    refundable-credit concept.
+    Split NI into employee+SE vs employer so the decomposition has a
+    clean analog of US `household_tax_before_refundable_credits`
+    (personal-side taxes that reduce household net income) plus
+    employer-side payroll (government revenue that doesn't come out of
+    household net income). `capital_gains_tax` is reported separately
+    but folded into the personal tax aggregate for the identity check.
     """
     return {
         "income_tax": float(sim.calculate("income_tax", period=YEAR).sum()),
-        "total_national_insurance": float(
-            sim.calculate("total_national_insurance", period=YEAR).sum()
+        "capital_gains_tax": float(
+            sim.calculate("capital_gains_tax", period=YEAR).sum()
+        ),
+        "national_insurance": float(
+            sim.calculate("national_insurance", period=YEAR).sum()
+        ),
+        "ni_class_1_employer": float(
+            sim.calculate("ni_class_1_employer", period=YEAR).sum()
         ),
         "household_benefits": float(
             sim.calculate("household_benefits", period=YEAR).sum()
@@ -181,17 +188,33 @@ def net_fiscal_impact(components, baseline_components):
     delta = {
         f"{k}_change": components[k] - baseline_components[k] for k in components
     }
-    total = (
+    # Government net revenue change = personal taxes + employer NI - benefits.
+    personal_tax_change = (
         delta["income_tax_change"]
-        + delta["total_national_insurance_change"]
+        + delta["capital_gains_tax_change"]
+        + delta["national_insurance_change"]
+    )
+    total = (
+        personal_tax_change
+        + delta["ni_class_1_employer_change"]
         - delta["household_benefits_change"]
     )
     delta["total_change"] = total
+    delta["personal_tax_change"] = personal_tax_change
+    delta["total_national_insurance_change"] = (
+        delta["national_insurance_change"] + delta["ni_class_1_employer_change"]
+    )
+    # Household-side identity: market - net = Δ(personal_tax) - Δ(benefits),
+    # approximately. Residual captures other taxes (council tax, duties, etc.)
+    # that UK household_tax sums but our three-bucket view doesn't show.
     market_minus_net_change = (
         delta["household_market_income_change"]
         - delta["household_net_income_change"]
     )
-    delta["_identity_residual"] = market_minus_net_change - total
+    delta["_identity_residual"] = (
+        market_minus_net_change
+        - (personal_tax_change - delta["household_benefits_change"])
+    )
     return delta
 
 
@@ -205,12 +228,14 @@ UK_MTR_SOURCES = [
 ]
 
 UK_MTR_TAX_TARGETS = [
-    # Use the same keys as the US sweep so the UI reads one metric name
-    # across both countries. The "fed_" prefix is a schema compromise.
-    ("fed_income_tax", ["income_tax"]),
+    # UK's income_tax does not include capital_gains_tax, so include CGT in
+    # both targets — otherwise the MTR on capital gains is 0 and labor-side
+    # comparison is misleading. Shared keys match the US sweep so the UI
+    # reads one metric name across both countries.
+    ("fed_income_tax", ["income_tax", "capital_gains_tax"]),
     (
         "fed_income_plus_payroll_tax",
-        ["income_tax", "total_national_insurance"],
+        ["income_tax", "capital_gains_tax", "total_national_insurance"],
     ),
 ]
 
@@ -416,19 +441,35 @@ def _scenario_row(
         fiscal_delta = {
             "total_change": 0.0,
             "income_tax_change": 0.0,
+            "capital_gains_tax_change": 0.0,
+            "national_insurance_change": 0.0,
+            "ni_class_1_employer_change": 0.0,
             "total_national_insurance_change": 0.0,
+            "personal_tax_change": 0.0,
             "household_benefits_change": 0.0,
             "_identity_residual": 0.0,
             "household_market_income_change": 0.0,
             "household_net_income_change": 0.0,
         }
     if fiscal is None:
-        fiscal = {"income_tax": 0.0, "total_national_insurance": 0.0}
+        fiscal = {
+            "income_tax": 0.0,
+            "capital_gains_tax": 0.0,
+            "national_insurance": 0.0,
+            "ni_class_1_employer": 0.0,
+        }
 
-    income_tax_change_b = _currency_billions(fiscal_delta["income_tax_change"])
-    ni_change_b = _currency_billions(
-        fiscal_delta["total_national_insurance_change"]
+    income_tax_change_b = _currency_billions(
+        fiscal_delta["income_tax_change"]
+        + fiscal_delta.get("capital_gains_tax_change", 0.0)
     )
+    ni_ee_se_change_b = _currency_billions(
+        fiscal_delta["national_insurance_change"]
+    )
+    ni_er_change_b = _currency_billions(
+        fiscal_delta.get("ni_class_1_employer_change", 0.0)
+    )
+    ni_change_b = ni_ee_se_change_b + ni_er_change_b
     benefits_change_b = _currency_billions(
         fiscal_delta["household_benefits_change"]
     )
@@ -449,12 +490,17 @@ def _scenario_row(
         "spm_poverty_rate": metrics.get("poverty_rate", 0.0),
         "fed_revenue_b": _currency_billions(
             fiscal.get("income_tax", 0.0)
-            + fiscal.get("total_national_insurance", 0.0)
+            + fiscal.get("capital_gains_tax", 0.0)
+            + fiscal.get("national_insurance", 0.0)
+            + fiscal.get("ni_class_1_employer", 0.0)
         ),
-        # Shared-schema fiscal fields consumed by the UI.
+        # Shared-schema fiscal fields consumed by the UI. UK maps:
+        # income_tax_before_refundable_credits ← income_tax + CGT;
+        # employer_payroll ← ni_class_1_employer;
+        # employee_ss_tax ← national_insurance (employee + SE portion).
         "total_rev_change_b": total_change_b,
         "revenue_change_b": total_change_b,
-        "household_tax_change_b": income_tax_change_b + ni_change_b,
+        "household_tax_change_b": income_tax_change_b + ni_ee_se_change_b,
         "refundable_credits_change_b": 0.0,
         "state_refundable_credits_change_b": 0.0,
         "state_tax_before_refundable_credits_change_b": 0.0,
@@ -467,8 +513,8 @@ def _scenario_row(
         "fed_niit_change_b": 0.0,
         "fed_nonrefundable_credits_change_b": 0.0,
         "fed_other_income_tax_items_change_b": 0.0,
-        "employer_payroll_change_b": ni_change_b,
-        "employee_ss_tax_change_b": 0.0,
+        "employer_payroll_change_b": ni_er_change_b,
+        "employee_ss_tax_change_b": ni_ee_se_change_b,
         "employee_medicare_tax_change_b": 0.0,
         "self_employment_tax_change_b": 0.0,
         "identity_residual_b": _currency_billions(
@@ -479,7 +525,9 @@ def _scenario_row(
         # Legacy UK-specific fields kept for back-compat.
         "gov_revenue_b": _currency_billions(
             fiscal.get("income_tax", 0.0)
-            + fiscal.get("total_national_insurance", 0.0)
+            + fiscal.get("capital_gains_tax", 0.0)
+            + fiscal.get("national_insurance", 0.0)
+            + fiscal.get("ni_class_1_employer", 0.0)
         ),
         "income_tax_change_b": income_tax_change_b,
         "national_insurance_change_b": ni_change_b,
@@ -487,23 +535,21 @@ def _scenario_row(
 
 
 def _uk_national_baseline_totals(sim):
+    income_tax_plus_cgt = float(
+        sim.calculate("income_tax", period=YEAR).sum()
+    ) + float(sim.calculate("capital_gains_tax", period=YEAR).sum())
+    ni_ee_se = float(sim.calculate("national_insurance", period=YEAR).sum())
+    ni_er = float(sim.calculate("ni_class_1_employer", period=YEAR).sum())
     return {
-        "fed_income_tax": float(sim.calculate("income_tax", period=YEAR).sum()),
-        "fed_income_tax_before_refundable_credits": float(
-            sim.calculate("income_tax", period=YEAR).sum()
-        ),
-        "household_tax_before_refundable_credits": float(
-            sim.calculate("income_tax", period=YEAR).sum()
-        )
-        + float(sim.calculate("total_national_insurance", period=YEAR).sum()),
+        "fed_income_tax": income_tax_plus_cgt,
+        "fed_income_tax_before_refundable_credits": income_tax_plus_cgt,
+        "household_tax_before_refundable_credits": income_tax_plus_cgt + ni_ee_se,
         "household_refundable_tax_credits": 0.0,
         "household_benefits": float(
             sim.calculate("household_benefits", period=YEAR).sum()
         ),
-        "employer_payroll_tax": float(
-            sim.calculate("total_national_insurance", period=YEAR).sum()
-        ),
-        "employee_social_security_tax": 0.0,
+        "employer_payroll_tax": ni_er,
+        "employee_social_security_tax": ni_ee_se,
         "employee_medicare_tax": 0.0,
         "self_employment_tax": 0.0,
         "state_tax_before_refundable_credits": 0.0,

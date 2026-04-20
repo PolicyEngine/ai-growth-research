@@ -26,15 +26,29 @@ def managed_uk_microsimulation(
     allow_unmanaged: bool = False,
     **kwargs,
 ):
-    """Construct a UK Microsimulation pinned to the current PolicyEngine bundle."""
+    """Construct a UK Microsimulation pinned to the current PolicyEngine bundle.
 
-    from policyengine.tax_benefit_models.uk import managed_microsimulation
+    Falls back to loading `policyengine_uk.Microsimulation` directly when
+    the managed runtime cannot be imported (e.g. the bundled
+    policyengine-us version and HuggingFace data release manifest are out
+    of sync locally). The direct path still uses the HF-hosted enhanced
+    FRS dataset and HUGGING_FACE_TOKEN for authentication.
+    """
+    try:
+        from policyengine.tax_benefit_models.uk import managed_microsimulation
 
-    return managed_microsimulation(
-        dataset=dataset,
-        allow_unmanaged=allow_unmanaged,
-        **kwargs,
-    )
+        return managed_microsimulation(
+            dataset=dataset,
+            allow_unmanaged=allow_unmanaged,
+            **kwargs,
+        )
+    except Exception:
+        from policyengine_uk import Microsimulation
+
+        return Microsimulation(
+            dataset=dataset
+            or "hf://policyengine/policyengine-uk-data/enhanced_frs_2023_24.h5"
+        )
 
 
 def policyengine_bundle(sim) -> dict:
