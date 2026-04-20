@@ -24,7 +24,7 @@ import { useRovingRadioGroup } from "../utils/useRovingRadioGroup";
 import "./AnalysisSection.css";
 import "./ShiftSweep.css";
 
-const FEDERAL_BUCKETS = [
+const FEDERAL_BUCKETS_US = [
   {
     key: "rev_fed_income_tax_net",
     label: "Net federal income tax (after refundable credits)",
@@ -41,6 +41,28 @@ const FEDERAL_BUCKETS = [
     color: "#B45309",
   },
 ];
+
+const NATIONAL_BUCKETS_UK = [
+  {
+    key: "rev_fed_income_tax_net",
+    label: "Income tax",
+    color: "#17354F",
+  },
+  {
+    key: "rev_payroll_all",
+    label: "National Insurance",
+    color: "#DD6B20",
+  },
+  {
+    key: "rev_fed_benefits",
+    label: "Benefits (negated)",
+    color: "#B45309",
+  },
+];
+
+function federalBuckets(countryId) {
+  return countryId === "uk" ? NATIONAL_BUCKETS_UK : FEDERAL_BUCKETS_US;
+}
 
 const STATE_BUCKETS = [
   {
@@ -89,6 +111,7 @@ const FED_INCOME_TAX_BUCKETS = [
 ];
 
 const MTR_SOURCE_COLORS = {
+  // US
   employment_income: "#DD6B20",
   self_employment_income: "#B45309",
   long_term_capital_gains: "#17354F",
@@ -97,6 +120,11 @@ const MTR_SOURCE_COLORS = {
   non_qualified_dividend_income: "#227773",
   taxable_interest_income: "#5DD4CF",
   rental_income: "#8B5CF6",
+  // UK
+  dividend_income: "#17354F",
+  savings_interest_income: "#5DD4CF",
+  property_income: "#8B5CF6",
+  capital_gains: "#2C6496",
 };
 
 const billionFmt = (value, { precision = 0, currencySymbol = "$" } = {}) => {
@@ -541,22 +569,28 @@ function FederalMtrChart({ sweepData, metric }) {
   const dataMax = Math.max(...values);
   const ticks = niceTicks(dataMin, Math.max(dataMax, 0.05), 6);
 
-  const titleByMetric = {
-    fed_income_tax_mtr:
-      "Dollar-weighted federal income tax MTR (after refundable credits)",
-    fed_income_tax_before_refundable_credits_mtr:
-      "Dollar-weighted federal income tax MTR (before refundable credits)",
-    fed_income_plus_payroll_tax_mtr:
-      "Dollar-weighted federal income + payroll tax MTR",
-  };
-  const title = titleByMetric[metric] ?? "Dollar-weighted federal MTR";
-  const descriptionByMetric = {
-    fed_income_plus_payroll_tax_mtr:
-      "Each line shows the dollar-weighted marginal tax rate on a +1% bump in that income source against federal income tax (after refundable credits) + employer + employee payroll + self-employment tax. Labor sources now bear FICA on top of income tax; capital sources don't, so the gap reverses relative to income-tax-only.",
-  };
-  const description =
-    descriptionByMetric[metric] ??
-    "Each line shows the dollar-weighted marginal tax rate on a +1% bump in that income source. Labor sources typically pay lower rates than concentrated capital sources when measured on income tax alone because capital income is held predominantly by top-bracket households.";
+  const countryId = sweepData?.metadata?.country_id;
+  const isUk = countryId === "uk";
+  const titleByMetric = isUk
+    ? {
+        fed_income_tax_mtr: "Dollar-weighted UK income tax MTR",
+        fed_income_plus_payroll_tax_mtr:
+          "Dollar-weighted UK income tax + National Insurance MTR",
+      }
+    : {
+        fed_income_tax_mtr:
+          "Dollar-weighted federal income tax MTR (after refundable credits)",
+        fed_income_tax_before_refundable_credits_mtr:
+          "Dollar-weighted federal income tax MTR (before refundable credits)",
+        fed_income_plus_payroll_tax_mtr:
+          "Dollar-weighted federal income + payroll tax MTR",
+      };
+  const title = titleByMetric[metric] ?? "Dollar-weighted MTR";
+  const description = isUk
+    ? "Each line shows the dollar-weighted marginal tax rate on a +1% bump in that UK income source against income tax + National Insurance. Employment and self-employment income bear NI on top of income tax; other sources don't."
+    : metric === "fed_income_plus_payroll_tax_mtr"
+      ? "Each line shows the dollar-weighted marginal tax rate on a +1% bump in that income source against federal income tax (after refundable credits) + employer + employee payroll + self-employment tax. Labor sources bear FICA on top of income tax; capital sources don't, so the gap reverses relative to income-tax-only."
+      : "Each line shows the dollar-weighted marginal tax rate on a +1% bump in that income source. Labor sources typically pay lower rates than concentrated capital sources when measured on income tax alone because capital income is held predominantly by top-bracket households.";
 
   return (
     <div className="shift-sweep-mtr-chart">
@@ -1075,7 +1109,9 @@ function ShiftSweep({ sweepData = defaultSweepData }) {
                     setSelectedJurisdiction(event.target.value)
                   }
                 >
-                  <option value="federal">Federal</option>
+                  <option value="federal">
+                    {metadata.country_id === "uk" ? "UK" : "Federal"}
+                  </option>
                   {stateOptions.map((code) => (
                     <option key={code} value={code}>
                       {code}
@@ -1117,12 +1153,14 @@ function ShiftSweep({ sweepData = defaultSweepData }) {
             currencySymbol={currencySymbol}
             buckets={
               selectedJurisdiction === "federal"
-                ? FEDERAL_BUCKETS
+                ? federalBuckets(metadata.country_id)
                 : STATE_BUCKETS
             }
             title={
               selectedJurisdiction === "federal"
-                ? "Federal revenue decomposition"
+                ? metadata.country_id === "uk"
+                  ? "UK revenue decomposition"
+                  : "Federal revenue decomposition"
                 : `${selectedJurisdiction} state revenue decomposition`
             }
             axisLabel={config.axisLabel}
@@ -1193,22 +1231,24 @@ function ShiftSweep({ sweepData = defaultSweepData }) {
           </>
         )}
 
-        {isRevenue && selectedJurisdiction === "federal" && (
-          <RevenueDecompositionChart
-            chartData={chartData}
-            currencySymbol={currencySymbol}
-            buckets={FED_INCOME_TAX_BUCKETS}
-            title="Federal income tax decomposition"
-            axisLabel={`Change vs baseline (${currencySymbol}B)`}
-            showTotalLine={false}
-            unit={selectedUnit}
-            denominatorB={
-              selectedUnit === "share"
-                ? federalBaseDenominator(baselineTotals) / 1e9
-                : null
-            }
-          />
-        )}
+        {isRevenue &&
+          selectedJurisdiction === "federal" &&
+          metadata.country_id !== "uk" && (
+            <RevenueDecompositionChart
+              chartData={chartData}
+              currencySymbol={currencySymbol}
+              buckets={FED_INCOME_TAX_BUCKETS}
+              title="Federal income tax decomposition"
+              axisLabel={`Change vs baseline (${currencySymbol}B)`}
+              showTotalLine={false}
+              unit={selectedUnit}
+              denominatorB={
+                selectedUnit === "share"
+                  ? federalBaseDenominator(baselineTotals) / 1e9
+                  : null
+              }
+            />
+          )}
 
         {isRevenue &&
           selectedJurisdiction === "federal" &&
