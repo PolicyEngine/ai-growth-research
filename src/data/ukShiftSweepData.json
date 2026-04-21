@@ -1,0 +1,1491 @@
+{
+  "year": 2026,
+  "metadata": {
+    "country_id": "uk",
+    "country_label": "United Kingdom",
+    "year": 2026,
+    "description": "Positive employment and self-employment income are reduced by the selected share, and the same weighted total is redistributed to positive capital income in proportion to existing UK capital-income holdings. This is a static current-law microsimulation; it is not a behavioural forecast.",
+    "model_url": "https://www.policyengine.org/uk/model",
+    "currency_symbol": "\u00a3",
+    "labor_label": "labour",
+    "labor_title": "Labour",
+    "policyengine_package": "policyengine",
+    "policyengine_version": "3.4.0",
+    "country_model_package": "policyengine-uk",
+    "country_model_version": "2.74.0",
+    "policyengine_uk_version": "2.74.0",
+    "data_package": null,
+    "data_version": null,
+    "dataset_name": null,
+    "dataset_uri": null,
+    "policyengine_bundle": null,
+    "revenue_label": "Net government revenue change",
+    "revenue_description": "UK government effect including Income Tax, National Insurance, and modelled household benefit changes.",
+    "revenue_summary_note": "Includes Income Tax and National Insurance receipts net of modelled household benefit costs.",
+    "baseline_facts": {
+      "labor_income_t": 1.35368595302835,
+      "positive_labor_income_t": 1.35368595302835,
+      "positive_capital_income_t": 0.3161544448630077,
+      "households_with_positive_capital_income_share": 0.6422575353299497,
+      "positive_capital_top_10_share": 0.5819410844150292,
+      "positive_capital_top_1_share": 0.29979761670159555,
+      "positive_capital_top_0_1_share": 0.09178872272471846,
+      "market_top_10_share": 0.4062475701678272,
+      "market_top_1_share": 0.13157423420431558,
+      "market_top_0_1_share": 0.041942959440800925,
+      "net_top_10_share": 0.29502548308355636,
+      "net_top_1_share": 0.08617736056575609,
+      "net_top_0_1_share": 0.026899635263548452,
+      "totals": {
+        "national": {
+          "fed_income_tax": 343537422680.6124,
+          "fed_income_tax_before_refundable_credits": 343537422680.6124,
+          "household_tax_before_refundable_credits": 398203860643.72125,
+          "household_refundable_tax_credits": 0.0,
+          "household_benefits": 559599113160.5297,
+          "employer_payroll_tax": 156082196726.74255,
+          "employee_social_security_tax": 54666437963.10884,
+          "employee_medicare_tax": 0.0,
+          "self_employment_tax": 0.0,
+          "state_tax_before_refundable_credits": 0.0,
+          "state_refundable_credits": 0.0,
+          "state_benefits": 0.0
+        }
+      },
+      "decile_impacts": {
+        "baseline_mean_net_by_decile": [
+          {
+            "decile": 1,
+            "weight": 3197338.2424277617,
+            "mean_net": 25118.14669927775
+          },
+          {
+            "decile": 2,
+            "weight": 3095982.4801265714,
+            "mean_net": 24687.854934593808
+          },
+          {
+            "decile": 3,
+            "weight": 3278053.631364955,
+            "mean_net": 27799.859796383134
+          },
+          {
+            "decile": 4,
+            "weight": 3218627.690365782,
+            "mean_net": 33162.76432156152
+          },
+          {
+            "decile": 5,
+            "weight": 3181797.7420482375,
+            "mean_net": 38557.463430182186
+          },
+          {
+            "decile": 6,
+            "weight": 3212382.2612299128,
+            "mean_net": 44079.518155169804
+          },
+          {
+            "decile": 7,
+            "weight": 3198125.3955714507,
+            "mean_net": 49893.902842019816
+          },
+          {
+            "decile": 8,
+            "weight": 3191607.663831153,
+            "mean_net": 62401.97219389529
+          },
+          {
+            "decile": 9,
+            "weight": 3203082.4702879586,
+            "mean_net": 76971.82934877794
+          },
+          {
+            "decile": 10,
+            "weight": 3198264.512048683,
+            "mean_net": 154217.13105838443
+          }
+        ],
+        "scenarios": [
+          {
+            "shift_pct": 0,
+            "deciles": [
+              {
+                "decile": 1,
+                "weight": 3197338.2424277617,
+                "mean_net": 25118.14669927775,
+                "baseline_mean_net": 25118.14669927775,
+                "delta_mean_net": 0.0,
+                "pct_change": 0.0
+              },
+              {
+                "decile": 2,
+                "weight": 3095982.4801265714,
+                "mean_net": 24687.854934593808,
+                "baseline_mean_net": 24687.854934593808,
+                "delta_mean_net": 0.0,
+                "pct_change": 0.0
+              },
+              {
+                "decile": 3,
+                "weight": 3278053.631364955,
+                "mean_net": 27799.859796383134,
+                "baseline_mean_net": 27799.859796383134,
+                "delta_mean_net": 0.0,
+                "pct_change": 0.0
+              },
+              {
+                "decile": 4,
+                "weight": 3218627.690365782,
+                "mean_net": 33162.76432156152,
+                "baseline_mean_net": 33162.76432156152,
+                "delta_mean_net": 0.0,
+                "pct_change": 0.0
+              },
+              {
+                "decile": 5,
+                "weight": 3181797.7420482375,
+                "mean_net": 38557.463430182186,
+                "baseline_mean_net": 38557.463430182186,
+                "delta_mean_net": 0.0,
+                "pct_change": 0.0
+              },
+              {
+                "decile": 6,
+                "weight": 3212382.2612299128,
+                "mean_net": 44079.518155169804,
+                "baseline_mean_net": 44079.518155169804,
+                "delta_mean_net": 0.0,
+                "pct_change": 0.0
+              },
+              {
+                "decile": 7,
+                "weight": 3198125.3955714507,
+                "mean_net": 49893.902842019816,
+                "baseline_mean_net": 49893.902842019816,
+                "delta_mean_net": 0.0,
+                "pct_change": 0.0
+              },
+              {
+                "decile": 8,
+                "weight": 3191607.663831153,
+                "mean_net": 62401.97219389529,
+                "baseline_mean_net": 62401.97219389529,
+                "delta_mean_net": 0.0,
+                "pct_change": 0.0
+              },
+              {
+                "decile": 9,
+                "weight": 3203082.4702879586,
+                "mean_net": 76971.82934877794,
+                "baseline_mean_net": 76971.82934877794,
+                "delta_mean_net": 0.0,
+                "pct_change": 0.0
+              },
+              {
+                "decile": 10,
+                "weight": 3198264.512048683,
+                "mean_net": 154217.13105838443,
+                "baseline_mean_net": 154217.13105838443,
+                "delta_mean_net": 0.0,
+                "pct_change": 0.0
+              }
+            ]
+          },
+          {
+            "shift_pct": 10,
+            "deciles": [
+              {
+                "decile": 1,
+                "weight": 3197338.2424277617,
+                "mean_net": 25117.313423043244,
+                "baseline_mean_net": 25118.14669927775,
+                "delta_mean_net": -0.8332762345053197,
+                "pct_change": -0.003317427214999391
+              },
+              {
+                "decile": 2,
+                "weight": 3095982.4801265714,
+                "mean_net": 24744.50618686433,
+                "baseline_mean_net": 24687.854934593808,
+                "delta_mean_net": 56.6512522705234,
+                "pct_change": 0.22947012780418774
+              },
+              {
+                "decile": 3,
+                "weight": 3278053.631364955,
+                "mean_net": 28156.132687677746,
+                "baseline_mean_net": 27799.859796383134,
+                "delta_mean_net": 356.2728912946113,
+                "pct_change": 1.2815636262344166
+              },
+              {
+                "decile": 4,
+                "weight": 3218627.690365782,
+                "mean_net": 33282.03804539344,
+                "baseline_mean_net": 33162.76432156152,
+                "delta_mean_net": 119.27372383192414,
+                "pct_change": 0.35966158513021096
+              },
+              {
+                "decile": 5,
+                "weight": 3181797.7420482375,
+                "mean_net": 39578.16614943504,
+                "baseline_mean_net": 38557.463430182186,
+                "delta_mean_net": 1020.7027192528549,
+                "pct_change": 2.6472247612996824
+              },
+              {
+                "decile": 6,
+                "weight": 3212382.2612299128,
+                "mean_net": 43065.157593811906,
+                "baseline_mean_net": 44079.518155169804,
+                "delta_mean_net": -1014.3605613578984,
+                "pct_change": -2.301206101634601
+              },
+              {
+                "decile": 7,
+                "weight": 3198125.3955714507,
+                "mean_net": 49069.21144891181,
+                "baseline_mean_net": 49893.902842019816,
+                "delta_mean_net": -824.6913931080053,
+                "pct_change": -1.652890125110562
+              },
+              {
+                "decile": 8,
+                "weight": 3191607.663831153,
+                "mean_net": 60179.87046286665,
+                "baseline_mean_net": 62401.97219389529,
+                "delta_mean_net": -2222.1017310286406,
+                "pct_change": -3.560947920242219
+              },
+              {
+                "decile": 9,
+                "weight": 3203082.4702879586,
+                "mean_net": 75657.52551147577,
+                "baseline_mean_net": 76971.82934877794,
+                "delta_mean_net": -1314.30383730217,
+                "pct_change": -1.7075127984119254
+              },
+              {
+                "decile": 10,
+                "weight": 3198264.512048683,
+                "mean_net": 161923.18484523185,
+                "baseline_mean_net": 154217.13105838443,
+                "delta_mean_net": 7706.05378684742,
+                "pct_change": 4.9968857116982734
+              }
+            ]
+          },
+          {
+            "shift_pct": 20,
+            "deciles": [
+              {
+                "decile": 1,
+                "weight": 3197338.2424277617,
+                "mean_net": 25116.426145837802,
+                "baseline_mean_net": 25118.14669927775,
+                "delta_mean_net": -1.7205534399472526,
+                "pct_change": -0.006849842309408771
+              },
+              {
+                "decile": 2,
+                "weight": 3095982.4801265714,
+                "mean_net": 24800.087437238115,
+                "baseline_mean_net": 24687.854934593808,
+                "delta_mean_net": 112.2325026443068,
+                "pct_change": 0.4546061330222839
+              },
+              {
+                "decile": 3,
+                "weight": 3278053.631364955,
+                "mean_net": 28399.12371300079,
+                "baseline_mean_net": 27799.859796383134,
+                "delta_mean_net": 599.2639166176559,
+                "pct_change": 2.1556364708559483
+              },
+              {
+                "decile": 4,
+                "weight": 3218627.690365782,
+                "mean_net": 33348.65748707737,
+                "baseline_mean_net": 33162.76432156152,
+                "delta_mean_net": 185.89316551585216,
+                "pct_change": 0.5605478593803115
+              },
+              {
+                "decile": 5,
+                "weight": 3181797.7420482375,
+                "mean_net": 40356.71616274705,
+                "baseline_mean_net": 38557.463430182186,
+                "delta_mean_net": 1799.2527325648625,
+                "pct_change": 4.6664188265985285
+              },
+              {
+                "decile": 6,
+                "weight": 3212382.2612299128,
+                "mean_net": 41988.15155941648,
+                "baseline_mean_net": 44079.518155169804,
+                "delta_mean_net": -2091.366595753323,
+                "pct_change": -4.7445314360997415
+              },
+              {
+                "decile": 7,
+                "weight": 3198125.3955714507,
+                "mean_net": 48125.080256998735,
+                "baseline_mean_net": 49893.902842019816,
+                "delta_mean_net": -1768.8225850210802,
+                "pct_change": -3.5451678146360743
+              },
+              {
+                "decile": 8,
+                "weight": 3191607.663831153,
+                "mean_net": 57822.98699516768,
+                "baseline_mean_net": 62401.97219389529,
+                "delta_mean_net": -4578.985198727612,
+                "pct_change": -7.337885386858922
+              },
+              {
+                "decile": 9,
+                "weight": 3203082.4702879586,
+                "mean_net": 73917.78027732247,
+                "baseline_mean_net": 76971.82934877794,
+                "delta_mean_net": -3054.049071455476,
+                "pct_change": -3.9677491067762527
+              },
+              {
+                "decile": 10,
+                "weight": 3198264.512048683,
+                "mean_net": 169651.4698243968,
+                "baseline_mean_net": 154217.13105838443,
+                "delta_mean_net": 15434.33876601237,
+                "pct_change": 10.008186937525853
+              }
+            ]
+          },
+          {
+            "shift_pct": 30,
+            "deciles": [
+              {
+                "decile": 1,
+                "weight": 3197338.2424277617,
+                "mean_net": 25115.11010318632,
+                "baseline_mean_net": 25118.14669927775,
+                "delta_mean_net": -3.036596091427782,
+                "pct_change": -0.012089252156155528
+              },
+              {
+                "decile": 2,
+                "weight": 3095982.4801265714,
+                "mean_net": 24854.876179664585,
+                "baseline_mean_net": 24687.854934593808,
+                "delta_mean_net": 167.02124507077679,
+                "pct_change": 0.6765320256185481
+              },
+              {
+                "decile": 3,
+                "weight": 3278053.631364955,
+                "mean_net": 28620.045636113755,
+                "baseline_mean_net": 27799.859796383134,
+                "delta_mean_net": 820.1858397306205,
+                "pct_change": 2.9503236553636514
+              },
+              {
+                "decile": 4,
+                "weight": 3218627.690365782,
+                "mean_net": 33362.80694657012,
+                "baseline_mean_net": 33162.76432156152,
+                "delta_mean_net": 200.04262500860204,
+                "pct_change": 0.6032145664001121
+              },
+              {
+                "decile": 5,
+                "weight": 3181797.7420482375,
+                "mean_net": 41002.27525188539,
+                "baseline_mean_net": 38557.463430182186,
+                "delta_mean_net": 2444.8118217032024,
+                "pct_change": 6.340696726925876
+              },
+              {
+                "decile": 6,
+                "weight": 3212382.2612299128,
+                "mean_net": 40796.361738599226,
+                "baseline_mean_net": 44079.518155169804,
+                "delta_mean_net": -3283.1564165705786,
+                "pct_change": -7.448258406575881
+              },
+              {
+                "decile": 7,
+                "weight": 3198125.3955714507,
+                "mean_net": 47069.25280487195,
+                "baseline_mean_net": 49893.902842019816,
+                "delta_mean_net": -2824.6500371478687,
+                "pct_change": -5.661313058815265
+              },
+              {
+                "decile": 8,
+                "weight": 3191607.663831153,
+                "mean_net": 55341.514763462306,
+                "baseline_mean_net": 62401.97219389529,
+                "delta_mean_net": -7060.457430432987,
+                "pct_change": -11.314478024019415
+              },
+              {
+                "decile": 9,
+                "weight": 3203082.4702879586,
+                "mean_net": 71997.32083411176,
+                "baseline_mean_net": 76971.82934877794,
+                "delta_mean_net": -4974.508514666188,
+                "pct_change": -6.462765087894029
+              },
+              {
+                "decile": 10,
+                "weight": 3198264.512048683,
+                "mean_net": 177211.91015777175,
+                "baseline_mean_net": 154217.13105838443,
+                "delta_mean_net": 22994.77909938732,
+                "pct_change": 14.910651586873191
+              }
+            ]
+          },
+          {
+            "shift_pct": 40,
+            "deciles": [
+              {
+                "decile": 1,
+                "weight": 3197338.2424277617,
+                "mean_net": 25113.979674948612,
+                "baseline_mean_net": 25118.14669927775,
+                "delta_mean_net": -4.167024329137348,
+                "pct_change": -0.01658969660073284
+              },
+              {
+                "decile": 2,
+                "weight": 3095982.4801265714,
+                "mean_net": 24909.210029503924,
+                "baseline_mean_net": 24687.854934593808,
+                "delta_mean_net": 221.35509491011544,
+                "pct_change": 0.8966153418211498
+              },
+              {
+                "decile": 3,
+                "weight": 3278053.631364955,
+                "mean_net": 28894.864890964214,
+                "baseline_mean_net": 27799.859796383134,
+                "delta_mean_net": 1095.00509458108,
+                "pct_change": 3.938887111666456
+              },
+              {
+                "decile": 4,
+                "weight": 3218627.690365782,
+                "mean_net": 33298.482551854926,
+                "baseline_mean_net": 33162.76432156152,
+                "delta_mean_net": 135.71823029340885,
+                "pct_change": 0.40924884601725164
+              },
+              {
+                "decile": 5,
+                "weight": 3181797.7420482375,
+                "mean_net": 41551.55258020094,
+                "baseline_mean_net": 38557.463430182186,
+                "delta_mean_net": 2994.089150018757,
+                "pct_change": 7.765264837611263
+              },
+              {
+                "decile": 6,
+                "weight": 3212382.2612299128,
+                "mean_net": 39552.544357748695,
+                "baseline_mean_net": 44079.518155169804,
+                "delta_mean_net": -4526.973797421109,
+                "pct_change": -10.270016522152403
+              },
+              {
+                "decile": 7,
+                "weight": 3198125.3955714507,
+                "mean_net": 45897.65885375168,
+                "baseline_mean_net": 49893.902842019816,
+                "delta_mean_net": -3996.2439882681356,
+                "pct_change": -8.009483645569947
+              },
+              {
+                "decile": 8,
+                "weight": 3191607.663831153,
+                "mean_net": 52749.58004820236,
+                "baseline_mean_net": 62401.97219389529,
+                "delta_mean_net": -9652.392145692931,
+                "pct_change": -15.468088277243918
+              },
+              {
+                "decile": 9,
+                "weight": 3203082.4702879586,
+                "mean_net": 69839.19927243546,
+                "baseline_mean_net": 76971.82934877794,
+                "delta_mean_net": -7132.630076342481,
+                "pct_change": -9.26654613342085
+              },
+              {
+                "decile": 10,
+                "weight": 3198264.512048683,
+                "mean_net": 184452.74811750208,
+                "baseline_mean_net": 154217.13105838443,
+                "delta_mean_net": 30235.61705911765,
+                "pct_change": 19.605874426279435
+              }
+            ]
+          },
+          {
+            "shift_pct": 50,
+            "deciles": [
+              {
+                "decile": 1,
+                "weight": 3197338.2424277617,
+                "mean_net": 25112.57467524732,
+                "baseline_mean_net": 25118.14669927775,
+                "delta_mean_net": -5.57202403042902,
+                "pct_change": -0.02218326095925205
+              },
+              {
+                "decile": 2,
+                "weight": 3095982.4801265714,
+                "mean_net": 24962.525442121972,
+                "baseline_mean_net": 24687.854934593808,
+                "delta_mean_net": 274.6705075281643,
+                "pct_change": 1.1125734020061895
+              },
+              {
+                "decile": 3,
+                "weight": 3278053.631364955,
+                "mean_net": 29163.545172686827,
+                "baseline_mean_net": 27799.859796383134,
+                "delta_mean_net": 1363.6853763036925,
+                "pct_change": 4.9053678194489025
+              },
+              {
+                "decile": 4,
+                "weight": 3218627.690365782,
+                "mean_net": 32863.531908212666,
+                "baseline_mean_net": 33162.76432156152,
+                "delta_mean_net": -299.23241334885097,
+                "pct_change": -0.9023144465502231
+              },
+              {
+                "decile": 5,
+                "weight": 3181797.7420482375,
+                "mean_net": 42027.15329203375,
+                "baseline_mean_net": 38557.463430182186,
+                "delta_mean_net": 3469.6898618515625,
+                "pct_change": 8.998750314927474
+              },
+              {
+                "decile": 6,
+                "weight": 3212382.2612299128,
+                "mean_net": 38074.77518019934,
+                "baseline_mean_net": 44079.518155169804,
+                "delta_mean_net": -6004.742974970461,
+                "pct_change": -13.622524079851361
+              },
+              {
+                "decile": 7,
+                "weight": 3198125.3955714507,
+                "mean_net": 44606.655833266734,
+                "baseline_mean_net": 49893.902842019816,
+                "delta_mean_net": -5287.247008753082,
+                "pct_change": -10.596980207169226
+              },
+              {
+                "decile": 8,
+                "weight": 3191607.663831153,
+                "mean_net": 50031.09524414208,
+                "baseline_mean_net": 62401.97219389529,
+                "delta_mean_net": -12370.876949753212,
+                "pct_change": -19.82449675038226
+              },
+              {
+                "decile": 9,
+                "weight": 3203082.4702879586,
+                "mean_net": 67665.94433193837,
+                "baseline_mean_net": 76971.82934877794,
+                "delta_mean_net": -9305.885016839573,
+                "pct_change": -12.08998811067925
+              },
+              {
+                "decile": 10,
+                "weight": 3198264.512048683,
+                "mean_net": 191351.67930473658,
+                "baseline_mean_net": 154217.13105838443,
+                "delta_mean_net": 37134.54824635215,
+                "pct_change": 24.079392471834748
+              }
+            ]
+          },
+          {
+            "shift_pct": 60,
+            "deciles": [
+              {
+                "decile": 1,
+                "weight": 3197338.2424277617,
+                "mean_net": 25110.97116400043,
+                "baseline_mean_net": 25118.14669927775,
+                "delta_mean_net": -7.175535277317977,
+                "pct_change": -0.02856713659341592
+              },
+              {
+                "decile": 2,
+                "weight": 3095982.4801265714,
+                "mean_net": 25014.45272545255,
+                "baseline_mean_net": 24687.854934593808,
+                "delta_mean_net": 326.59779085874106,
+                "pct_change": 1.3229087408525686
+              },
+              {
+                "decile": 3,
+                "weight": 3278053.631364955,
+                "mean_net": 29415.42393433988,
+                "baseline_mean_net": 27799.859796383134,
+                "delta_mean_net": 1615.564137956746,
+                "pct_change": 5.8114110998751745
+              },
+              {
+                "decile": 4,
+                "weight": 3218627.690365782,
+                "mean_net": 32534.5683006934,
+                "baseline_mean_net": 33162.76432156152,
+                "delta_mean_net": -628.1960208681157,
+                "pct_change": -1.8942812329419745
+              },
+              {
+                "decile": 5,
+                "weight": 3181797.7420482375,
+                "mean_net": 42498.619590577066,
+                "baseline_mean_net": 38557.463430182186,
+                "delta_mean_net": 3941.1561603948794,
+                "pct_change": 10.22151306071084
+              },
+              {
+                "decile": 6,
+                "weight": 3212382.2612299128,
+                "mean_net": 36431.442406370814,
+                "baseline_mean_net": 44079.518155169804,
+                "delta_mean_net": -7648.07574879899,
+                "pct_change": -17.3506337384997
+              },
+              {
+                "decile": 7,
+                "weight": 3198125.3955714507,
+                "mean_net": 42915.12485660753,
+                "baseline_mean_net": 49893.902842019816,
+                "delta_mean_net": -6978.7779854122855,
+                "pct_change": -13.987236090769139
+              },
+              {
+                "decile": 8,
+                "weight": 3191607.663831153,
+                "mean_net": 46804.88778066541,
+                "baseline_mean_net": 62401.97219389529,
+                "delta_mean_net": -15597.08441322988,
+                "pct_change": -24.994537616161626
+              },
+              {
+                "decile": 9,
+                "weight": 3203082.4702879586,
+                "mean_net": 65297.39240667631,
+                "baseline_mean_net": 76971.82934877794,
+                "delta_mean_net": -11674.436942101638,
+                "pct_change": -15.167155361738837
+              },
+              {
+                "decile": 10,
+                "weight": 3198264.512048683,
+                "mean_net": 197724.385072851,
+                "baseline_mean_net": 154217.13105838443,
+                "delta_mean_net": 43507.25401446657,
+                "pct_change": 28.211686805401225
+              }
+            ]
+          },
+          {
+            "shift_pct": 70,
+            "deciles": [
+              {
+                "decile": 1,
+                "weight": 3197338.2424277617,
+                "mean_net": 25109.216320975553,
+                "baseline_mean_net": 25118.14669927775,
+                "delta_mean_net": -8.930378302196914,
+                "pct_change": -0.03555349209921621
+              },
+              {
+                "decile": 2,
+                "weight": 3095982.4801265714,
+                "mean_net": 25066.601620670663,
+                "baseline_mean_net": 24687.854934593808,
+                "delta_mean_net": 378.74668607685453,
+                "pct_change": 1.5341417351984576
+              },
+              {
+                "decile": 3,
+                "weight": 3278053.631364955,
+                "mean_net": 29635.807293254402,
+                "baseline_mean_net": 27799.859796383134,
+                "delta_mean_net": 1835.9474968712675,
+                "pct_change": 6.6041609933231715
+              },
+              {
+                "decile": 4,
+                "weight": 3218627.690365782,
+                "mean_net": 32238.83756952027,
+                "baseline_mean_net": 33162.76432156152,
+                "delta_mean_net": -923.9267520412468,
+                "pct_change": -2.7860366014196725
+              },
+              {
+                "decile": 5,
+                "weight": 3181797.7420482375,
+                "mean_net": 42405.76674662166,
+                "baseline_mean_net": 38557.463430182186,
+                "delta_mean_net": 3848.303316439473,
+                "pct_change": 9.980696275334022
+              },
+              {
+                "decile": 6,
+                "weight": 3212382.2612299128,
+                "mean_net": 34594.34477345066,
+                "baseline_mean_net": 44079.518155169804,
+                "delta_mean_net": -9485.173381719142,
+                "pct_change": -21.5183236539229
+              },
+              {
+                "decile": 7,
+                "weight": 3198125.3955714507,
+                "mean_net": 40868.20339857401,
+                "baseline_mean_net": 49893.902842019816,
+                "delta_mean_net": -9025.699443445803,
+                "pct_change": -18.089784381117823
+              },
+              {
+                "decile": 8,
+                "weight": 3191607.663831153,
+                "mean_net": 43526.2539550937,
+                "baseline_mean_net": 62401.97219389529,
+                "delta_mean_net": -18875.718238801594,
+                "pct_change": -30.24859243254524
+              },
+              {
+                "decile": 9,
+                "weight": 3203082.4702879586,
+                "mean_net": 62485.51952217416,
+                "baseline_mean_net": 76971.82934877794,
+                "delta_mean_net": -14486.309826603785,
+                "pct_change": -18.820274831929506
+              },
+              {
+                "decile": 10,
+                "weight": 3198264.512048683,
+                "mean_net": 203688.19009637588,
+                "baseline_mean_net": 154217.13105838443,
+                "delta_mean_net": 49471.05903799145,
+                "pct_change": 32.07883501558748
+              }
+            ]
+          },
+          {
+            "shift_pct": 80,
+            "deciles": [
+              {
+                "decile": 1,
+                "weight": 3197338.2424277617,
+                "mean_net": 25107.174248518295,
+                "baseline_mean_net": 25118.14669927775,
+                "delta_mean_net": -10.97245075945466,
+                "pct_change": -0.043683361240065555
+              },
+              {
+                "decile": 2,
+                "weight": 3095982.4801265714,
+                "mean_net": 25117.312050697838,
+                "baseline_mean_net": 24687.854934593808,
+                "delta_mean_net": 429.4571161040294,
+                "pct_change": 1.7395481188697826
+              },
+              {
+                "decile": 3,
+                "weight": 3278053.631364955,
+                "mean_net": 29848.067477525085,
+                "baseline_mean_net": 27799.859796383134,
+                "delta_mean_net": 2048.20768114195,
+                "pct_change": 7.3676906867294
+              },
+              {
+                "decile": 4,
+                "weight": 3218627.690365782,
+                "mean_net": 31872.28479804771,
+                "baseline_mean_net": 33162.76432156152,
+                "delta_mean_net": -1290.479523513808,
+                "pct_change": -3.891350886797984
+              },
+              {
+                "decile": 5,
+                "weight": 3181797.7420482375,
+                "mean_net": 42267.08912667012,
+                "baseline_mean_net": 38557.463430182186,
+                "delta_mean_net": 3709.625696487936,
+                "pct_change": 9.6210314851368
+              },
+              {
+                "decile": 6,
+                "weight": 3212382.2612299128,
+                "mean_net": 32534.93243911578,
+                "baseline_mean_net": 44079.518155169804,
+                "delta_mean_net": -11544.585716054025,
+                "pct_change": -26.190362778954366
+              },
+              {
+                "decile": 7,
+                "weight": 3198125.3955714507,
+                "mean_net": 38676.74510921884,
+                "baseline_mean_net": 49893.902842019816,
+                "delta_mean_net": -11217.157732800973,
+                "pct_change": -22.482021036354105
+              },
+              {
+                "decile": 8,
+                "weight": 3191607.663831153,
+                "mean_net": 39758.92284308056,
+                "baseline_mean_net": 62401.97219389529,
+                "delta_mean_net": -22643.049350814734,
+                "pct_change": -36.285791225409184
+              },
+              {
+                "decile": 9,
+                "weight": 3203082.4702879586,
+                "mean_net": 58746.51533598244,
+                "baseline_mean_net": 76971.82934877794,
+                "delta_mean_net": -18225.314012795505,
+                "pct_change": -23.67790159983363
+              },
+              {
+                "decile": 10,
+                "weight": 3198264.512048683,
+                "mean_net": 209072.39598033106,
+                "baseline_mean_net": 154217.13105838443,
+                "delta_mean_net": 54855.264921946626,
+                "pct_change": 35.57015005108557
+              }
+            ]
+          },
+          {
+            "shift_pct": 90,
+            "deciles": [
+              {
+                "decile": 1,
+                "weight": 3197338.2424277617,
+                "mean_net": 25104.95149183259,
+                "baseline_mean_net": 25118.14669927775,
+                "delta_mean_net": -13.195207445158303,
+                "pct_change": -0.052532567801022445
+              },
+              {
+                "decile": 2,
+                "weight": 3095982.4801265714,
+                "mean_net": 25174.04904820801,
+                "baseline_mean_net": 24687.854934593808,
+                "delta_mean_net": 486.19411361420134,
+                "pct_change": 1.9693655641702668
+              },
+              {
+                "decile": 3,
+                "weight": 3278053.631364955,
+                "mean_net": 30037.36717752799,
+                "baseline_mean_net": 27799.859796383134,
+                "delta_mean_net": 2237.5073811448565,
+                "pct_change": 8.048628293571337
+              },
+              {
+                "decile": 4,
+                "weight": 3218627.690365782,
+                "mean_net": 31439.02683763438,
+                "baseline_mean_net": 33162.76432156152,
+                "delta_mean_net": -1723.737483927136,
+                "pct_change": -5.197810011291515
+              },
+              {
+                "decile": 5,
+                "weight": 3181797.7420482375,
+                "mean_net": 42079.093644929955,
+                "baseline_mean_net": 38557.463430182186,
+                "delta_mean_net": 3521.630214747769,
+                "pct_change": 9.133459261718691
+              },
+              {
+                "decile": 6,
+                "weight": 3212382.2612299128,
+                "mean_net": 30417.159367822987,
+                "baseline_mean_net": 44079.518155169804,
+                "delta_mean_net": -13662.358787346817,
+                "pct_change": -30.9948006674035
+              },
+              {
+                "decile": 7,
+                "weight": 3198125.3955714507,
+                "mean_net": 36435.39586687956,
+                "baseline_mean_net": 49893.902842019816,
+                "delta_mean_net": -13458.506975140255,
+                "pct_change": -26.974251779329084
+              },
+              {
+                "decile": 8,
+                "weight": 3191607.663831153,
+                "mean_net": 35656.815458758305,
+                "baseline_mean_net": 62401.97219389529,
+                "delta_mean_net": -26745.15673513699,
+                "pct_change": -42.85947349874534
+              },
+              {
+                "decile": 9,
+                "weight": 3203082.4702879586,
+                "mean_net": 54721.34297241648,
+                "baseline_mean_net": 76971.82934877794,
+                "delta_mean_net": -22250.486376361463,
+                "pct_change": -28.90731136912329
+              },
+              {
+                "decile": 10,
+                "weight": 3198264.512048683,
+                "mean_net": 213270.76224613335,
+                "baseline_mean_net": 154217.13105838443,
+                "delta_mean_net": 59053.63118774892,
+                "pct_change": 38.29252352346772
+              }
+            ]
+          },
+          {
+            "shift_pct": 100,
+            "deciles": [
+              {
+                "decile": 1,
+                "weight": 3197338.2424277617,
+                "mean_net": 25103.039786682406,
+                "baseline_mean_net": 25118.14669927775,
+                "delta_mean_net": -15.106912595343601,
+                "pct_change": -0.060143420516678425
+              },
+              {
+                "decile": 2,
+                "weight": 3095982.4801265714,
+                "mean_net": 25272.093096255794,
+                "baseline_mean_net": 24687.854934593808,
+                "delta_mean_net": 584.2381616619859,
+                "pct_change": 2.366500302313934
+              },
+              {
+                "decile": 3,
+                "weight": 3278053.631364955,
+                "mean_net": 30365.916926299687,
+                "baseline_mean_net": 27799.859796383134,
+                "delta_mean_net": 2566.057129916553,
+                "pct_change": 9.230467882612881
+              },
+              {
+                "decile": 4,
+                "weight": 3218627.690365782,
+                "mean_net": 31104.10210711204,
+                "baseline_mean_net": 33162.76432156152,
+                "delta_mean_net": -2058.662214449476,
+                "pct_change": -6.207752147823786
+              },
+              {
+                "decile": 5,
+                "weight": 3181797.7420482375,
+                "mean_net": 41964.66717283789,
+                "baseline_mean_net": 38557.463430182186,
+                "delta_mean_net": 3407.203742655707,
+                "pct_change": 8.836690589943208
+              },
+              {
+                "decile": 6,
+                "weight": 3212382.2612299128,
+                "mean_net": 28276.21540848066,
+                "baseline_mean_net": 44079.518155169804,
+                "delta_mean_net": -15803.302746689144,
+                "pct_change": -35.85180466596293
+              },
+              {
+                "decile": 7,
+                "weight": 3198125.3955714507,
+                "mean_net": 34193.32860657843,
+                "baseline_mean_net": 49893.902842019816,
+                "delta_mean_net": -15700.574235441389,
+                "pct_change": -31.467921611894077
+              },
+              {
+                "decile": 8,
+                "weight": 3191607.663831153,
+                "mean_net": 31533.39021393429,
+                "baseline_mean_net": 62401.97219389529,
+                "delta_mean_net": -30868.581979961004,
+                "pct_change": -49.46731793034714
+              },
+              {
+                "decile": 9,
+                "weight": 3203082.4702879586,
+                "mean_net": 50591.798321878116,
+                "baseline_mean_net": 76971.82934877794,
+                "delta_mean_net": -26380.03102689983,
+                "pct_change": -34.272319171947366
+              },
+              {
+                "decile": 10,
+                "weight": 3198264.512048683,
+                "mean_net": 215877.70861672738,
+                "baseline_mean_net": 154217.13105838443,
+                "delta_mean_net": 61660.57755834295,
+                "pct_change": 39.9829624213403
+              }
+            ]
+          }
+        ],
+        "methodology": "Households bucketed into deciles by baseline weighted market income; decile membership held fixed across scenarios."
+      }
+    }
+  },
+  "scenarios": [
+    {
+      "shift_pct": 0,
+      "label": "Baseline",
+      "net_gini": 0.38031497778514817,
+      "net_gini_including_health_benefits": 0.38031497778514817,
+      "market_gini": 0.575093405898298,
+      "net_top_10_share": 0.29502548308355636,
+      "net_top_1_share": 0.08617736056575609,
+      "net_top_0_1_share": 0.026899635263548452,
+      "market_top_10_share": 0.4062475701678272,
+      "market_top_1_share": 0.13157423420431558,
+      "market_top_0_1_share": 0.041942959440800925,
+      "spm_poverty_rate": 0.0,
+      "fed_revenue_b": 554.2860573704638,
+      "total_rev_change_b": 0.0,
+      "revenue_change_b": 0.0,
+      "household_tax_change_b": 0.0,
+      "refundable_credits_change_b": 0.0,
+      "state_refundable_credits_change_b": 0.0,
+      "state_tax_before_refundable_credits_change_b": 0.0,
+      "state_benefits_change_b": 0.0,
+      "benefits_change_b": 0.0,
+      "fed_income_tax_before_refundable_credits_change_b": 0.0,
+      "fed_main_rates_change_b": 0.0,
+      "fed_capital_gains_tax_change_b": 0.0,
+      "fed_amt_change_b": 0.0,
+      "fed_niit_change_b": 0.0,
+      "fed_nonrefundable_credits_change_b": 0.0,
+      "fed_other_income_tax_items_change_b": 0.0,
+      "employer_payroll_change_b": 0.0,
+      "employee_ss_tax_change_b": 0.0,
+      "employee_medicare_tax_change_b": 0.0,
+      "self_employment_tax_change_b": 0.0,
+      "identity_residual_b": 0.0,
+      "state_deltas": {},
+      "federal_mtrs": [],
+      "gov_revenue_b": 554.2860573704638,
+      "income_tax_change_b": 0.0,
+      "national_insurance_change_b": 0.0
+    },
+    {
+      "shift_pct": 10,
+      "label": "10% shift",
+      "net_gini": 0.393571132749435,
+      "net_gini_including_health_benefits": 0.393571132749435,
+      "market_gini": 0.5858037873084886,
+      "net_top_10_share": 0.3121751345601737,
+      "net_top_1_share": 0.10096114732928076,
+      "net_top_0_1_share": 0.03033642372414961,
+      "market_top_10_share": 0.4229587332851915,
+      "market_top_1_share": 0.14733624319701247,
+      "market_top_0_1_share": 0.04626320190893552,
+      "spm_poverty_rate": 0.0,
+      "fed_revenue_b": 526.0961285221532,
+      "total_rev_change_b": -30.255982035254952,
+      "revenue_change_b": -30.255982035254952,
+      "household_tax_change_b": -10.354120049479683,
+      "refundable_credits_change_b": 0.0,
+      "state_refundable_credits_change_b": 0.0,
+      "state_tax_before_refundable_credits_change_b": 0.0,
+      "state_benefits_change_b": 0.0,
+      "benefits_change_b": 2.066053186944336,
+      "fed_income_tax_before_refundable_credits_change_b": -3.4388113431931533,
+      "fed_main_rates_change_b": -3.4388113431931533,
+      "fed_capital_gains_tax_change_b": 0.0,
+      "fed_amt_change_b": 0.0,
+      "fed_niit_change_b": 0.0,
+      "fed_nonrefundable_credits_change_b": 0.0,
+      "fed_other_income_tax_items_change_b": 0.0,
+      "employer_payroll_change_b": -17.835808798830932,
+      "employee_ss_tax_change_b": -6.915308706286529,
+      "employee_medicare_tax_change_b": 0.0,
+      "self_employment_tax_change_b": 0.0,
+      "identity_residual_b": -0.00011938276738739014,
+      "state_deltas": {},
+      "federal_mtrs": [],
+      "gov_revenue_b": 526.0961285221532,
+      "income_tax_change_b": -3.4388113431931533,
+      "national_insurance_change_b": -24.751117505117463
+    },
+    {
+      "shift_pct": 20,
+      "label": "20% shift",
+      "net_gini": 0.41251914754078095,
+      "net_gini_including_health_benefits": 0.41251914754078095,
+      "market_gini": 0.6027271684790801,
+      "net_top_10_share": 0.3320054324692733,
+      "net_top_1_share": 0.11703733840856427,
+      "net_top_0_1_share": 0.03382807074657495,
+      "market_top_10_share": 0.4462752924354906,
+      "market_top_1_share": 0.16589360936928857,
+      "market_top_0_1_share": 0.05062929898607494,
+      "spm_poverty_rate": 0.0,
+      "fed_revenue_b": 501.4799279652341,
+      "total_rev_change_b": -56.882079332890676,
+      "revenue_change_b": -56.882079332890676,
+      "household_tax_change_b": -17.143933742552804,
+      "refundable_credits_change_b": 0.0,
+      "state_refundable_credits_change_b": 0.0,
+      "state_tax_before_refundable_credits_change_b": 0.0,
+      "state_benefits_change_b": 0.0,
+      "benefits_change_b": 4.075949927660889,
+      "fed_income_tax_before_refundable_credits_change_b": -3.041044176434845,
+      "fed_main_rates_change_b": -3.041044176434845,
+      "fed_capital_gains_tax_change_b": 0.0,
+      "fed_amt_change_b": 0.0,
+      "fed_niit_change_b": 0.0,
+      "fed_nonrefundable_credits_change_b": 0.0,
+      "fed_other_income_tax_items_change_b": 0.0,
+      "employer_payroll_change_b": -35.662195662676986,
+      "employee_ss_tax_change_b": -14.102889566117957,
+      "employee_medicare_tax_change_b": 0.0,
+      "self_employment_tax_change_b": 0.0,
+      "identity_residual_b": -0.000904024850517273,
+      "state_deltas": {},
+      "federal_mtrs": [],
+      "gov_revenue_b": 501.4799279652341,
+      "income_tax_change_b": -3.041044176434845,
+      "national_insurance_change_b": -49.765085228794945
+    },
+    {
+      "shift_pct": 30,
+      "label": "30% shift",
+      "net_gini": 0.43569713333179516,
+      "net_gini_including_health_benefits": 0.43569713333179516,
+      "market_gini": 0.6247044473698432,
+      "net_top_10_share": 0.3540812732695701,
+      "net_top_1_share": 0.13368688598767314,
+      "net_top_0_1_share": 0.03766949388895877,
+      "market_top_10_share": 0.47727011258740965,
+      "market_top_1_share": 0.1861006425782617,
+      "market_top_0_1_share": 0.05503348074980049,
+      "spm_poverty_rate": 0.0,
+      "fed_revenue_b": 479.729863983111,
+      "total_rev_change_b": -80.58766559091016,
+      "revenue_change_b": -80.58766559091016,
+      "household_tax_change_b": -21.076461139112723,
+      "refundable_credits_change_b": 0.0,
+      "state_refundable_credits_change_b": 0.0,
+      "state_tax_before_refundable_credits_change_b": 0.0,
+      "state_benefits_change_b": 0.0,
+      "benefits_change_b": 6.031472203557251,
+      "fed_income_tax_before_refundable_credits_change_b": 0.31565427208859254,
+      "fed_main_rates_change_b": 0.31565427208859254,
+      "fed_capital_gains_tax_change_b": 0.0,
+      "fed_amt_change_b": 0.0,
+      "fed_niit_change_b": 0.0,
+      "fed_nonrefundable_credits_change_b": 0.0,
+      "fed_other_income_tax_items_change_b": 0.0,
+      "employer_payroll_change_b": -53.479732248240175,
+      "employee_ss_tax_change_b": -21.392115411201317,
+      "employee_medicare_tax_change_b": 0.0,
+      "self_employment_tax_change_b": 0.0,
+      "identity_residual_b": -0.005897156058052063,
+      "state_deltas": {},
+      "federal_mtrs": [],
+      "gov_revenue_b": 479.729863983111,
+      "income_tax_change_b": 0.31565427208859254,
+      "national_insurance_change_b": -74.8718476594415
+    },
+    {
+      "shift_pct": 40,
+      "label": "40% shift",
+      "net_gini": 0.4623061717121988,
+      "net_gini_including_health_benefits": 0.4623061717121988,
+      "market_gini": 0.6506573269816865,
+      "net_top_10_share": 0.38066332917253914,
+      "net_top_1_share": 0.15105383866489225,
+      "net_top_0_1_share": 0.042443555916650694,
+      "market_top_10_share": 0.5115419665592247,
+      "market_top_1_share": 0.20722928962313816,
+      "market_top_0_1_share": 0.05990321252708876,
+      "spm_poverty_rate": 0.0,
+      "fed_revenue_b": 461.579973104302,
+      "total_rev_change_b": -101.22363793112606,
+      "revenue_change_b": -101.22363793112606,
+      "household_tax_change_b": -21.426726514427344,
+      "refundable_credits_change_b": 0.0,
+      "state_refundable_credits_change_b": 0.0,
+      "state_tax_before_refundable_credits_change_b": 0.0,
+      "state_benefits_change_b": 0.0,
+      "benefits_change_b": 8.517553664964234,
+      "fed_income_tax_before_refundable_credits_change_b": 7.475616287862259,
+      "fed_main_rates_change_b": 7.475616287862259,
+      "fed_capital_gains_tax_change_b": 0.0,
+      "fed_amt_change_b": 0.0,
+      "fed_niit_change_b": 0.0,
+      "fed_nonrefundable_credits_change_b": 0.0,
+      "fed_other_income_tax_items_change_b": 0.0,
+      "employer_payroll_change_b": -71.27935775173448,
+      "employee_ss_tax_change_b": -28.902342802289603,
+      "employee_medicare_tax_change_b": 0.0,
+      "self_employment_tax_change_b": 0.0,
+      "identity_residual_b": -0.0061985811230697635,
+      "state_deltas": {},
+      "federal_mtrs": [],
+      "gov_revenue_b": 461.579973104302,
+      "income_tax_change_b": 7.475616287862259,
+      "national_insurance_change_b": -100.18170055402408
+    },
+    {
+      "shift_pct": 50,
+      "label": "50% shift",
+      "net_gini": 0.4928365947144229,
+      "net_gini_including_health_benefits": 0.4928365947144229,
+      "market_gini": 0.6799472467306317,
+      "net_top_10_share": 0.4103052217057747,
+      "net_top_1_share": 0.16911874590121953,
+      "net_top_0_1_share": 0.04853156923137189,
+      "market_top_10_share": 0.549411951630998,
+      "market_top_1_share": 0.22968118521992031,
+      "market_top_0_1_share": 0.06493925078424287,
+      "spm_poverty_rate": 0.0,
+      "fed_revenue_b": 446.9718123769001,
+      "total_rev_change_b": -117.69418955556878,
+      "revenue_change_b": -117.69418955556878,
+      "household_tax_change_b": -18.26476510758114,
+      "refundable_credits_change_b": 0.0,
+      "state_refundable_credits_change_b": 0.0,
+      "state_tax_before_refundable_credits_change_b": 0.0,
+      "state_benefits_change_b": 0.0,
+      "benefits_change_b": 10.379944562005127,
+      "fed_income_tax_before_refundable_credits_change_b": 18.09393398845239,
+      "fed_main_rates_change_b": 18.09393398845239,
+      "fed_capital_gains_tax_change_b": 0.0,
+      "fed_amt_change_b": 0.0,
+      "fed_niit_change_b": 0.0,
+      "fed_nonrefundable_credits_change_b": 0.0,
+      "fed_other_income_tax_items_change_b": 0.0,
+      "employer_payroll_change_b": -89.0494798859825,
+      "employee_ss_tax_change_b": -36.35869909603353,
+      "employee_medicare_tax_change_b": 0.0,
+      "self_employment_tax_change_b": 0.0,
+      "identity_residual_b": -0.011608859749671937,
+      "state_deltas": {},
+      "federal_mtrs": [],
+      "gov_revenue_b": 446.9718123769001,
+      "income_tax_change_b": 18.09393398845239,
+      "national_insurance_change_b": -125.40817898201604
+    },
+    {
+      "shift_pct": 60,
+      "label": "60% shift",
+      "net_gini": 0.5281326996384232,
+      "net_gini_including_health_benefits": 0.5281326996384232,
+      "market_gini": 0.7122901051372842,
+      "net_top_10_share": 0.4425999277616292,
+      "net_top_1_share": 0.18767651699424656,
+      "net_top_0_1_share": 0.05478681101358208,
+      "market_top_10_share": 0.5900367571243645,
+      "market_top_1_share": 0.2522317036690702,
+      "market_top_0_1_share": 0.07014323199716453,
+      "spm_poverty_rate": 0.0,
+      "fed_revenue_b": 438.2733853889924,
+      "total_rev_change_b": -128.59135314191516,
+      "revenue_change_b": -128.59135314191516,
+      "household_tax_change_b": -9.297365867499458,
+      "refundable_credits_change_b": 0.0,
+      "state_refundable_credits_change_b": 0.0,
+      "state_tax_before_refundable_credits_change_b": 0.0,
+      "state_benefits_change_b": 0.0,
+      "benefits_change_b": 12.578681160443725,
+      "fed_income_tax_before_refundable_credits_change_b": 33.7927367933665,
+      "fed_main_rates_change_b": 33.7927367933665,
+      "fed_capital_gains_tax_change_b": 0.0,
+      "fed_amt_change_b": 0.0,
+      "fed_niit_change_b": 0.0,
+      "fed_nonrefundable_credits_change_b": 0.0,
+      "fed_other_income_tax_items_change_b": 0.0,
+      "employer_payroll_change_b": -106.71530611397196,
+      "employee_ss_tax_change_b": -43.09010266086596,
+      "employee_medicare_tax_change_b": 0.0,
+      "self_employment_tax_change_b": 0.0,
+      "identity_residual_b": -0.012283370138359069,
+      "state_deltas": {},
+      "federal_mtrs": [],
+      "gov_revenue_b": 438.2733853889924,
+      "income_tax_change_b": 33.7927367933665,
+      "national_insurance_change_b": -149.80540877483793
+    },
+    {
+      "shift_pct": 70,
+      "label": "70% shift",
+      "net_gini": 0.5701359730118771,
+      "net_gini_including_health_benefits": 0.5701359730118771,
+      "market_gini": 0.7475445768998163,
+      "net_top_10_share": 0.4782804171394565,
+      "net_top_1_share": 0.20725482658809827,
+      "net_top_0_1_share": 0.06132175924543817,
+      "market_top_10_share": 0.6337387935435542,
+      "market_top_1_share": 0.2749651514370769,
+      "market_top_0_1_share": 0.07768964720286711,
+      "spm_poverty_rate": 0.0,
+      "fed_revenue_b": 437.05297256465315,
+      "total_rev_change_b": -132.76104513334454,
+      "revenue_change_b": -132.76104513334454,
+      "household_tax_change_b": 6.866901131409158,
+      "refundable_credits_change_b": 0.0,
+      "state_refundable_credits_change_b": 0.0,
+      "state_tax_before_refundable_credits_change_b": 0.0,
+      "state_benefits_change_b": 0.0,
+      "benefits_change_b": 15.527960327533814,
+      "fed_income_tax_before_refundable_credits_change_b": 55.37419380705029,
+      "fed_main_rates_change_b": 55.37419380705029,
+      "fed_capital_gains_tax_change_b": 0.0,
+      "fed_amt_change_b": 0.0,
+      "fed_niit_change_b": 0.0,
+      "fed_nonrefundable_credits_change_b": 0.0,
+      "fed_other_income_tax_items_change_b": 0.0,
+      "employer_payroll_change_b": -124.09998593721988,
+      "employee_ss_tax_change_b": -48.50729267564113,
+      "employee_medicare_tax_change_b": 0.0,
+      "self_employment_tax_change_b": 0.0,
+      "identity_residual_b": -0.013543661918075562,
+      "state_deltas": {},
+      "federal_mtrs": [],
+      "gov_revenue_b": 437.05297256465315,
+      "income_tax_change_b": 55.37419380705029,
+      "national_insurance_change_b": -172.60727861286102
+    },
+    {
+      "shift_pct": 80,
+      "label": "80% shift",
+      "net_gini": 0.6204768971545346,
+      "net_gini_including_health_benefits": 0.6204768971545346,
+      "market_gini": 0.7858610040603934,
+      "net_top_10_share": 0.5177237820288694,
+      "net_top_1_share": 0.22829724036722732,
+      "net_top_0_1_share": 0.06825561019552062,
+      "market_top_10_share": 0.6788863323046211,
+      "market_top_1_share": 0.2981111328147411,
+      "market_top_0_1_share": 0.08523606082119436,
+      "spm_poverty_rate": 0.0,
+      "fed_revenue_b": 444.2469423524021,
+      "total_rev_change_b": -128.00525321710862,
+      "revenue_change_b": -128.00525321710862,
+      "household_tax_change_b": 30.485922491561176,
+      "refundable_credits_change_b": 0.0,
+      "state_refundable_credits_change_b": 0.0,
+      "state_tax_before_refundable_credits_change_b": 0.0,
+      "state_benefits_change_b": 0.0,
+      "benefits_change_b": 17.966138199046874,
+      "fed_income_tax_before_refundable_credits_change_b": 82.65815216727385,
+      "fed_main_rates_change_b": 82.65815216727385,
+      "fed_capital_gains_tax_change_b": 0.0,
+      "fed_amt_change_b": 0.0,
+      "fed_niit_change_b": 0.0,
+      "fed_nonrefundable_credits_change_b": 0.0,
+      "fed_other_income_tax_items_change_b": 0.0,
+      "employer_payroll_change_b": -140.52503750962293,
+      "employee_ss_tax_change_b": -52.17222967571268,
+      "employee_medicare_tax_change_b": 0.0,
+      "self_employment_tax_change_b": 0.0,
+      "identity_residual_b": -0.015371414569229126,
+      "state_deltas": {},
+      "federal_mtrs": [],
+      "gov_revenue_b": 444.2469423524021,
+      "income_tax_change_b": 82.65815216727385,
+      "national_insurance_change_b": -192.69726718533562
+    },
+    {
+      "shift_pct": 90,
+      "label": "90% shift",
+      "net_gini": 0.6814129170897558,
+      "net_gini_including_health_benefits": 0.6814129170897558,
+      "market_gini": 0.8280053744846115,
+      "net_top_10_share": 0.5606817708483347,
+      "net_top_1_share": 0.25086068052488764,
+      "net_top_0_1_share": 0.0756667713526007,
+      "market_top_10_share": 0.7259462473368283,
+      "market_top_1_share": 0.3216842939019426,
+      "market_top_0_1_share": 0.09278247527117824,
+      "spm_poverty_rate": 0.0,
+      "fed_revenue_b": 463.1451914574264,
+      "total_rev_change_b": -112.14137271284055,
+      "revenue_change_b": -112.14137271284055,
+      "household_tax_change_b": 61.25649800717218,
+      "refundable_credits_change_b": 0.0,
+      "state_refundable_credits_change_b": 0.0,
+      "state_tax_before_refundable_credits_change_b": 0.0,
+      "state_benefits_change_b": 0.0,
+      "benefits_change_b": 21.0005067998031,
+      "fed_income_tax_before_refundable_credits_change_b": 115.34972219279503,
+      "fed_main_rates_change_b": 115.34972219279503,
+      "fed_capital_gains_tax_change_b": 0.0,
+      "fed_amt_change_b": 0.0,
+      "fed_niit_change_b": 0.0,
+      "fed_nonrefundable_credits_change_b": 0.0,
+      "fed_other_income_tax_items_change_b": 0.0,
+      "employer_payroll_change_b": -152.3973639202096,
+      "employee_ss_tax_change_b": -54.093224185622844,
+      "employee_medicare_tax_change_b": 0.0,
+      "self_employment_tax_change_b": 0.0,
+      "identity_residual_b": -0.018991751059761048,
+      "state_deltas": {},
+      "federal_mtrs": [],
+      "gov_revenue_b": 463.1451914574264,
+      "income_tax_change_b": 115.34972219279503,
+      "national_insurance_change_b": -206.49058810583244
+    },
+    {
+      "shift_pct": 100,
+      "label": "100% shift",
+      "net_gini": 0.7536236602486339,
+      "net_gini_including_health_benefits": 0.7536236602486339,
+      "market_gini": 0.8766554345823585,
+      "net_top_10_share": 0.6064118553964994,
+      "net_top_1_share": 0.27474060309035064,
+      "net_top_0_1_share": 0.08353118912645521,
+      "market_top_10_share": 0.7744875081878443,
+      "market_top_1_share": 0.3453166822202136,
+      "market_top_0_1_share": 0.10032888860944725,
+      "spm_poverty_rate": 0.0,
+      "fed_revenue_b": 496.8194551576361,
+      "total_rev_change_b": -83.30221464600906,
+      "revenue_change_b": -83.30221464600906,
+      "household_tax_change_b": 98.2575727480666,
+      "refundable_credits_change_b": 0.0,
+      "state_refundable_credits_change_b": 0.0,
+      "state_tax_before_refundable_credits_change_b": 0.0,
+      "state_benefits_change_b": 0.0,
+      "benefits_change_b": 25.835612433181396,
+      "fed_income_tax_before_refundable_credits_change_b": 152.90767065422895,
+      "fed_main_rates_change_b": 152.90767065422895,
+      "fed_capital_gains_tax_change_b": 0.0,
+      "fed_amt_change_b": 0.0,
+      "fed_niit_change_b": 0.0,
+      "fed_nonrefundable_credits_change_b": 0.0,
+      "fed_other_income_tax_items_change_b": 0.0,
+      "employer_payroll_change_b": -155.72417496089426,
+      "employee_ss_tax_change_b": -54.65009790616236,
+      "employee_medicare_tax_change_b": 0.0,
+      "self_employment_tax_change_b": 0.0,
+      "identity_residual_b": -0.01944957157659912,
+      "state_deltas": {},
+      "federal_mtrs": [],
+      "gov_revenue_b": 496.8194551576361,
+      "income_tax_change_b": 152.90767065422895,
+      "national_insurance_change_b": -210.37427286705662
+    }
+  ]
+}
