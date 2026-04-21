@@ -1082,50 +1082,7 @@
       "self_employment_tax_change_b": 0.0,
       "identity_residual_b": 0.0,
       "state_deltas": {},
-      "federal_mtrs": [
-        {
-          "source": "employment_income",
-          "label": "Employment",
-          "positive_total_t": 1.22890718668279,
-          "fed_income_tax_mtr": 0.3075780004303941,
-          "fed_income_plus_payroll_tax_mtr": 0.5042721336091174
-        },
-        {
-          "source": "self_employment_income",
-          "label": "Self-employment",
-          "positive_total_t": 0.12477876634556015,
-          "fed_income_tax_mtr": 0.3243310350866512,
-          "fed_income_plus_payroll_tax_mtr": 0.35033452854141245
-        },
-        {
-          "source": "dividend_income",
-          "label": "Dividends",
-          "positive_total_t": 0.07661289393973038,
-          "fed_income_tax_mtr": 0.30525458323672533,
-          "fed_income_plus_payroll_tax_mtr": 0.30525458323672533
-        },
-        {
-          "source": "savings_interest_income",
-          "label": "Savings interest",
-          "positive_total_t": 0.05888172480676364,
-          "fed_income_tax_mtr": 0.19376249761502273,
-          "fed_income_plus_payroll_tax_mtr": 0.19376249761502273
-        },
-        {
-          "source": "property_income",
-          "label": "Property",
-          "positive_total_t": 0.06136908436890639,
-          "fed_income_tax_mtr": 0.32507312503396074,
-          "fed_income_plus_payroll_tax_mtr": 0.3250731250340602
-        },
-        {
-          "source": "capital_gains",
-          "label": "Capital gains",
-          "positive_total_t": 0.11929074174760732,
-          "fed_income_tax_mtr": 0.2370364042238486,
-          "fed_income_plus_payroll_tax_mtr": 0.2370364042238998
-        }
-      ],
+      "federal_mtrs": [],
       "gov_revenue_b": 554.2860573704638,
       "income_tax_change_b": 0.0,
       "national_insurance_change_b": 0.0
@@ -1165,50 +1122,7 @@
       "self_employment_tax_change_b": 0.0,
       "identity_residual_b": -0.00011938276738739014,
       "state_deltas": {},
-      "federal_mtrs": [
-        {
-          "source": "employment_income",
-          "label": "Employment",
-          "positive_total_t": 1.1060164675367923,
-          "fed_income_tax_mtr": -1.6374449396350121,
-          "fed_income_plus_payroll_tax_mtr": -1.4080413498197113
-        },
-        {
-          "source": "self_employment_income",
-          "label": "Self-employment",
-          "positive_total_t": 0.11230088982934418,
-          "fed_income_tax_mtr": -22.247020582890563,
-          "fed_income_plus_payroll_tax_mtr": -22.22211154289085
-        },
-        {
-          "source": "dividend_income",
-          "label": "Dividends",
-          "positive_total_t": 0.10941641821134267,
-          "fed_income_tax_mtr": -9.331286191029001,
-          "fed_income_plus_payroll_tax_mtr": -9.037676644680824
-        },
-        {
-          "source": "savings_interest_income",
-          "label": "Savings interest",
-          "positive_total_t": 0.08409325207713407,
-          "fed_income_tax_mtr": -18.44888386178068,
-          "fed_income_plus_payroll_tax_mtr": -18.066859096171573
-        },
-        {
-          "source": "property_income",
-          "label": "Property",
-          "positive_total_t": 0.08764562971616269,
-          "fed_income_tax_mtr": -14.116716883251751,
-          "fed_income_plus_payroll_tax_mtr": -13.750176018429253
-        },
-        {
-          "source": "capital_gains",
-          "label": "Capital gains",
-          "positive_total_t": 0.1703677399140119,
-          "fed_income_tax_mtr": -12.29807786349272,
-          "fed_income_plus_payroll_tax_mtr": -12.10951103194181
-        }
-      ],
+      "federal_mtrs": [],
       "gov_revenue_b": 526.0961285221532,
       "income_tax_change_b": -3.4388113431931533,
       "national_insurance_change_b": -24.751117505117463
@@ -1248,50 +1162,7 @@
       "self_employment_tax_change_b": 0.0,
       "identity_residual_b": -0.000904024850517273,
       "state_deltas": {},
-      "federal_mtrs": [
-        {
-          "source": "employment_income",
-          "label": "Employment",
-          "positive_total_t": 0.9831257486325669,
-          "fed_income_tax_mtr": -4.279491052529345,
-          "fed_income_plus_payroll_tax_mtr": -4.013010397162606
-        },
-        {
-          "source": "self_employment_income",
-          "label": "Self-employment",
-          "positive_total_t": 0.09982301336983168,
-          "fed_income_tax_mtr": -52.43067172309846,
-          "fed_income_plus_payroll_tax_mtr": -52.4055850631858
-        },
-        {
-          "source": "dividend_income",
-          "label": "Dividends",
-          "positive_total_t": 0.14221994152817943,
-          "fed_income_tax_mtr": -15.523995670141373,
-          "fed_income_plus_payroll_tax_mtr": -15.075815833640052
-        },
-        {
-          "source": "savings_interest_income",
-          "label": "Savings interest",
-          "positive_total_t": 0.10930477864030516,
-          "fed_income_tax_mtr": -29.63796167945789,
-          "fed_income_plus_payroll_tax_mtr": -29.0548205676582
-        },
-        {
-          "source": "property_income",
-          "label": "Property",
-          "positive_total_t": 0.11392217649444597,
-          "fed_income_tax_mtr": -23.23456765948359,
-          "fed_income_plus_payroll_tax_mtr": -22.675061932831376
-        },
-        {
-          "source": "capital_gains",
-          "label": "Capital gains",
-          "positive_total_t": 0.2214447386078836,
-          "fed_income_tax_mtr": -20.011700641264337,
-          "fed_income_plus_payroll_tax_mtr": -19.723863095238073
-        }
-      ],
+      "federal_mtrs": [],
       "gov_revenue_b": 501.4799279652341,
       "income_tax_change_b": -3.041044176434845,
       "national_insurance_change_b": -49.765085228794945
@@ -1331,50 +1202,7 @@
       "self_employment_tax_change_b": 0.0,
       "identity_residual_b": -0.005897156058052063,
       "state_deltas": {},
-      "federal_mtrs": [
-        {
-          "source": "employment_income",
-          "label": "Employment",
-          "positive_total_t": 0.8602350318004518,
-          "fed_income_tax_mtr": -7.804892529539778,
-          "fed_income_plus_payroll_tax_mtr": -7.50287505164486
-        },
-        {
-          "source": "self_employment_income",
-          "label": "Self-employment",
-          "positive_total_t": 0.08734513586450408,
-          "fed_income_tax_mtr": -92.3837927882999,
-          "fed_income_plus_payroll_tax_mtr": -92.35919886697218
-        },
-        {
-          "source": "dividend_income",
-          "label": "Dividends",
-          "positive_total_t": 0.1750234650544483,
-          "fed_income_tax_mtr": -19.94240712705828,
-          "fed_income_plus_payroll_tax_mtr": -19.45753208906869
-        },
-        {
-          "source": "savings_interest_income",
-          "label": "Savings interest",
-          "positive_total_t": 0.13451630559266323,
-          "fed_income_tax_mtr": -37.10933749965036,
-          "fed_income_plus_payroll_tax_mtr": -36.47845108856854
-        },
-        {
-          "source": "property_income",
-          "label": "Property",
-          "positive_total_t": 0.14019872217281076,
-          "fed_income_tax_mtr": -29.488067627240106,
-          "fed_income_plus_payroll_tax_mtr": -28.882751773057535
-        },
-        {
-          "source": "capital_gains",
-          "label": "Capital gains",
-          "positive_total_t": 0.27252173706245125,
-          "fed_income_tax_mtr": -25.231565206419603,
-          "fed_income_plus_payroll_tax_mtr": -24.920160655053905
-        }
-      ],
+      "federal_mtrs": [],
       "gov_revenue_b": 479.729863983111,
       "income_tax_change_b": 0.31565427208859254,
       "national_insurance_change_b": -74.8718476594415
@@ -1414,50 +1242,7 @@
       "self_employment_tax_change_b": 0.0,
       "identity_residual_b": -0.0061985811230697635,
       "state_deltas": {},
-      "federal_mtrs": [
-        {
-          "source": "employment_income",
-          "label": "Employment",
-          "positive_total_t": 0.7373443108730061,
-          "fed_income_tax_mtr": -12.708185009022044,
-          "fed_income_plus_payroll_tax_mtr": -12.34491407915978
-        },
-        {
-          "source": "self_employment_income",
-          "label": "Self-employment",
-          "positive_total_t": 0.07486725985791502,
-          "fed_income_tax_mtr": -147.4007633594869,
-          "fed_income_plus_payroll_tax_mtr": -147.37821104663215
-        },
-        {
-          "source": "dividend_income",
-          "label": "Dividends",
-          "positive_total_t": 0.20782698785033735,
-          "fed_income_tax_mtr": -23.51385470537394,
-          "fed_income_plus_payroll_tax_mtr": -22.94638487063933
-        },
-        {
-          "source": "savings_interest_income",
-          "label": "Savings interest",
-          "positive_total_t": 0.15972783348500386,
-          "fed_income_tax_mtr": -42.79968281027789,
-          "fed_income_plus_payroll_tax_mtr": -42.06132967622693
-        },
-        {
-          "source": "property_income",
-          "label": "Property",
-          "positive_total_t": 0.16647526646717928,
-          "fed_income_tax_mtr": -34.6869642861166,
-          "fed_income_plus_payroll_tax_mtr": -33.97853744919622
-        },
-        {
-          "source": "capital_gains",
-          "label": "Capital gains",
-          "positive_total_t": 0.3235987363218465,
-          "fed_income_tax_mtr": -29.275604266366756,
-          "fed_income_plus_payroll_tax_mtr": -28.91115430655133
-        }
-      ],
+      "federal_mtrs": [],
       "gov_revenue_b": 461.579973104302,
       "income_tax_change_b": 7.475616287862259,
       "national_insurance_change_b": -100.18170055402408
@@ -1497,50 +1282,7 @@
       "self_employment_tax_change_b": 0.0,
       "identity_residual_b": -0.011608859749671937,
       "state_deltas": {},
-      "federal_mtrs": [
-        {
-          "source": "employment_income",
-          "label": "Employment",
-          "positive_total_t": 0.614453593341395,
-          "fed_income_tax_mtr": -19.691461014619055,
-          "fed_income_plus_payroll_tax_mtr": -19.250882241910713
-        },
-        {
-          "source": "self_employment_income",
-          "label": "Self-employment",
-          "positive_total_t": 0.062389383172780075,
-          "fed_income_tax_mtr": -225.2286592867409,
-          "fed_income_plus_payroll_tax_mtr": -225.21038988380394
-        },
-        {
-          "source": "dividend_income",
-          "label": "Dividends",
-          "positive_total_t": 0.24063051462881538,
-          "fed_income_tax_mtr": -26.4497630989253,
-          "fed_income_plus_payroll_tax_mtr": -25.839693297450985
-        },
-        {
-          "source": "savings_interest_income",
-          "label": "Savings interest",
-          "positive_total_t": 0.18493936046045123,
-          "fed_income_tax_mtr": -47.17942572223887,
-          "fed_income_plus_payroll_tax_mtr": -46.38564439887555
-        },
-        {
-          "source": "property_income",
-          "label": "Property",
-          "positive_total_t": 0.1927518132719416,
-          "fed_income_tax_mtr": -38.520986289755726,
-          "fed_income_plus_payroll_tax_mtr": -37.75937783691509
-        },
-        {
-          "source": "capital_gains",
-          "label": "Capital gains",
-          "positive_total_t": 0.3746757370450689,
-          "fed_income_tax_mtr": -32.40981426164543,
-          "fed_income_plus_payroll_tax_mtr": -32.01800503629758
-        }
-      ],
+      "federal_mtrs": [],
       "gov_revenue_b": 446.9718123769001,
       "income_tax_change_b": 18.09393398845239,
       "national_insurance_change_b": -125.40817898201604
@@ -1580,50 +1322,7 @@
       "self_employment_tax_change_b": 0.0,
       "identity_residual_b": -0.012283370138359069,
       "state_deltas": {},
-      "federal_mtrs": [
-        {
-          "source": "employment_income",
-          "label": "Employment",
-          "positive_total_t": 0.4915628743162834,
-          "fed_income_tax_mtr": -30.375463581277067,
-          "fed_income_plus_payroll_tax_mtr": -29.84142381570629
-        },
-        {
-          "source": "self_employment_income",
-          "label": "Self-employment",
-          "positive_total_t": 0.04991150668491584,
-          "fed_income_tax_mtr": -343.318527280037,
-          "fed_income_plus_payroll_tax_mtr": -343.30319860659387
-        },
-        {
-          "source": "dividend_income",
-          "label": "Dividends",
-          "positive_total_t": 0.27343403728044385,
-          "fed_income_tax_mtr": -28.990616196951894,
-          "fed_income_plus_payroll_tax_mtr": -28.37536018609667
-        },
-        {
-          "source": "savings_interest_income",
-          "label": "Savings interest",
-          "positive_total_t": 0.21015088974163293,
-          "fed_income_tax_mtr": -50.86099046184707,
-          "fed_income_plus_payroll_tax_mtr": -50.060461207766664
-        },
-        {
-          "source": "property_income",
-          "label": "Property",
-          "positive_total_t": 0.21902835998585485,
-          "fed_income_tax_mtr": -41.633580394311316,
-          "fed_income_plus_payroll_tax_mtr": -40.86549750760175
-        },
-        {
-          "source": "capital_gains",
-          "label": "Capital gains",
-          "positive_total_t": 0.42575273153151366,
-          "fed_income_tax_mtr": -35.031677271244995,
-          "fed_income_plus_payroll_tax_mtr": -34.636537269667
-        }
-      ],
+      "federal_mtrs": [],
       "gov_revenue_b": 438.2733853889924,
       "income_tax_change_b": 33.7927367933665,
       "national_insurance_change_b": -149.80540877483793
@@ -1663,50 +1362,7 @@
       "self_employment_tax_change_b": 0.0,
       "identity_residual_b": -0.013543661918075562,
       "state_deltas": {},
-      "federal_mtrs": [
-        {
-          "source": "employment_income",
-          "label": "Employment",
-          "positive_total_t": 0.36867215543650306,
-          "fed_income_tax_mtr": -48.22727040587708,
-          "fed_income_plus_payroll_tax_mtr": -47.5259853215105
-        },
-        {
-          "source": "self_employment_income",
-          "label": "Self-employment",
-          "positive_total_t": 0.03743362992895751,
-          "fed_income_tax_mtr": -539.6589868075671,
-          "fed_income_plus_payroll_tax_mtr": -539.6484694327271
-        },
-        {
-          "source": "dividend_income",
-          "label": "Dividends",
-          "positive_total_t": 0.30623756053599965,
-          "fed_income_tax_mtr": -31.207286948149296,
-          "fed_income_plus_payroll_tax_mtr": -30.573846311116107
-        },
-        {
-          "source": "savings_interest_income",
-          "label": "Savings interest",
-          "positive_total_t": 0.23536241356964707,
-          "fed_income_tax_mtr": -53.91295711243529,
-          "fed_income_plus_payroll_tax_mtr": -53.088767249290434
-        },
-        {
-          "source": "property_income",
-          "label": "Property",
-          "positive_total_t": 0.24530490458516474,
-          "fed_income_tax_mtr": -44.068829380286026,
-          "fed_income_plus_payroll_tax_mtr": -43.27804488391626
-        },
-        {
-          "source": "capital_gains",
-          "label": "Capital gains",
-          "positive_total_t": 0.4768297317355636,
-          "fed_income_tax_mtr": -37.14781291087521,
-          "fed_income_plus_payroll_tax_mtr": -36.7409940769838
-        }
-      ],
+      "federal_mtrs": [],
       "gov_revenue_b": 437.05297256465315,
       "income_tax_change_b": 55.37419380705029,
       "national_insurance_change_b": -172.60727861286102
@@ -1746,50 +1402,7 @@
       "self_employment_tax_change_b": 0.0,
       "identity_residual_b": -0.015371414569229126,
       "state_deltas": {},
-      "federal_mtrs": [
-        {
-          "source": "employment_income",
-          "label": "Employment",
-          "positive_total_t": 0.2457814371581417,
-          "fed_income_tax_mtr": -83.91998014602852,
-          "fed_income_plus_payroll_tax_mtr": -82.94315642670172
-        },
-        {
-          "source": "self_employment_income",
-          "label": "Self-employment",
-          "positive_total_t": 0.02495575334245792,
-          "fed_income_tax_mtr": -930.9826066549745,
-          "fed_income_plus_payroll_tax_mtr": -930.9752166914426
-        },
-        {
-          "source": "dividend_income",
-          "label": "Dividends",
-          "positive_total_t": 0.33904108146347717,
-          "fed_income_tax_mtr": -33.103055747697105,
-          "fed_income_plus_payroll_tax_mtr": -32.50161800404059
-        },
-        {
-          "source": "savings_interest_income",
-          "label": "Savings interest",
-          "positive_total_t": 0.26057394367731856,
-          "fed_income_tax_mtr": -56.51382677612466,
-          "fed_income_plus_payroll_tax_mtr": -55.73127691651638
-        },
-        {
-          "source": "property_income",
-          "label": "Property",
-          "positive_total_t": 0.2715814489910852,
-          "fed_income_tax_mtr": -45.998872222603175,
-          "fed_income_plus_payroll_tax_mtr": -45.248039999710976
-        },
-        {
-          "source": "capital_gains",
-          "label": "Capital gains",
-          "positive_total_t": 0.5279067290234201,
-          "fed_income_tax_mtr": -38.867638459205715,
-          "fed_income_plus_payroll_tax_mtr": -38.48137306073376
-        }
-      ],
+      "federal_mtrs": [],
       "gov_revenue_b": 444.2469423524021,
       "income_tax_change_b": 82.65815216727385,
       "national_insurance_change_b": -192.69726718533562
@@ -1829,50 +1442,7 @@
       "self_employment_tax_change_b": 0.0,
       "identity_residual_b": -0.018991751059761048,
       "state_deltas": {},
-      "federal_mtrs": [
-        {
-          "source": "employment_income",
-          "label": "Employment",
-          "positive_total_t": 0.12289071857907086,
-          "fed_income_tax_mtr": -190.5441316358002,
-          "fed_income_plus_payroll_tax_mtr": -188.77385398023486
-        },
-        {
-          "source": "self_employment_income",
-          "label": "Self-employment",
-          "positive_total_t": 0.01247787667122896,
-          "fed_income_tax_mtr": -2100.081298740286,
-          "fed_income_plus_payroll_tax_mtr": -2100.0745338053084
-        },
-        {
-          "source": "dividend_income",
-          "label": "Dividends",
-          "positive_total_t": 0.3718446101180003,
-          "fed_income_tax_mtr": -34.61389026503045,
-          "fed_income_plus_payroll_tax_mtr": -34.05289627997634
-        },
-        {
-          "source": "savings_interest_income",
-          "label": "Savings interest",
-          "positive_total_t": 0.2857854702949798,
-          "fed_income_tax_mtr": -58.35821186939371,
-          "fed_income_plus_payroll_tax_mtr": -57.62828466408244
-        },
-        {
-          "source": "property_income",
-          "label": "Property",
-          "positive_total_t": 0.2978579982674944,
-          "fed_income_tax_mtr": -47.529021633914525,
-          "fed_income_plus_payroll_tax_mtr": -46.82867921952804
-        },
-        {
-          "source": "capital_gains",
-          "label": "Capital gains",
-          "positive_total_t": 0.5789837302533575,
-          "fed_income_tax_mtr": -40.213081813352474,
-          "fed_income_plus_payroll_tax_mtr": -39.852790878131024
-        }
-      ],
+      "federal_mtrs": [],
       "gov_revenue_b": 463.1451914574264,
       "income_tax_change_b": 115.34972219279503,
       "national_insurance_change_b": -206.49058810583244
@@ -1912,36 +1482,7 @@
       "self_employment_tax_change_b": 0.0,
       "identity_residual_b": -0.01944957157659912,
       "state_deltas": {},
-      "federal_mtrs": [
-        {
-          "source": "dividend_income",
-          "label": "Dividends",
-          "positive_total_t": 0.4046481330941189,
-          "fed_income_tax_mtr": -36.211809490631666,
-          "fed_income_plus_payroll_tax_mtr": -35.677909365940124
-        },
-        {
-          "source": "savings_interest_income",
-          "label": "Savings interest",
-          "positive_total_t": 0.3109969962843276,
-          "fed_income_tax_mtr": -60.310522622728726,
-          "fed_income_plus_payroll_tax_mtr": -59.615848104015264
-        },
-        {
-          "source": "property_income",
-          "label": "Property",
-          "positive_total_t": 0.32413454228943395,
-          "fed_income_tax_mtr": -49.095468816602946,
-          "fed_income_plus_payroll_tax_mtr": -48.428950255547406
-        },
-        {
-          "source": "capital_gains",
-          "label": "Capital gains",
-          "positive_total_t": 0.6300607263768825,
-          "fed_income_tax_mtr": -41.520401999544525,
-          "fed_income_plus_payroll_tax_mtr": -41.177511735684604
-        }
-      ],
+      "federal_mtrs": [],
       "gov_revenue_b": 496.8194551576361,
       "income_tax_change_b": 152.90767065422895,
       "national_insurance_change_b": -210.37427286705662

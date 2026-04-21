@@ -644,7 +644,13 @@ def run_shift_sweep(
     baseline = microsim_factory()
     if verbose:
         print("Computing UK baseline...")
-    baseline_mtrs = _uk_mtrs(baseline, branch_prefix="mtr_base")
+    # PE-UK does not propagate sub-branch inputs correctly when the parent
+    # branch already overrides the same variables. This makes per-scenario
+    # MTR computation on shifted UK branches produce nonsense (−22 000% on
+    # self-employment at 50% shift, etc.), so UK MTR computation is
+    # disabled across the board — the chart hides when no scenario has
+    # populated federal_mtrs. US is unaffected.
+    baseline_mtrs = []
     baseline_metrics = _extract_results(baseline, "Baseline")
     baseline_fiscal = revenue_components(baseline)
     baseline_totals = {"national": _uk_national_baseline_totals(baseline)}
@@ -674,7 +680,8 @@ def run_shift_sweep(
 
         sim = microsim_factory()
         branch, _ = _apply_shift(sim, f"uk_sweep_{int(pct * 100)}", pct)
-        scenario_mtrs = _uk_mtrs(branch, branch_prefix=f"mtr_{int(pct * 100)}")
+        # MTRs disabled for UK; see comment on baseline_mtrs above.
+        scenario_mtrs = []
         metrics = _extract_results(branch, label)
         fiscal = revenue_components(branch)
         fiscal_delta = net_fiscal_impact(fiscal, baseline_fiscal)

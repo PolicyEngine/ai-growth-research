@@ -235,7 +235,7 @@ function IncomeShift() {
                   At a 100% shift, the top decile's mean net income rises{" "}
                   <strong>
                     {findings.topDecilePct != null
-                      ? `+${findings.topDecilePct.toFixed(0)}%`
+                      ? `${findings.topDecilePct >= 0 ? "+" : ""}${findings.topDecilePct.toFixed(0)}%`
                       : "-"}
                   </strong>
                   {findings.worstPct != null && findings.worstDecile ? (
