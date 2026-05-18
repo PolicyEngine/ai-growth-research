@@ -179,29 +179,29 @@
 }
 
 /* Uncertainty Box */
-.uncertainty-box {
+.approach-section .uncertainty-box {
   margin-top: var(--space-16);
   padding: var(--space-8);
   background: linear-gradient(
     135deg,
-    var(--pe-teal-50) 0%,
-    rgba(240, 249, 255, 0.5) 100%
+    var(--pe-teal-600) 0%,
+    #1a4a4a 100%
   );
   border-radius: var(--radius-2xl);
-  border: 1px solid var(--pe-teal-200);
+  border: 1px solid rgba(255, 255, 255, 0.16);
   text-align: center;
 }
 
-.uncertainty-box h3 {
+.approach-section .uncertainty-box h3 {
   font-size: 1.25rem;
-  color: var(--pe-gray-800);
+  color: white;
   margin-bottom: var(--space-3);
   font-weight: 600;
 }
 
-.uncertainty-box > p {
+.approach-section .uncertainty-box > p {
   font-size: 0.95rem;
-  color: var(--pe-gray-600);
+  color: rgba(255, 255, 255, 0.92);
   line-height: 1.7;
   max-width: 700px;
   margin: 0 auto var(--space-8);
@@ -218,16 +218,16 @@
   text-align: center;
 }
 
-.uncertainty-value {
+.approach-section .uncertainty-value {
   font-size: 1.5rem;
   font-weight: 700;
-  color: var(--pe-teal-600);
+  color: white;
   letter-spacing: -0.02em;
 }
 
-.uncertainty-label {
+.approach-section .uncertainty-label {
   font-size: 0.85rem;
-  color: var(--pe-gray-500);
+  color: rgba(255, 255, 255, 0.9);
   margin-top: var(--space-1);
 }
 

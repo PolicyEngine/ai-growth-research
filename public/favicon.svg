@@ -1,31 +1,9 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
-  <!-- AI circuit node (brain/network) balanced with distribution bars -->
-
-  <!-- Scale beam -->
-  <rect x="4" y="14" width="24" height="2" rx="1" fill="#2c7a7b"/>
-
-  <!-- Scale fulcrum -->
-  <polygon points="16,16 13,22 19,22" fill="#319795"/>
-  <rect x="14" y="22" width="4" height="2" rx="1" fill="#319795"/>
-
-  <!-- Left pan: AI circuit nodes -->
-  <circle cx="7" cy="10" r="2" fill="#319795"/>
-  <circle cx="12" cy="8" r="1.5" fill="#38b2ac"/>
-  <circle cx="9" cy="5" r="1.5" fill="#38b2ac"/>
-  <line x1="7" y1="10" x2="12" y2="8" stroke="#4fd1c5" stroke-width="0.8"/>
-  <line x1="7" y1="10" x2="9" y2="5" stroke="#4fd1c5" stroke-width="0.8"/>
-  <line x1="12" y1="8" x2="9" y2="5" stroke="#4fd1c5" stroke-width="0.8"/>
-
-  <!-- Right pan: distribution/inequality bars -->
-  <rect x="21" y="5" width="2.5" height="9" rx="0.5" fill="#319795"/>
-  <rect x="24.5" y="8" width="2.5" height="6" rx="0.5" fill="#38b2ac"/>
-  <rect x="18" y="10" width="2" height="4" rx="0.5" fill="#4fd1c5"/>
-
-  <!-- Hanging lines -->
-  <line x1="7" y1="12" x2="7" y2="14" stroke="#2c7a7b" stroke-width="1"/>
-  <line x1="25" y1="12" x2="25" y2="14" stroke="#2c7a7b" stroke-width="1"/>
-
-  <!-- Base -->
-  <rect x="10" y="25" width="12" height="1.5" rx="0.75" fill="#2c7a7b"/>
-  <rect x="15" y="24" width="2" height="1.5" fill="#319795"/>
+<svg width="244" height="244" viewBox="0 0 244 244" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M28.0008 103.633V0.775391H71.4212C80.0906 0.775391 86.9723 2.36723 92.0661 5.5509C97.16 8.6856 100.809 12.7264 103.013 17.6733C105.217 22.5713 106.319 27.6897 106.319 33.0285C106.319 36.7509 105.658 40.5223 104.336 44.3427C103.062 48.1142 101.029 51.5917 98.2375 54.7754C95.4947 57.9101 91.8947 60.457 87.4375 62.4162C83.0294 64.3264 77.6906 65.2815 71.4212 65.2815H47.0294V103.633H28.0008ZM47.0294 47.355H72.3028C75.8294 47.355 78.6457 46.6448 80.7518 45.2244C82.9069 43.755 84.4498 41.9182 85.3804 39.7142C86.311 37.5101 86.7763 35.2815 86.7763 33.0285C86.7763 30.9713 86.3355 28.8407 85.4539 26.6366C84.6212 24.3836 83.1518 22.4978 81.0457 20.9795C78.9396 19.4611 76.0253 18.7019 72.3028 18.7019H47.0294V47.355Z" fill="#2C7A7B"/>
+<path d="M140.776 243.224V140.367H210V158.441H159.805V181.069H189.707V199.143H159.805V225.004H210V243.224H140.776Z" fill="#2C7A7B"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M103.968 140.367H0.817505V158.735H85.6008V243.224H103.968V158.735H85.6008V147.714H103.968V140.367Z" fill="#2C7A7B" fill-opacity="0.3"/>
+<path d="M103.968 158.735V147.714H85.6008V158.735H103.968Z" fill="#2C7A7B" fill-opacity="0.3"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M140.703 103.633V96.2856H159.07V85.2652H243.266V103.633H140.703Z" fill="#2C7A7B" fill-opacity="0.3"/>
+<path d="M140.703 0.775394V85.2652H159.07V0.775394H140.703Z" fill="#2C7A7B" fill-opacity="0.3"/>
+<path d="M140.703 85.2652V96.2856H159.07V85.2652H140.703Z" fill="#2C7A7B" fill-opacity="0.3"/>
 </svg>
