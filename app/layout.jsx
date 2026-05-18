@@ -3,6 +3,9 @@ import "@policyengine/ui-kit/styles.css";
 
 import "./globals.css";
 
+const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
+const assetPath = (path) => `${basePath}${path}`;
+
 export const metadata = {
   title:
     "How do economic policies mediate AI's impact on inequality? | PolicyEngine",
@@ -10,12 +13,12 @@ export const metadata = {
     "PolicyEngine models how policy choices, safety nets, and capital taxation shape inequality under AI-driven economic change.",
   icons: {
     icon: [
-      { url: "/favicon.svg", type: "image/svg+xml" },
-      { url: "/favicon.ico", sizes: "any" },
+      { url: assetPath("/favicon.svg"), type: "image/svg+xml" },
+      { url: assetPath("/favicon.ico"), sizes: "any" },
     ],
-    apple: "/logo512.png",
+    apple: assetPath("/logo512.png"),
   },
-  manifest: "/manifest.json",
+  manifest: assetPath("/manifest.json"),
 };
 
 export default function RootLayout({ children }) {
