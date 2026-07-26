@@ -187,6 +187,14 @@ fully relative line would show larger increases. Gini is household-level and
 unequivalized, so changes are meaningful but levels are not comparable to
 published series.
 
+**Levels versus changes.** PolicyEngine's absolute SPM poverty level sits above
+the Census published rate — a known calibration gap, and one that moves whenever
+BLS revises thresholds (as it did for 2019–2024 in July 2026). Every poverty
+figure here is therefore reported as a change against a same-year baseline
+computed on the identical threshold. Because the threshold is identical in
+baseline and scenario, those changes are close to unaffected by the level gap;
+the levels are context, the deltas are the result.
+
 **Diagnostics.** The net-income identity closes to $0.000B in every scenario,
 and the labor shock hits its target aggregate to within 2e-16.
 
