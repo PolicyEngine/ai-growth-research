@@ -31,15 +31,15 @@ import numpy as np
 from .constants import YEAR
 
 
-def _hh_sum(sim, var):
-    return float(sim.calculate(var, map_to="household", period=YEAR).sum())
+def _hh_sum(sim, var, year=YEAR):
+    return float(sim.calculate(var, map_to="household", period=year).sum())
 
 
-def _tu_sum(sim, var):
-    return float(sim.calculate(var, period=YEAR).sum())
+def _tu_sum(sim, var, year=YEAR):
+    return float(sim.calculate(var, period=year).sum())
 
 
-def revenue_components(sim):
+def revenue_components(sim, year=YEAR):
     """Return a comprehensive, non-overlapping revenue/transfer decomposition.
 
     Top-line aggregates (these reconcile to household net income):
@@ -72,20 +72,22 @@ def revenue_components(sim):
     return {
         # --- Aggregates (use these for totals) ---
         "household_tax_before_refundable_credits": _hh_sum(
-            sim, "household_tax_before_refundable_credits"
+            sim, "household_tax_before_refundable_credits", year
         ),
         "household_refundable_tax_credits": _hh_sum(
-            sim, "household_refundable_tax_credits"
+            sim, "household_refundable_tax_credits", year
         ),
-        "household_benefits": _hh_sum(sim, "household_benefits"),
-        "employer_payroll_tax": _hh_sum(sim, "employer_payroll_tax"),
+        "household_benefits": _hh_sum(sim, "household_benefits", year),
+        "employer_payroll_tax": _hh_sum(sim, "employer_payroll_tax", year),
         # --- Federal income tax subcomponents (sum to fed income tax portion) ---
-        "fed_income_tax_main_rates": _tu_sum(sim, "income_tax_main_rates"),
-        "fed_capital_gains_tax": _tu_sum(sim, "capital_gains_tax"),
-        "fed_alternative_minimum_tax": _tu_sum(sim, "alternative_minimum_tax"),
-        "fed_net_investment_income_tax": _tu_sum(sim, "net_investment_income_tax"),
+        "fed_income_tax_main_rates": _tu_sum(sim, "income_tax_main_rates", year),
+        "fed_capital_gains_tax": _tu_sum(sim, "capital_gains_tax", year),
+        "fed_alternative_minimum_tax": _tu_sum(sim, "alternative_minimum_tax", year),
+        "fed_net_investment_income_tax": _tu_sum(
+            sim, "net_investment_income_tax", year
+        ),
         "fed_nonrefundable_credits": _tu_sum(
-            sim, "income_tax_capped_non_refundable_credits"
+            sim, "income_tax_capped_non_refundable_credits", year
         ),
         # Catch-all for the three minor additive items inside
         # income_tax_before_refundable_credits that don't get their own line:
@@ -93,40 +95,46 @@ def revenue_components(sim):
         # qualified-retirement penalty. Near-zero in current law, but
         # exposed so the 5-bucket decomposition stays MECE for any reform.
         "fed_other_income_tax_items": (
-            _tu_sum(sim, "recapture_of_investment_credit")
-            + _tu_sum(sim, "unreported_payroll_tax")
-            + _tu_sum(sim, "qualified_retirement_penalty")
+            _tu_sum(sim, "recapture_of_investment_credit", year)
+            + _tu_sum(sim, "unreported_payroll_tax", year)
+            + _tu_sum(sim, "qualified_retirement_penalty", year)
         ),
         "fed_income_tax_before_refundable_credits": _tu_sum(
-            sim, "income_tax_before_refundable_credits"
+            sim, "income_tax_before_refundable_credits", year
         ),
         # --- Payroll / self-employment ---
-        "employee_social_security_tax": _hh_sum(sim, "employee_social_security_tax"),
-        "employee_medicare_tax": _hh_sum(sim, "employee_medicare_tax"),
-        "employer_social_security_tax": _hh_sum(sim, "employer_social_security_tax"),
-        "employer_medicare_tax": _hh_sum(sim, "employer_medicare_tax"),
-        "self_employment_tax": _hh_sum(sim, "self_employment_tax"),
+        "employee_social_security_tax": _hh_sum(
+            sim, "employee_social_security_tax", year
+        ),
+        "employee_medicare_tax": _hh_sum(sim, "employee_medicare_tax", year),
+        "employer_social_security_tax": _hh_sum(
+            sim, "employer_social_security_tax", year
+        ),
+        "employer_medicare_tax": _hh_sum(sim, "employer_medicare_tax", year),
+        "self_employment_tax": _hh_sum(sim, "self_employment_tax", year),
         # --- State ---
         "state_tax_before_refundable_credits": _hh_sum(
-            sim, "household_state_tax_before_refundable_credits"
+            sim, "household_state_tax_before_refundable_credits", year
         ),
         "state_refundable_credits": _hh_sum(
-            sim, "household_refundable_state_tax_credits"
+            sim, "household_refundable_state_tax_credits", year
         ),
-        "state_benefits": _hh_sum(sim, "household_state_benefits"),
+        "state_benefits": _hh_sum(sim, "household_state_benefits", year),
         # --- Federal refundable credit components ---
-        "income_tax_refundable_credits": _hh_sum(sim, "income_tax_refundable_credits"),
-        "eitc": _hh_sum(sim, "eitc"),
-        "refundable_ctc": _hh_sum(sim, "refundable_ctc"),
+        "income_tax_refundable_credits": _hh_sum(
+            sim, "income_tax_refundable_credits", year
+        ),
+        "eitc": _hh_sum(sim, "eitc", year),
+        "refundable_ctc": _hh_sum(sim, "refundable_ctc", year),
         # --- Benefit components ---
-        "snap": _hh_sum(sim, "snap"),
-        "ssi": _hh_sum(sim, "ssi"),
-        "tanf": _hh_sum(sim, "tanf"),
-        "wic": _hh_sum(sim, "wic"),
-        "health_benefits": _hh_sum(sim, "household_health_benefits"),
+        "snap": _hh_sum(sim, "snap", year),
+        "ssi": _hh_sum(sim, "ssi", year),
+        "tanf": _hh_sum(sim, "tanf", year),
+        "wic": _hh_sum(sim, "wic", year),
+        "health_benefits": _hh_sum(sim, "household_health_benefits", year),
         # --- Identity-check variables ---
-        "household_market_income": _hh_sum(sim, "household_market_income"),
-        "household_net_income": _hh_sum(sim, "household_net_income"),
+        "household_market_income": _hh_sum(sim, "household_market_income", year),
+        "household_net_income": _hh_sum(sim, "household_net_income", year),
     }
 
 
@@ -136,9 +144,7 @@ def net_fiscal_impact(components, baseline_components):
     Total change is computed from the *aggregates only* to avoid double-counting
     the subcomponents. Subcomponent deltas are reported for attribution.
     """
-    delta = {
-        f"{k}_change": components[k] - baseline_components[k] for k in components
-    }
+    delta = {f"{k}_change": components[k] - baseline_components[k] for k in components}
 
     # Government net revenue = taxes - transfers
     # Taxes = household_tax_before_refundable_credits + employer_payroll_tax
@@ -177,7 +183,7 @@ STATE_BREAKDOWN_VARIABLES = (
 )
 
 
-def state_revenue_components(sim):
+def state_revenue_components(sim, year=YEAR):
     """Return per-state totals for state tax/credit/benefit lines.
 
     All variables are mapped to the household entity so per-state sums use the
@@ -185,11 +191,9 @@ def state_revenue_components(sim):
     capital_gains_tax are aggregated across tax units within each household.
     """
     state_code = np.asarray(
-        sim.calculate("state_code_str", map_to="household", period=YEAR)
+        sim.calculate("state_code_str", map_to="household", period=year)
     )
-    hh_weight = np.asarray(
-        sim.calculate("household_weight", period=YEAR), dtype=float
-    )
+    hh_weight = np.asarray(sim.calculate("household_weight", period=year), dtype=float)
 
     unique_states = np.unique(state_code)
     per_state = {str(code): {"household_weight": 0.0} for code in unique_states}
@@ -199,7 +203,7 @@ def state_revenue_components(sim):
 
     for var in STATE_BREAKDOWN_VARIABLES:
         values = np.asarray(
-            sim.calculate(var, map_to="household", period=YEAR), dtype=float
+            sim.calculate(var, map_to="household", period=year), dtype=float
         )
         weighted = values * hh_weight
         for code in unique_states:
