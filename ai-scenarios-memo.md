@@ -141,14 +141,23 @@ side of a scenario that raises federal receipts $238B.
 
 ## States
 
-State income tax revenue under Rapid / proportional concentrates almost
-entirely in a handful of states — California +$10.1B, New York +$3.8B, New
-Jersey +$1.8B, Massachusetts and Maryland +$1.3B each. The nine states without a
-broad income tax (TX, FL, TN, NV, SD, WY, AK, NH, WA on wage income) collect
-essentially nothing from the capital shock.
+State revenue under Rapid / proportional concentrates almost entirely in a
+handful of states — California +$10.1B, New York +$3.8B, New Jersey +$1.8B,
+Massachusetts and Maryland +$1.3B each.
 
-Whatever AI does to the federal fiscal picture, it does almost nothing for the
-states that would need it most to absorb displaced workers.
+Seven states collect **exactly nothing** from the capital shock: Florida,
+Nevada, New Hampshire, South Dakota, Tennessee, Texas and Wyoming. Alaska
+collects $2.8M, which rounds to nothing on this scale.
+
+Washington is the instructive exception. It has no income tax either, but its
+capital gains excise tax collects **+$0.91B** — more than all seven zero-collecting
+states combined, many times over. A state that taxes capital gains participates
+in an AI capital boom; a state that taxes only wages does not participate in an
+economy where wages are the shrinking share.
+
+Whatever AI does to the federal fiscal picture, it does almost nothing for most
+of the states that would bear the cost of absorbing displaced workers — unless
+they have a capital tax to collect it with.
 
 ## Scope and method
 
