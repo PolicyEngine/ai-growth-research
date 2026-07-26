@@ -137,3 +137,49 @@ class TestAIScenarioPayload:
         payload = ai_scenarios_website_payload(_result(scenarios=[]))
         assert payload["scenarios"] == []
         assert payload["baseline"]["povertyRate"] == pytest.approx(0.1250)
+
+
+class TestCheckpointRoundTrip:
+    """A run this long must not be all-or-nothing."""
+
+    def test_append_then_load_round_trips(self, tmp_path):
+        from analysis.compute_ai_scenarios import append_checkpoint, load_checkpoint
+
+        path = str(tmp_path / "checkpoint.jsonl")
+        append_checkpoint(path, "grid:Rapid / proportional", {"revenue": 205.7})
+        append_checkpoint(path, "realization:0.5", {"revenue": 110.0})
+
+        loaded = load_checkpoint(path)
+        assert loaded["grid:Rapid / proportional"] == {"revenue": 205.7}
+        assert loaded["realization:0.5"] == {"revenue": 110.0}
+
+    def test_missing_file_loads_as_empty(self, tmp_path):
+        from analysis.compute_ai_scenarios import load_checkpoint
+
+        assert load_checkpoint(str(tmp_path / "absent.jsonl")) == {}
+
+    def test_none_path_is_a_no_op(self, tmp_path):
+        from analysis.compute_ai_scenarios import append_checkpoint, load_checkpoint
+
+        append_checkpoint(None, "key", {"a": 1})
+        assert load_checkpoint(None) == {}
+
+    def test_torn_final_line_is_discarded_not_fatal(self, tmp_path):
+        """A process killed mid-write leaves a partial line; resume anyway."""
+        from analysis.compute_ai_scenarios import append_checkpoint, load_checkpoint
+
+        path = tmp_path / "checkpoint.jsonl"
+        append_checkpoint(str(path), "grid:Slow / proportional", {"revenue": 5.9})
+        with open(path, "a") as handle:
+            handle.write('{"key": "grid:Moderate / propor')
+
+        loaded = load_checkpoint(str(path))
+        assert loaded == {"grid:Slow / proportional": {"revenue": 5.9}}
+
+    def test_later_record_wins_for_a_repeated_key(self, tmp_path):
+        from analysis.compute_ai_scenarios import append_checkpoint, load_checkpoint
+
+        path = str(tmp_path / "checkpoint.jsonl")
+        append_checkpoint(path, "grid:Rapid / proportional", {"revenue": 1.0})
+        append_checkpoint(path, "grid:Rapid / proportional", {"revenue": 2.0})
+        assert load_checkpoint(path)["grid:Rapid / proportional"] == {"revenue": 2.0}

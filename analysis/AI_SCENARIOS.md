@@ -161,6 +161,11 @@ baseline path, applied on top of PolicyEngine's own uprating of the 2024
 microdata to the target year. That is only exactly right where PolicyEngine's
 uprating factors track CBO's projection; they are not guaranteed to.
 
+**Gini is household-level and unequivalized.** `extract_results` takes the Gini
+of `household_net_income` weighted by household weights, without an equivalence
+scale. Changes against the same-year baseline are meaningful; the levels are not
+comparable to published equivalized-income Ginis.
+
 **Poverty is anchored, not relative.** `spm_unit_spm_threshold` is rebuilt from
 each unit's composition, tenure and geography against base reference thresholds;
 it does not respond to the income distribution inside the simulation. So the

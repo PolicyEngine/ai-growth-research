@@ -57,6 +57,15 @@ WEBSITE_OUTPUT_PATH = os.path.join(
     os.path.dirname(__file__), "..", "src", "data", "aiScenariosData.json"
 )
 
+#: Append-only record of completed units, so a killed run resumes instead of
+#: starting over. Lives beside the run output, outside any temp directory that
+#: a restart might clear.
+CHECKPOINT_PATH = os.path.join(
+    os.path.dirname(__file__), "outputs", "ai_scenarios_checkpoint.jsonl"
+)
+
+BASELINE_KEY = "baseline"
+
 MODEL_URL = "https://www.policyengine.org/us/model"
 
 DESCRIPTION = (
@@ -243,6 +252,43 @@ def _metadata(baseline, year, capital_income_vars):
     }
 
 
+def load_checkpoint(path):
+    """Read completed units from a checkpoint file, keyed by unit name.
+
+    A run of this length should not be all-or-nothing, so each finished unit is
+    appended as one JSON line. A process killed mid-write leaves a torn final
+    line; that line is discarded rather than failing the resume.
+    """
+    if not path or not os.path.exists(path):
+        return {}
+    records = {}
+    with open(path) as handle:
+        for line in handle:
+            line = line.strip()
+            if not line:
+                continue
+            try:
+                record = json.loads(line)
+            except json.JSONDecodeError:
+                continue
+            records[record["key"]] = record["payload"]
+    return records
+
+
+def append_checkpoint(path, key, payload):
+    """Append one completed unit, flushed to disk before returning."""
+    if not path:
+        return
+    directory = os.path.dirname(path)
+    if directory:
+        os.makedirs(directory, exist_ok=True)
+    with open(path, "a") as handle:
+        handle.write(json.dumps({"key": key, "payload": payload}, default=float))
+        handle.write("\n")
+        handle.flush()
+        os.fsync(handle.fileno())
+
+
 def _run_one(
     scenario,
     baseline_revenue,
@@ -251,8 +297,17 @@ def _run_one(
     year,
     capital_income_vars,
     verbose,
+    checkpoint_path=None,
+    checkpoint=None,
+    checkpoint_key=None,
 ):
     """Run a single scenario from a fresh microsimulation."""
+    key = checkpoint_key or scenario.label
+    if checkpoint and key in checkpoint:
+        if verbose:
+            print(f"  {scenario.label} ... (from checkpoint)", flush=True)
+        return checkpoint[key]
+
     if verbose:
         print(f"  {scenario.label} ...", flush=True)
 
@@ -291,6 +346,7 @@ def _run_one(
 
     del branch, sim
     gc.collect()
+    append_checkpoint(checkpoint_path, key, row)
     return row
 
 
@@ -302,26 +358,55 @@ def run_ai_scenarios(
     realization_sweep=REALIZATION_SWEEP,
     include_capital_scope_sensitivity=True,
     verbose=False,
+    checkpoint_path=CHECKPOINT_PATH,
 ):
-    """Run the scenario grid plus sensitivities and return an export payload."""
+    """Run the scenario grid plus sensitivities and return an export payload.
+
+    Completed units are appended to `checkpoint_path` as they finish, and a
+    rerun with the same path skips them. Pass `checkpoint_path=None` to
+    disable. Delete the file to force a clean run.
+    """
     if scenarios is None:
         scenarios = default_scenario_grid()
+
+    checkpoint = load_checkpoint(checkpoint_path)
+    if checkpoint and verbose:
+        print(f"Resuming: {len(checkpoint)} unit(s) already in the checkpoint.")
 
     if verbose:
         print(f"Baseline microsimulation for {year}...", flush=True)
 
-    baseline = microsim_factory()
-    baseline_metrics = extract_results(baseline, "Baseline", year=year)
-    baseline_revenue = revenue_components(baseline, year=year)
-    baseline_states = state_revenue_components(baseline, year=year)
-    metadata = _metadata(baseline, year, capital_income_vars)
-    baseline_row = {
-        "scenario": {"name": "Baseline", "label": "Baseline"},
-        "context": _baseline_context(baseline, year, capital_income_vars),
-    }
-    baseline_row.update(_metrics_row(baseline_metrics))
-    del baseline
-    gc.collect()
+    cached_baseline = checkpoint.get(BASELINE_KEY)
+    if cached_baseline:
+        if verbose:
+            print("  (from checkpoint)", flush=True)
+        baseline_row = cached_baseline["row"]
+        baseline_revenue = cached_baseline["revenue"]
+        baseline_states = cached_baseline["states"]
+        metadata = cached_baseline["metadata"]
+    else:
+        baseline = microsim_factory()
+        baseline_metrics = extract_results(baseline, "Baseline", year=year)
+        baseline_revenue = revenue_components(baseline, year=year)
+        baseline_states = state_revenue_components(baseline, year=year)
+        metadata = _metadata(baseline, year, capital_income_vars)
+        baseline_row = {
+            "scenario": {"name": "Baseline", "label": "Baseline"},
+            "context": _baseline_context(baseline, year, capital_income_vars),
+        }
+        baseline_row.update(_metrics_row(baseline_metrics))
+        del baseline
+        gc.collect()
+        append_checkpoint(
+            checkpoint_path,
+            BASELINE_KEY,
+            {
+                "row": baseline_row,
+                "revenue": baseline_revenue,
+                "states": baseline_states,
+                "metadata": metadata,
+            },
+        )
 
     if verbose:
         context = baseline_row["context"]
@@ -348,6 +433,9 @@ def run_ai_scenarios(
             year,
             capital_income_vars,
             verbose,
+            checkpoint_path=checkpoint_path,
+            checkpoint=checkpoint,
+            checkpoint_key=f"grid:{scenario.label}",
         )
         for scenario in scenarios
     ]
@@ -368,6 +456,9 @@ def run_ai_scenarios(
                 year,
                 capital_income_vars,
                 verbose,
+                checkpoint_path=checkpoint_path,
+                checkpoint=checkpoint,
+                checkpoint_key=f"realization:{rate}",
             )
             for rate in realization_sweep
         ]
@@ -384,6 +475,9 @@ def run_ai_scenarios(
                 year,
                 CAPITAL_INCOME_VARS_EXCL_RETIREMENT,
                 verbose,
+                checkpoint_path=checkpoint_path,
+                checkpoint=checkpoint,
+                checkpoint_key=f"capital_scope:{name}",
             )
             for name in ("Slow", "Moderate", "Rapid")
         ]
