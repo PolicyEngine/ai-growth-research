@@ -2,6 +2,20 @@ import React from "react";
 import { describe, expect, it } from "vitest";
 import { fireEvent, render, screen } from "@testing-library/react";
 import AIScenarios, { realizationBreakeven } from "./AIScenarios";
+import scenariosData from "../data/aiScenariosData.json";
+
+// Derive expected strings from the committed payload so a data-build refresh
+// changes the numbers without breaking the tests. This mirrors the
+// component's own formatter.
+const fmtBillions = (value) =>
+  `${value >= 0 ? "+" : "\u2212"}$${Math.abs(value).toFixed(0)}B`;
+
+function revenueOf(name, variant) {
+  const row = scenariosData.scenarios.find(
+    (r) => r.name === name && r.inequality === variant && !r.holdSharesFixed,
+  );
+  return fmtBillions(row.revenueChange);
+}
 
 describe("AIScenarios", () => {
   it("renders the section with scenario and variant controls", () => {
@@ -15,15 +29,17 @@ describe("AIScenarios", () => {
 
   it("defaults to Rapid / proportional and shows its revenue", () => {
     render(<AIScenarios />);
-    // Rapid / proportional revenue change is +$206B in the committed payload.
-    expect(screen.getAllByText("+$206B").length).toBeGreaterThan(0);
+    expect(
+      screen.getAllByText(revenueOf("Rapid", "proportional")).length,
+    ).toBeGreaterThan(0);
   });
 
   it("switches scenario when a tab is clicked", () => {
     render(<AIScenarios />);
     fireEvent.click(screen.getByRole("radio", { name: "Slow" }));
-    // Slow / proportional revenue change is +$6B.
-    expect(screen.getAllByText("+$6B").length).toBeGreaterThan(0);
+    expect(
+      screen.getAllByText(revenueOf("Slow", "proportional")).length,
+    ).toBeGreaterThan(0);
   });
 
   it("shows the crossover wage only for spread variants", () => {
