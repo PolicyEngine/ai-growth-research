@@ -170,10 +170,36 @@ formulas, reproducing all nine of their Table 1 derived values to within
 **We model and they do not:** SPM poverty, the transfer system (SNAP, SSI, TANF,
 WIC, Medicaid, CHIP, ACA premium tax credits), and state tax and benefit codes.
 
-**They model and we cannot:** the corporate income tax. Our totals are *not*
-comparable to their headline $216B — compare to their individual income tax and
-payroll lines. Our figures land in a similar range, but that is offsetting
-scope, not agreement.
+**They model and we cannot:** the corporate income tax. Their microsimulation
+covers federal individual income tax plus payroll; the corporate effect is a
+single aggregate wedge layered on top, not attributed to households.
+
+Their methodology document publishes that wedge in full — a 21% statutory rate,
+a C-corp share of capital income near 0.50, a CBO 2030 corporate anchor of about
+$486B, and an effective-rate adjustment that "falls out to roughly one" — which
+works out to 10.5% of the excess capital flow. Applying their formula to our
+capital flow gives the first genuinely comparable figure:
+
+| Rapid + expansive | Federal income tax + payroll | + their corporate wedge | Comparable total |
+| --- | --- | --- | --- |
+| ours | +$217B | +$96B | **+$313B** |
+| theirs (published) | — | — | +$216B |
+
+So on a like-for-like basis we are **1.45× their estimate**, or 4.7% of CBO's
+2030 revenue against their 3.3% — not the near-agreement the raw totals
+suggested. Most of the gap is the capital base. Inverting the same wedge
+identity recovers the realized taxable capital income their run starts from,
+which they do not publish: about **$4.6T** against our **$5.3T**. A 14% larger
+base, shocked at the same rate, produces a proportionally larger flow.
+
+Two further differences push the same way and are not netted out above: they
+apportion the capital flow by SCF-imputed *total* wealth while we use existing
+realized capital income (they note a narrower base pushes incidence toward the
+top), and their pass-through split is active/passive-aware where ours applies a
+single rule. `reconcile_budget_lab.py` reproduces the whole bridge.
+
+The borrowed wedge is not PolicyEngine modelling corporate tax, and it inherits
+every constant-rate assumption they list.
 
 **Both static:** no labor supply response, no behavioural response, no change in
 avoidance or enforcement.

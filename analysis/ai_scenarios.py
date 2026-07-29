@@ -129,10 +129,14 @@ CAPITAL_INCOME_VARS_EXCL_RETIREMENT = tuple(
     var for var in CAPITAL_INCOME_VARS if var not in RETIREMENT_INCOME_VARS
 )
 
-#: Passthrough profits mix capital and labor. Saez and Zucman (2020) allocate
-#: 75% to labor below the top of the wage distribution; the Budget Lab follows
-#: them. We apply the single below-threshold split, because the 99.99th
-#: percentile refinement is below the resolution the survey data supports.
+#: Passthrough profits mix capital and labor. Following Saez and Zucman (2020),
+#: The Budget Lab's methodology splits them three ways: passive income 25% labor
+#: / 75% capital, and active income 75% labor below the 99.99th wage percentile,
+#: 25% labor on the excess. PolicyEngine-US carries no active/passive flag and
+#: no percentile refinement is worth the survey data's resolution, so we apply
+#: the single active-below-threshold rule to all of it. That under-assigns the
+#: passive portion to capital, making our capital shock base slightly smaller
+#: than theirs.
 PASSTHROUGH_VAR = "partnership_s_corp_income"
 PASSTHROUGH_CAPITAL_SHARE = 0.25
 

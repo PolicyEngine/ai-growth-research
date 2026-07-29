@@ -140,13 +140,20 @@ and payroll lines.
 avoidance or enforcement. The same is true of their tax microsimulation.
 
 **Apportionment is narrower than theirs.** The incremental capital flow is
-distributed proportional to households' existing positive capital income. The
-Budget Lab apportions by SCF-imputed assets, which reaches households holding
-wealth but reporting no current realized capital income; ours cannot reach those
-households at all, so it concentrates the capital shock more than theirs does.
-The data would support their approach — `stock_assets` is populated for 31% of
-households and `net_worth` for 99.7% — so this is a known next step, not a
-limitation of the data.
+distributed proportional to households' existing positive capital income. Their
+methodology document is explicit that they apportion by SCF-imputed *total*
+wealth — cash, equities, bonds, retirement balances, life insurance, annuities,
+trusts, real-estate funds, home equity and pass-through equity — and that
+"pinning to a narrower base would push the distributional incidence further
+toward the top". Ours is that narrower base, so it concentrates the shock more
+than theirs by their own account. The data would support their approach:
+`stock_assets` is populated for 31% of households and `net_worth` for 99.7%.
+
+**Pass-through split is coarser than theirs.** Their rule is active/passive
+aware — passive 25% labor / 75% capital, active 75% labor below the 99.99th wage
+percentile and 25% on the excess. PolicyEngine-US carries no active/passive
+flag, so we apply the single active-below-threshold rule throughout, which
+under-assigns the passive portion to capital.
 
 **Modelled shares are not national shares.** The scenarios are calibrated on
 national factor shares (55.5% labor pre-shock). The microdata's own positive
@@ -174,6 +181,29 @@ incomes move. Over a five-year horizon in which output grows several percent
 faster than baseline, a fully relative threshold would drift upward and poverty
 would rise by more than reported here.
 
+## Comparing totals with The Budget Lab
+
+Their total is federal individual income tax plus payroll plus a corporate
+wedge, with no states and no non-tax benefits. Ours is the household sector
+across federal and state, net of the whole transfer system. Setting the two
+side by side without an explicit bridge is wrong, so `reconcile_budget_lab.py`
+builds one, using only our run output and parameters they publish.
+
+The bridge rests on their corporate wedge, which their methodology document
+states in full: `dR_CIT = X * (R_CIT_CBO / Y0_K) = X * tau_stat * eta * kappa`,
+with a 21% statutory rate, `kappa` about 0.50 from NIPA, a CBO 2030 CIT anchor
+near $486B, and `eta` "roughly one in practice" — an effective 10.5% on the
+excess capital flow. Applying their formula to our capital flow estimates what
+their corporate line would add to our estimate. It is not PolicyEngine
+modelling corporate tax, and it inherits every constant-rate assumption they
+list.
+
+Inverting the same identity recovers the baseline realized taxable capital
+income their run starts from, which they do not publish: about **$4.6T** against
+our **$5.3T**, so our capital base is roughly 14% larger. That is the single
+most useful cross-check available on our capital aggregate, and it explains most
+of why our bridged totals exceed theirs.
+
 ## Identified next steps
 
 **Asset-based apportionment.** Distribute the incremental capital flow by
@@ -193,6 +223,11 @@ repo already maps Yale AI-Employment-Model task exposure scores onto CPS
 occupation codes. Distributing the labor shock by measured exposure instead of
 by a scalar spread parameter would replace an assumption with a measurement, and
 would let the implied `lambda` be an output rather than an input.
+
+This is also on their roadmap. Their methodology numbers the redistribution
+rules S0 (proportional), S2 (compressive) and S3 (expansive), and notes that
+"the omitted S1 is a planned future expansion involving occupation-level AI
+exposure". We already hold the exposure mapping.
 
 **Policy response.** `labor_capital_shift.py` recycles the net fiscal gain into a
 flat UBI. Running that on the calibrated scenarios would answer the question the
