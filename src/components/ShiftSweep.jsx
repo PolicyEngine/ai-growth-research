@@ -9,6 +9,7 @@ import {
   Legend,
   Line,
   LineChart,
+  ReferenceArea,
   ReferenceLine,
   ResponsiveContainer,
   Tooltip,
@@ -260,15 +261,13 @@ function buildFederalRow(scenario) {
     (scenario.self_employment_tax_change_b ?? 0);
   // Federal benefits = total household benefits − state-funded benefits.
   const fedBenefitsChange =
-    (scenario.benefits_change_b ?? 0) -
-    (scenario.state_benefits_change_b ?? 0);
+    (scenario.benefits_change_b ?? 0) - (scenario.state_benefits_change_b ?? 0);
   const rev_fed_benefits = -fedBenefitsChange;
   return {
     rev_fed_income_tax_net,
     rev_payroll_all,
     rev_fed_benefits,
-    revenue:
-      rev_fed_income_tax_net + rev_payroll_all + rev_fed_benefits,
+    revenue: rev_fed_income_tax_net + rev_payroll_all + rev_fed_benefits,
   };
 }
 
@@ -394,8 +393,8 @@ function summaryForMetric(measureKey, conceptKey, config, chartData, metadata) {
       <>
         The SPM poverty rate rises from {shareTooltipFmt(startValue)} at
         baseline to {shareTooltipFmt(endValue)} at a 100% shift. Refundable
-        credits and benefits cushion the very bottom, but as wages disappear
-        an increasing share of households fall below the SPM threshold.
+        credits and benefits cushion the very bottom, but as wages disappear an
+        increasing share of households fall below the SPM threshold.
       </>
     );
   }
@@ -461,7 +460,11 @@ function RevenueDecompositionChart({
       .reduce((a, b) => a + b, 0);
     return [pos, neg, showTotalLine ? row.revenue : 0];
   });
-  const absMax = Math.max(Math.abs(Math.min(0, ...values)), Math.abs(Math.max(0, ...values))) || 1;
+  const absMax =
+    Math.max(
+      Math.abs(Math.min(0, ...values)),
+      Math.abs(Math.max(0, ...values)),
+    ) || 1;
   const ticks = niceTicks(-absMax, absMax, 7);
 
   const tickFormatter = (v) =>
@@ -556,10 +559,7 @@ function RevenueDecompositionChart({
 function FederalMtrChart({ sweepData, metric }) {
   // metric: "fed_income_tax_mtr" (after refundable credits) or
   //         "fed_income_tax_before_refundable_credits_mtr"
-  const scenarios = useMemo(
-    () => sweepData.scenarios ?? [],
-    [sweepData],
-  );
+  const scenarios = useMemo(() => sweepData.scenarios ?? [], [sweepData]);
   const laborTerm = sweepData?.metadata?.labor_label ?? "labor";
   const perSource = useMemo(() => {
     const bySource = new Map();
@@ -725,7 +725,10 @@ function DecileImpactChart({ sweepData, unit = "dollars" }) {
   const field = unit === "share" ? "pct" : "dollars_b";
   const values = rows.map((r) => r[field]);
   const absMax =
-    Math.max(Math.abs(Math.min(0, ...values)), Math.abs(Math.max(0, ...values))) || 1;
+    Math.max(
+      Math.abs(Math.min(0, ...values)),
+      Math.abs(Math.max(0, ...values)),
+    ) || 1;
   const ticks = niceTicks(-absMax, absMax, 7);
 
   return (
@@ -758,8 +761,8 @@ function DecileImpactChart({ sweepData, unit = "dollars" }) {
         </div>
       </div>
       <p className="shift-sweep-description">
-        Households are bucketed into deciles by weighted baseline market
-        income; decile membership is held fixed across scenarios.
+        Households are bucketed into deciles by weighted baseline market income;
+        decile membership is held fixed across scenarios.
         {unit === "share"
           ? " Bars show the change in each decile's mean household net income as % of its baseline mean. D1 is omitted because its baseline mean is negative (losses dominate)."
           : " Bars show the aggregate dollar change in each decile's total net income ($B)."}
@@ -866,9 +869,8 @@ function StateExposureChart({ sweepData, currencySymbol, unit = "dollars" }) {
         stateTax,
         stateRef,
         stateBen,
-        stateNet: unit === "share" && shareValue != null
-          ? shareValue
-          : netDollarsB,
+        stateNet:
+          unit === "share" && shareValue != null ? shareValue : netDollarsB,
         stateNetDollarsB: netDollarsB,
         stateNetShare: shareValue,
         denominatorB,
@@ -888,7 +890,11 @@ function StateExposureChart({ sweepData, currencySymbol, unit = "dollars" }) {
 
   const display = ranked;
   const values = display.map((r) => r.stateNet);
-  const absMax = Math.max(Math.abs(Math.min(0, ...values)), Math.abs(Math.max(0, ...values))) || 1;
+  const absMax =
+    Math.max(
+      Math.abs(Math.min(0, ...values)),
+      Math.abs(Math.max(0, ...values)),
+    ) || 1;
   const ticks = niceTicks(-absMax, absMax, 7);
 
   return (
@@ -920,15 +926,18 @@ function StateExposureChart({ sweepData, currencySymbol, unit = "dollars" }) {
         </div>
       </div>
       <p className="shift-sweep-description">
-        All states with a state income tax, sorted descending by net change
-        in state revenue at the selected shift level. Net = state income tax
-        before refundable credits − refundable state credits − state-funded
-        benefits. Teal gains, orange loses.
+        All states with a state income tax, sorted descending by net change in
+        state revenue at the selected shift level. Net = state income tax before
+        refundable credits − refundable state credits − state-funded benefits.
+        Teal gains, orange loses.
         {unit === "share"
           ? " In share mode, each state's change is expressed as % of its own baseline net state revenue — states without income tax (FL, TX, etc.) are dropped."
           : ""}
       </p>
-      <ResponsiveContainer width="100%" height={Math.max(320, display.length * 22)}>
+      <ResponsiveContainer
+        width="100%"
+        height={Math.max(320, display.length * 22)}
+      >
         <BarChart
           data={display}
           layout="vertical"
@@ -1011,16 +1020,15 @@ function federalBaseDenominator(totals) {
 function stateBaseDenominator(totals, code) {
   const state = totals?.per_state?.[code];
   if (!state) return null;
-  const own = (
+  const own =
     (state.household_state_tax_before_refundable_credits ?? 0) -
     (state.household_refundable_state_tax_credits ?? 0) -
-    (state.household_state_benefits ?? 0)
-  );
+    (state.household_state_benefits ?? 0);
   // Fall back to federal base if the state has no income tax (e.g. TX, FL).
   return own > 0 ? own : null;
 }
 
-function ShiftSweep({ sweepData = defaultSweepData }) {
+function ShiftSweep({ sweepData = defaultSweepData, forecastBand = null }) {
   const [selectedMeasure, setSelectedMeasure] = useState("gini");
   const [selectedConcept, setSelectedConcept] = useState("net");
   const [selectedJurisdiction, setSelectedJurisdiction] = useState("federal");
@@ -1038,7 +1046,8 @@ function ShiftSweep({ sweepData = defaultSweepData }) {
     return Object.keys(deltas).sort();
   }, [sweepData]);
   const hasPovertyData = useMemo(
-    () => chartData.some((row) => Number.isFinite(row.poverty) && row.poverty > 0),
+    () =>
+      chartData.some((row) => Number.isFinite(row.poverty) && row.poverty > 0),
     [chartData],
   );
   const measureOptions = useMemo(
@@ -1078,11 +1087,7 @@ function ShiftSweep({ sweepData = defaultSweepData }) {
   );
   const shiftTicks = useMemo(
     () =>
-      niceTicks(
-        chartData[0].shift,
-        chartData[chartData.length - 1].shift,
-        11,
-      ),
+      niceTicks(chartData[0].shift, chartData[chartData.length - 1].shift, 11),
     [chartData],
   );
   const isRevenue = selectedMeasure === "revenue";
@@ -1224,6 +1229,19 @@ function ShiftSweep({ sweepData = defaultSweepData }) {
             )}
           </div>
           <p className="shift-sweep-description">{config.description}</p>
+          {forecastBand && (
+            <p className="shift-sweep-description">
+              For scale: the tilt forecasters actually expect by 2030 is
+              equivalent to shifting{" "}
+              {forecastBand.markers
+                .map(
+                  (marker) => `${marker.shiftPct.toFixed(1)}% (${marker.name})`,
+                )
+                .join(", ")}{" "}
+              of labor income — the shaded sliver at the left edge. Everything
+              beyond it is stress test, not forecast.
+            </p>
+          )}
         </div>
 
         {isRevenue ? (
@@ -1249,65 +1267,81 @@ function ShiftSweep({ sweepData = defaultSweepData }) {
           />
         ) : (
           <>
-        <h3 className="analysis-chart-title">{config.label} by shift level</h3>
-        <ResponsiveContainer width="100%" height={400}>
-          <LineChart
-            data={chartData}
-            margin={{ left: 20, right: 30, top: 10, bottom: 35 }}
-          >
-            <CartesianGrid stroke="#e2e8f0" strokeDasharray="3 3" />
-            <XAxis
-              type="number"
-              dataKey="shift"
-              domain={[shiftTicks[0], shiftTicks[shiftTicks.length - 1]]}
-              ticks={shiftTicks}
-              tickFormatter={(value) => `${value}%`}
-              tick={{ fontSize: 12 }}
-              label={{
-                value: `Share of ${laborTerm} income shifted to capital`,
-                position: "bottom",
-                offset: 0,
-                style: { fontSize: 13 },
-              }}
-            />
-            <YAxis
-              ticks={yTicks}
-              domain={[yTicks[0], yTicks[yTicks.length - 1]]}
-              tickFormatter={isRevenue ? revenueFormatter : axisPctFmt}
-              tick={{ fontSize: 12 }}
-              label={{
-                value: config.axisLabel,
-                angle: -90,
-                position: "insideLeft",
-                offset: -10,
-                style: { fontSize: 13 },
-              }}
-            />
-            {isRevenue && (
-              <ReferenceLine y={0} stroke="#718096" strokeDasharray="4 4" />
-            )}
-            <Tooltip
-              contentStyle={TOOLTIP_STYLE}
-              formatter={(value) => [
-                config.tooltipFormatter(value),
-                config.label,
-              ]}
-              labelFormatter={(value) =>
-                chartData.find((row) => row.shift === value)?.label ??
-                `${value}% shift`
-              }
-            />
-            <Line
-              type="monotone"
-              dataKey={config.dataKey}
-              name={config.label}
-              stroke={config.color}
-              strokeWidth={3}
-              dot={{ r: 4 }}
-              activeDot={{ r: 6 }}
-            />
-          </LineChart>
-        </ResponsiveContainer>
+            <h3 className="analysis-chart-title">
+              {config.label} by shift level
+            </h3>
+            <ResponsiveContainer width="100%" height={400}>
+              <LineChart
+                data={chartData}
+                margin={{ left: 20, right: 30, top: 10, bottom: 35 }}
+              >
+                <CartesianGrid stroke="#e2e8f0" strokeDasharray="3 3" />
+                <XAxis
+                  type="number"
+                  dataKey="shift"
+                  domain={[shiftTicks[0], shiftTicks[shiftTicks.length - 1]]}
+                  ticks={shiftTicks}
+                  tickFormatter={(value) => `${value}%`}
+                  tick={{ fontSize: 12 }}
+                  label={{
+                    value: `Share of ${laborTerm} income shifted to capital`,
+                    position: "bottom",
+                    offset: 0,
+                    style: { fontSize: 13 },
+                  }}
+                />
+                <YAxis
+                  ticks={yTicks}
+                  domain={[yTicks[0], yTicks[yTicks.length - 1]]}
+                  tickFormatter={isRevenue ? revenueFormatter : axisPctFmt}
+                  tick={{ fontSize: 12 }}
+                  label={{
+                    value: config.axisLabel,
+                    angle: -90,
+                    position: "insideLeft",
+                    offset: -10,
+                    style: { fontSize: 13 },
+                  }}
+                />
+                {isRevenue && (
+                  <ReferenceLine y={0} stroke="#718096" strokeDasharray="4 4" />
+                )}
+                {forecastBand && (
+                  <ReferenceArea
+                    x1={0}
+                    x2={forecastBand.maxPct}
+                    fill="#39c6c0"
+                    fillOpacity={0.14}
+                    label={{
+                      value: "Forecast range",
+                      position: "insideTopLeft",
+                      fontSize: 11,
+                      fill: "#227773",
+                    }}
+                  />
+                )}
+                <Tooltip
+                  contentStyle={TOOLTIP_STYLE}
+                  formatter={(value) => [
+                    config.tooltipFormatter(value),
+                    config.label,
+                  ]}
+                  labelFormatter={(value) =>
+                    chartData.find((row) => row.shift === value)?.label ??
+                    `${value}% shift`
+                  }
+                />
+                <Line
+                  type="monotone"
+                  dataKey={config.dataKey}
+                  name={config.label}
+                  stroke={config.color}
+                  strokeWidth={3}
+                  dot={{ r: 4 }}
+                  activeDot={{ r: 6 }}
+                />
+              </LineChart>
+            </ResponsiveContainer>
           </>
         )}
 

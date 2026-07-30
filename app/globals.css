@@ -2,6 +2,7 @@
 @import "@policyengine/ui-kit/theme.css";
 @import "../src/index.css";
 @import "../src/App.css";
+@import "../src/components/AIScenarios.css";
 @import "../src/components/AnalysisSection.css";
 @import "../src/components/Approach.css";
 @import "../src/components/BaselineDistributionSummary.css";

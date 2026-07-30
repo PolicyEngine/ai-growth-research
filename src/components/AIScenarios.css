@@ -1,0 +1,90 @@
+/* Stat tiles, crossover note, and capital-scope table for the AI scenarios
+ * section. Layout-only additions; palette and radii come from the shared
+ * PolicyEngine tokens in index.css. */
+
+.ai-scenarios-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-4);
+  margin-bottom: var(--space-6);
+}
+
+.ai-scenarios-stat {
+  background: var(--pe-gray-50);
+  border: 1px solid var(--pe-gray-200);
+  border-radius: var(--radius-lg);
+  padding: var(--space-4);
+}
+
+.ai-scenarios-stat-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--pe-gray-500);
+  margin-bottom: var(--space-1);
+}
+
+.ai-scenarios-stat-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--pe-gray-900);
+  font-variant-numeric: tabular-nums;
+  line-height: 1.2;
+}
+
+.ai-scenarios-stat-delta {
+  font-size: 0.8rem;
+  color: var(--pe-gray-500);
+  margin-top: var(--space-1);
+  font-variant-numeric: tabular-nums;
+}
+
+.ai-scenarios-crossover {
+  font-size: 0.9rem;
+  color: var(--pe-gray-700);
+  background: var(--pe-teal-50);
+  border: 1px solid var(--pe-teal-100);
+  border-radius: var(--radius-md);
+  padding: var(--space-3) var(--space-4);
+  margin: 0 0 var(--space-6);
+}
+
+.ai-scenarios-pair {
+  margin-top: var(--space-8);
+}
+
+.ai-scenarios-scope {
+  margin-top: var(--space-8);
+}
+
+.ai-scenarios-scope-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.ai-scenarios-scope-table th,
+.ai-scenarios-scope-table td {
+  padding: var(--space-2) var(--space-3);
+  border-bottom: 1px solid var(--pe-gray-200);
+  text-align: right;
+}
+
+.ai-scenarios-scope-table th[scope="col"]:first-child,
+.ai-scenarios-scope-table th[scope="row"] {
+  text-align: left;
+}
+
+.ai-scenarios-scope-table thead th {
+  color: var(--pe-gray-500);
+  font-weight: 600;
+  font-size: 0.8rem;
+}
+
+@media (max-width: 768px) {
+  .ai-scenarios-stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}

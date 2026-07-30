@@ -151,7 +151,7 @@ def lorenz_curve(values, weights, n_points=100):
     return x, np.interp(x, pop_fracs, income_fracs)
 
 
-def extract_results(sim, label):
+def extract_results(sim, label, year=YEAR):
     """Extract standard metrics from a simulation or branch.
 
     Returns a dict with core inequality/poverty/revenue metrics plus
@@ -163,28 +163,26 @@ def extract_results(sim, label):
 
     Uses MicroSeries.gini() from microdf for Gini calculation.
     """
-    net_income = sim.calculate("household_net_income", period=YEAR)
+    net_income = sim.calculate("household_net_income", period=year)
     net_income_including_health_benefits = sim.calculate(
-        "household_net_income_including_health_benefits", period=YEAR
+        "household_net_income_including_health_benefits", period=year
     )
-    market_income = sim.calculate("household_market_income", period=YEAR)
-    income_tax = sim.calculate("income_tax", map_to="household", period=YEAR)
+    market_income = sim.calculate("household_market_income", period=year)
+    income_tax = sim.calculate("income_tax", map_to="household", period=year)
     state_income_tax = sim.calculate(
-        "state_income_tax", map_to="household", period=YEAR
+        "state_income_tax", map_to="household", period=year
     )
-    healthcare_benefit_value = sim.calculate(
-        "healthcare_benefit_value", period=YEAR
-    )
-    medicaid_cost = sim.calculate("medicaid_cost", map_to="household", period=YEAR)
-    chip_benefit = sim.calculate("per_capita_chip", map_to="household", period=YEAR)
+    healthcare_benefit_value = sim.calculate("healthcare_benefit_value", period=year)
+    medicaid_cost = sim.calculate("medicaid_cost", map_to="household", period=year)
+    chip_benefit = sim.calculate("per_capita_chip", map_to="household", period=year)
     aca_ptc = _calculate_first_available(
         sim,
         ("assigned_aca_ptc", "aca_ptc"),
         map_to="household",
-        period=YEAR,
+        period=year,
     )
     in_poverty = sim.calculate(
-        "spm_unit_is_in_spm_poverty", map_to="person", period=YEAR
+        "spm_unit_is_in_spm_poverty", map_to="person", period=year
     )
 
     decile_shares = compute_decile_shares(
@@ -250,9 +248,7 @@ def extract_results(sim, label):
         ),
         # Raw MicroSeries for downstream use (charts, state breakdown)
         "_net_income": net_income,
-        "_net_income_including_health_benefits": (
-            net_income_including_health_benefits
-        ),
+        "_net_income_including_health_benefits": (net_income_including_health_benefits),
         "_market_income": market_income,
         "_income_tax": income_tax,
         "_state_income_tax": state_income_tax,

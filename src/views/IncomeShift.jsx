@@ -1,14 +1,22 @@
 import React from "react";
 import { useSearchParams } from "react-router-dom";
+import AIScenarios from "../components/AIScenarios";
 import BaselineDistributionSummary from "../components/BaselineDistributionSummary";
 import ShiftSweep from "../components/ShiftSweep";
+import aiScenariosData from "../data/aiScenariosData.json";
 import {
   aiInequalityUrl,
   COUNTRIES,
   countryFromSearchParams,
 } from "../utils/countryConfig";
+import { forecastBand } from "../utils/forecastEquivalence";
 import { policyEngineLabel } from "../utils/modelMetadata";
 import { useRovingRadioGroup } from "../utils/useRovingRadioGroup";
+
+// The scenario calibration is US-specific (Karger et al. survey via The
+// Budget Lab), so the scenarios section and the forecast band on the sweep
+// render for the US view only.
+const US_FORECAST_BAND = forecastBand(aiScenariosData);
 
 const COUNTRY_KEYS = Object.keys(COUNTRIES);
 
@@ -127,10 +135,21 @@ function IncomeShift() {
             ))}
           </div>
           <p className="policy-analysis-subtitle">
-            A direct view of the prototype experiment: remove positive{" "}
-            {laborTerm} income, route the same dollars through existing positive
-            capital income, and measure distributional and fiscal effects under
-            current law.
+            {countryKey === "us" ? (
+              <>
+                First, the three AI futures forecasters actually expect, scored
+                through the full tax and benefit system. Then the mechanism at
+                full range: shift 0–100% of {laborTerm} income into capital and
+                watch how current law responds.
+              </>
+            ) : (
+              <>
+                A direct view of the prototype experiment: remove positive{" "}
+                {laborTerm} income, route the same dollars through existing
+                positive capital income, and measure distributional and fiscal
+                effects under current law.
+              </>
+            )}
           </p>
 
           <div className="policy-analysis-brief">
@@ -191,6 +210,12 @@ function IncomeShift() {
         </div>
       </div>
 
+      {countryKey === "us" && (
+        <div className="section">
+          <AIScenarios />
+        </div>
+      )}
+
       {(() => {
         const findings = headlineFindings(sweepData);
         if (!findings) return null;
@@ -207,14 +232,16 @@ function IncomeShift() {
                   shift.
                 </p>
               </div>
-              <div className="policy-analysis-brief-card">
-                <h2>Poverty</h2>
-                <p>
-                  SPM poverty rises from{" "}
-                  <strong>{formatPct1(findings.baselinePoverty)}</strong> to{" "}
-                  <strong>{formatPct1(findings.hundredPoverty)}</strong>.
-                </p>
-              </div>
+              {findings.hundredPoverty > 0 && (
+                <div className="policy-analysis-brief-card">
+                  <h2>Poverty</h2>
+                  <p>
+                    SPM poverty rises from{" "}
+                    <strong>{formatPct1(findings.baselinePoverty)}</strong> to{" "}
+                    <strong>{formatPct1(findings.hundredPoverty)}</strong>.
+                  </p>
+                </div>
+              )}
               <div className="policy-analysis-brief-card">
                 <h2>Government revenue</h2>
                 <p>
@@ -228,32 +255,35 @@ function IncomeShift() {
                   at a {findings.troughShift}% shift under current law.
                 </p>
               </div>
-              <div className="policy-analysis-brief-card">
-                <h2>Winners and losers</h2>
-                <p>
-                  At a 100% shift, the top decile's mean net income rises{" "}
-                  <strong>
-                    {findings.topDecilePct != null
-                      ? `${findings.topDecilePct >= 0 ? "+" : ""}${findings.topDecilePct.toFixed(0)}%`
-                      : "-"}
-                  </strong>
-                  {findings.worstPct != null && findings.worstDecile ? (
-                    <>
-                      {" "}
-                      while decile {findings.worstDecile} loses{" "}
-                      <strong>{formatPct1(findings.worstPct)}</strong>.
-                    </>
-                  ) : (
-                    "."
-                  )}
-                </p>
-              </div>
+              {findings.topDecilePct != null && (
+                <div className="policy-analysis-brief-card">
+                  <h2>Winners and losers</h2>
+                  <p>
+                    At a 100% shift, the top decile&apos;s mean net income rises{" "}
+                    <strong>
+                      {`${findings.topDecilePct >= 0 ? "+" : ""}${findings.topDecilePct.toFixed(0)}%`}
+                    </strong>
+                    {findings.worstPct != null && findings.worstDecile ? (
+                      <>
+                        {" "}
+                        while decile {findings.worstDecile} loses{" "}
+                        <strong>{formatPct1(findings.worstPct)}</strong>.
+                      </>
+                    ) : (
+                      "."
+                    )}
+                  </p>
+                </div>
+              )}
             </div>
           </div>
         );
       })()}
 
-      <ShiftSweep sweepData={sweepData} />
+      <ShiftSweep
+        sweepData={sweepData}
+        forecastBand={countryKey === "us" ? US_FORECAST_BAND : null}
+      />
     </>
   );
 }
