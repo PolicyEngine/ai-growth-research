@@ -167,7 +167,7 @@ function VariantPairCharts({ scenarios, scenarioName }) {
   return (
     <div className="analysis-charts-grid ai-scenarios-pair">
       <div>
-        <h3 className="analysis-chart-title">Revenue barely notices…</h3>
+        <h3 className="analysis-chart-title">Revenue stays positive…</h3>
         <ResponsiveContainer width="100%" height={260}>
           <BarChart data={rows} margin={{ left: 12, right: 12, top: 10 }}>
             <CartesianGrid stroke={COLOR_GRID} strokeDasharray="3 3" />
@@ -186,7 +186,7 @@ function VariantPairCharts({ scenarios, scenarioName }) {
         </ResponsiveContainer>
       </div>
       <div>
-        <h3 className="analysis-chart-title">…while poverty swings</h3>
+        <h3 className="analysis-chart-title">…while poverty flips sign</h3>
         <ResponsiveContainer width="100%" height={260}>
           <BarChart data={rows} margin={{ left: 12, right: 12, top: 10 }}>
             <CartesianGrid stroke={COLOR_GRID} strokeDasharray="3 3" />
