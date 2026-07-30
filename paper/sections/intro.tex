@@ -1,0 +1,89 @@
+\section{Introduction}\label{sec:intro}
+
+Forecasters expect artificial intelligence to raise output and, at the same
+time, to tilt its composition away from labor and toward capital
+\citep{karger2026}. The United States taxes those two kinds of income very
+differently, and it runs a transfer system that responds automatically when
+wages fall. So the fiscal and household consequences of AI-driven growth
+depend not mainly on how much growth arrives, but on which incomes it arrives
+in --- and on which parts of the fiscal system a model can see. The Budget
+Lab at Yale recently scored AI growth scenarios through a federal individual
+income and payroll tax microsimulation and found that a growing capital share
+mutes the revenue gains \citep{iselinnunn2026}. Their model, by design, stops
+at the tax code: no transfer programs beyond tax credits, no poverty
+measurement, no state systems.
+
+This paper runs the same question through the whole system. PolicyEngine-US
+is an open-source static microsimulation of United States federal and state
+tax and benefit law --- income and payroll taxes, refundable credits, SNAP,
+SSI, TANF, WIC and the other major transfer programs, and the Supplemental
+Poverty Measure (SPM) --- running on openly published microdata. I use it in
+two complementary designs. The first is a mechanism sweep: shift 0--100\% of
+positive labor income into capital income, holding modelled market income
+fixed, and record what current law does at each step. The second is a
+calibrated scenario set that deliberately adopts the Budget Lab's
+implementation of the \citet{karger2026} forecaster survey --- Slow, Moderate
+and Rapid adoption paths crossed with compressive, proportional and expansive
+wage-inequality variants, plus their shares-fixed counterfactuals --- so that
+where the two models differ, the difference is model coverage rather than
+scenario assumptions. Because they publish their code and their complete
+result grid, the comparison can then be made cell by cell on an identical
+accounting basis.
+
+Four findings organize the paper. First, the composition tilt, not the growth
+rate, drives the fiscal and poverty results. Rapid adoption with factor
+shares held at today's levels raises net government revenue by
+\genRapidFixedRev B in 2030 and cuts SPM poverty by
+\genRapidFixedPovPp pp; the same growth with the forecast tilt keeps
+\genRapidShareKeptPct\% of the revenue (\genRapidPropRev B) and erases the
+poverty gain (\genRapidPropPovPp pp).
+
+Second, the assumption the forecasting literature is least sure of --- whether
+AI compresses or widens the wage distribution --- decides the household
+verdict while leaving the revenue verdict intact. Across the Budget Lab's own
+compressive-to-expansive span, Rapid net revenue stays between
+\genRapidCompRev B and \genRapidExpRev B, always positive, while the poverty
+outcome flips sign: \genRapidCompPovPp pp under compression,
+\genRapidExpPovPp pp under expansion, a \genRapidPovSpanPp pp span.
+
+Third, the parts of the fiscal system outside a tax-only model respond
+materially, and in both directions. Across those same wage-spread variants,
+gross tax collections swing \$\genGrossTaxSwing B, and automatic transfer
+responses absorb \genTransferAbsorbPct\% of that swing ---
+\$\genBenefitSwing B of it in non-credit programs such as SNAP and SSI that a
+tax microsimulation does not carry. State tax codes add
+\genRapidPropState B under proportional Rapid growth and double across the
+variants, from \genRapidCompState B to \genRapidExpState B. Whether these
+channels matter is exactly the kind of question a full-system model exists to
+answer.
+
+Fourth, two definitional choices about the tax base move the revenue answer
+by more than the choice between Slow, Moderate and Rapid. If AI's incremental
+capital income goes unrealized --- retained, accrued, or sheltered inside
+retirement accounts --- revenue falls roughly linearly, and below a
+\genRealBreakevenPct\% realized share the household sector loses money on
+Rapid AI growth; poverty, meanwhile, sits still to within
+\genRealPovMaxPct$-$\genRealPovMinPct~pp across the whole sweep. And whether
+taxable retirement distributions count as capital income halves the Rapid
+estimate when excluded (\genRapidScopeFull B to \genRapidScopeExcl B).
+
+The reconciliation with the Budget Lab in Section~\ref{sec:reconciliation} is,
+to my knowledge, the first cell-level comparison of two independent
+microsimulations of AI fiscal scenarios. It is reassuring where the models
+share machinery --- payroll responses agree closely in every cell, two
+independent wage distributions meeting the same taxable maximum --- and
+informative where they do not: the bridged headline is \genBridgeOursTotal B
+against their \genBridgeTheirsTotal B (\genBridgeRatio$\times$), with the gap
+concentrated in the income-tax response to the capital shock
+(\genIITRatioProp$\times$ on the cell where the wage-spread channel is
+neutral), consistent with a larger realized-capital base and a more
+top-concentrated allocation rule.
+
+The paper proceeds as follows. Section~\ref{sec:literature} places the
+exercise in the literature. Section~\ref{sec:method} describes the model,
+data, and both experiment designs. Section~\ref{sec:results} reports the
+sweep and scenario results, including the transfer-system and state channels.
+Section~\ref{sec:sensitivity} reports the realization and capital-scope
+sensitivities and stability across data builds.
+Section~\ref{sec:reconciliation} reconciles with the Budget Lab cell by cell.
+Section~\ref{sec:discussion} discusses limitations and next steps.

@@ -488,7 +488,7 @@ def main():
     T.append(
         rf"\multicolumn{{2}}{{l}}{{\footnotesize {n_zero} states collect exactly \$0: "
         + ", ".join(ZERO_STATES)
-        + r".}} \\"
+        + r".} \\"
     )
     T.append(r"\bottomrule")
     T.append(r"\end{tabular}}")

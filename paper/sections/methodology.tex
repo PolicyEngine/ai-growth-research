@@ -1,0 +1,116 @@
+\section{Model, data, and experiment designs}\label{sec:method}
+
+\subsection{Model and data}
+
+All results come from PolicyEngine-US version \genModelVersion{}, an
+open-source static microsimulation of United States federal and state tax and
+benefit law, executed through the \texttt{policyengine.py} runtime
+(version \genRunnerVersion{}), which certifies the pairing of model version
+and dataset build. The dataset is \texttt{populace-us} build
+\texttt{cae8640} (28 July 2026), an openly published enhanced-CPS microdata
+file for 2024, uprated by the model to the analysis years. The mechanism
+sweep of Section~\ref{sec:sweep} is run at \genSweepYear{}; the calibrated
+scenarios are run at 2030, matching the Budget Lab's horizon. In the 2030
+baseline, SPM poverty is \genBaselinePovertyPct\% and the household
+net-income Gini is \genBaselineGini{} (household-level, unequivalized;
+Section~\ref{sec:discussion} discusses comparability).
+
+The model covers federal individual income tax (including capital gains
+rates, the net investment income tax and the alternative minimum tax),
+payroll taxes on both employee and employer sides plus self-employment tax,
+refundable credits (EITC, refundable CTC and others), the major means-tested
+transfer programs (SNAP, SSI, TANF, WIC, school meals, housing subsidies,
+broadband subsidies), and the tax and benefit codes of all fifty states and
+DC. Health programs (Medicaid, CHIP, ACA subsidies) are valued in the model
+but excluded from net-income accounting in these runs by the model's default
+simulation switch, so no result here contains a health-program response in
+either direction. Everything is static: no labor supply, behavioral,
+avoidance or enforcement responses, matching the Budget Lab's individual
+microsimulation.
+
+\textbf{Accounting.} Net government revenue is defined as taxes minus
+transfers: household tax before refundable credits (federal and state,
+including employee-side payroll) plus employer payroll tax, minus refundable
+credits and benefit outlays. An identity check --- the change in market
+income minus the change in household net income must equal the household-side
+revenue change --- closes to \$\genIdentityMaxResidual B in every scenario.
+Where the paper compares against the Budget Lab
+(Section~\ref{sec:reconciliation}), it restates results on their narrower
+basis: federal individual income tax net of refundable credits, plus payroll.
+
+\subsection{Design I: the mechanism sweep}\label{sec:method-sweep}
+
+The sweep isolates composition. In 10-point steps from 0\% to 100\%, it
+reduces every person's positive employment and self-employment income by the
+step share and redistributes the same weighted total to positive capital
+income in proportion to existing holdings, holding modelled market income
+fixed. The \genSweepYear{} baseline contains \$\genSweepLaborT T of positive
+labor income and \$\genSweepCapitalT T of positive capital income, with
+\genSweepHHCapSharePct\% of households receiving any positive capital income
+--- so the sweep concentrates income by construction, and the question is
+what current law does about it.
+
+The sweep's limitation is deliberate: a pure reallocation holds output fixed,
+while forecasters expect AI to raise output \emph{and} tilt its composition.
+The sweep therefore answers ``what does composition alone do to current
+law?'', and the calibrated scenarios answer ``what happens on the paths
+forecasters actually expect?''. The two connect through a
+forecast-equivalence mapping: the share of baseline labor income that the
+tilt removes, $k = 1 - (1+g_L)/(1+g_Y)$, places each scenario on the sweep
+axis at \genForecastShiftSlowPct\% (Slow), \genForecastShiftModPct\%
+(Moderate) and \genForecastShiftRapidPct\% (Rapid) --- the sweep's
+forecast-relevant range is its first decade, and the rest is out-of-sample
+stress test.
+
+\subsection{Design II: forecaster-calibrated scenarios}\label{sec:method-scenarios}
+
+The scenarios adopt the Budget Lab's calibration of \citet{karger2026}
+exactly. Each scenario is defined by an annual real GDP growth rate under AI
+(Slow 2.0\%, Moderate 2.6\%, Rapid 3.3\%) and a 2030 labor share of factor
+income (55.0\%, 53.8\%, 51.3\%). Growth is expressed in excess of the CBO
+baseline path: the five-year output shock is
+$g_Y = (1+r_{\mathrm{ai}})^5 / G_{\mathrm{CBO}} - 1$, and the factor shocks
+follow from the target shares,
+\begin{equation}
+g_K = \frac{\theta^1_K (1+g_Y) - \theta^0_K}{\theta^0_K}, \qquad
+g_L = \frac{\theta^1_L (1+g_Y) - \theta^0_L}{\theta^0_L}.
+\end{equation}
+Two inputs their report uses but does not print --- the cumulative CBO
+baseline factor $G_{\mathrm{CBO}} = 1.0976$ and the pre-shock labor share
+$\theta^0_L = 0.5550$ --- are recovered by inverting their published
+formulas against the nine derived values in their Table~1; unit tests
+reproduce all nine to within 0.005\,pp and re-derive the labor share by grid
+search so the constants cannot drift.
+
+The wage-inequality channel is their stylization $\lambda = 1 \pm g_Y$: a
+spread transform on log labor income,
+$\ln Y^1_i = \mu^1 + \lambda\,(\ln Y^0_i - \mu^0)$, equivalently
+$Y^1_i = C\,Y_i^{0\,\lambda}$ with $C$ in closed form, with the aggregate
+pinned to $(1+g_L)$ times baseline. Compressive ($\lambda<1$) narrows the
+wage distribution around the same aggregate; expansive ($\lambda>1$) widens
+it; proportional scales every wage equally. The transform is applied at the
+person level because the payroll result turns on a per-person threshold, the
+Social Security taxable maximum (\$\genSSCap{} in 2030; at baseline
+\genShareWagesAboveCapPct\% of wage income and
+\genShareWorkersAboveCapPct\% of workers sit above it).
+
+The capital shock scales nine capital income variables --- long- and
+short-term capital gains, taxable interest, qualified and non-qualified
+dividends, rental income, partnership and S-corporation income, taxable
+pension income and taxable IRA distributions --- in proportion to existing
+holdings, after routing pass-through income through the Budget Lab's
+labor/capital split rule. Appendix~\ref{app:routing} traces every shocked
+variable into IRS gross income and household market income, confirming the
+shock reaches the tax base rather than being recomputed away; the labor
+aggregate lands on its target to within relative error
+\genLaborTargetMaxErr{}. Each scenario also has a shares-fixed
+counterfactual growing both factors at $g_Y$, the comparison behind the
+Budget Lab's ``roughly twice as large'' finding.
+
+Two further axes vary definitional assumptions their report flags. A
+\emph{realization rate} routes a fraction of the incremental capital flow
+outside the taxable base (their assumption corresponds to 1.0); and a
+\emph{capital-scope} variant excludes taxable pension income and IRA
+distributions from the capital set, since those are taxed at ordinary rates
+and their inclusion works against the ``capital is taxed lightly''
+mechanism.

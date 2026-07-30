@@ -1,0 +1,91 @@
+\section{Discussion}\label{sec:discussion}
+
+\subsection{What the results say}
+
+Three readings of the results bear directly on policy questions the AI-fiscal
+conversation is starting to ask. First, the fiscal and household questions
+decouple. Capital-side tax design (the realization margin) moves the budget
+by hundreds of billions while leaving poverty untouched; the wage-side
+distribution moves poverty by \genRapidPovSpanPp pp while net revenue stays
+positive throughout. A revenue estimate, however good, is not a household
+forecast. Second, the automatic stabilizers are already in the scenario
+arithmetic: transfers absorb \genTransferAbsorbPct\% of the gross-tax swing
+across the wage-spread variants, which means deficit projections that stop
+at the tax code overstate how much the wage-distribution assumption matters
+fiscally --- and understate the program-side costs when workers lose. Third,
+the state layer is not a rounding error: \genRapidPropState B under
+proportional Rapid growth, doubling across wage-spread variants,
+concentrated in a handful of states, and available only to states whose
+codes reach capital income at all.
+
+\subsection{Limitations}
+
+\textbf{No corporate sector.} PolicyEngine-US models households; the
+corporate wedge in Section~\ref{sec:reconciliation} is borrowed from the
+Budget Lab, not modelled.
+
+\textbf{Static.} No labor supply, saving, avoidance or enforcement
+responses on either side of the comparison.
+
+\textbf{Apportionment is narrower than theirs.} The incremental capital flow
+follows existing realized capital income; their SCF-wealth apportionment
+reaches households that hold wealth but realize nothing. By their own
+account the narrower base is more top-concentrated, so this choice
+concentrates the shock more than theirs; the microdata would support an
+asset-based variant (\texttt{net\_worth} is populated for 99.7\% of
+households), which is identified future work.
+
+\textbf{Pass-through split is coarser than theirs.} Their active/passive-%
+aware rule is approximated by a single rule because the microdata carries no
+active/passive flag, under-assigning the passive portion to capital.
+
+\textbf{National shares versus modelled shares.} Scenario calibration uses
+national factor shares ($\theta^0_L = 0.5550$); observed taxable microdata
+flows are more labor-weighted (\$\genModelledLaborShareT T labor against
+\$\genModelledCapitalShareT T capital), because survey and tax data miss
+unrealized gains, retained earnings and imputed returns. Growth rates from
+national accounts are applied to observed taxable flows --- the same choice
+the Budget Lab makes with the PUF --- and both baseline shares are reported
+so the gap is visible rather than assumed away.
+
+\textbf{Anchored poverty, unequivalized Gini.} SPM thresholds do not respond
+to the simulated distribution, so a fully relative poverty line would rise
+with five years of above-baseline growth and show larger increases. The
+Gini is household-level and unequivalized: changes are meaningful, levels
+are not comparable to published equivalized series. Poverty levels sit above
+the Census published rate --- a known calibration gap --- so every poverty
+figure is a change against a same-year baseline on identical thresholds.
+
+\textbf{No health-program response.} Medicaid, CHIP and ACA subsidies are
+excluded from net-income accounting in these runs by the model's default
+switch; the transfer responses reported here would not shrink, and could
+grow, with that channel on --- but this paper does not measure it.
+
+\subsection{Next steps}
+
+The wage-inequality parameter $\lambda$ is a stylization with, as the Budget
+Lab says plainly, little evidence behind its magnitude. The natural
+replacement is measured occupation-level exposure
+\citep{felten2021, eloundou2024}: distributing the labor shock by exposure
+scores mapped to CPS occupations would make the implied $\lambda$ an output
+rather than an input --- the design of the UK companion paper
+\citep{ahmadi2026}, and the ``S1'' expansion the Budget Lab's methodology
+names as planned future work. Asset-based capital apportionment and a
+policy-response layer (recycling the net revenue gain into transfers to test
+whether the receipts can hold the bottom of the distribution harmless) are
+the other two identified extensions.
+
+\subsection{Conclusion}
+
+Whether AI pays for itself fiscally depends on where its income lands ---
+between factors, across the wage distribution, and on or off the individual
+tax base. Running forecaster-calibrated scenarios through the full United
+States tax and transfer system, the tilt toward capital keeps
+\genRapidShareKeptPct\% of the revenue that balanced growth would deliver
+and erases growth's poverty gain; the wage-distribution assumption nobody
+can yet pin down flips the household verdict while the revenue verdict
+stands; and the channels a tax-only model omits --- automatic transfers and
+state codes --- carry a material share of the response. Where this model and
+the Budget Lab's overlap, they agree closely; where they diverge, the
+anatomy is identifiable and mostly definitional. All of it is open:
+anyone can rerun these scenarios, or score a different future against them.

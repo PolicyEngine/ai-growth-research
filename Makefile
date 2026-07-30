@@ -21,3 +21,11 @@ lint:
 
 clean:
 	rm -rf node_modules build coverage
+paper: figures values
+	cd paper && PATH=/Library/TeX/texbin:$$PATH latexmk -pdf -interaction=nonstopmode main.tex
+
+values:
+	.venv/bin/python analysis/emit_paper_values.py
+
+figures:
+	.venv/bin/python analysis/paper_figures.py

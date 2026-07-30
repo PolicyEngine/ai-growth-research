@@ -1,0 +1,89 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1.1in]{geometry}
+\usepackage{booktabs}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{xcolor}
+% Paper chrome matches the UK sister paper (PolicyEngine/uk-ai-study):
+% template blue for headings and links, PolicyEngine teal in figures.
+\definecolor{paperblue}{rgb}{0,0,0.7}
+\definecolor{peteal}{HTML}{39C6C0}
+\usepackage{sectsty}
+\allsectionsfont{\color{paperblue}}
+\usepackage[colorlinks=true, citecolor=paperblue, linkcolor=paperblue, urlcolor=paperblue]{hyperref}
+\usepackage[hang,flushmargin]{footmisc}
+\usepackage{natbib}
+\bibliographystyle{apalike}
+\input{values_generated} % machine-generated numeric macros from run outputs
+\input{tables_generated} % machine-generated tables from run outputs
+
+\title{\bfseries What if income shifts from labor to capital?\\[0.15cm]
+The fiscal and distributional incidence of AI-driven growth in the United
+States\thanks{\textbf{Acknowledgements:} the cell-level reconciliation in
+Section~\ref{sec:reconciliation} is possible because the Budget Lab at Yale
+publishes its code and complete result grids alongside its reports; I thank
+them for that practice. All errors are mine. An interactive companion to this
+paper is at
+\href{https://policyengine.org/us/ai-inequality/income-shift}{policyengine.org/us/ai-inequality/income-shift};
+code and data references are in Appendix~\ref{app:repro}.}\\[0.7cm]}
+\author{Max Ghenis\thanks{PolicyEngine. Email:
+\href{mailto:max@policyengine.org}{max@policyengine.org}.}}
+\date{\small \ifcase\month\or January\or February\or March\or April\or May\or
+June\or July\or August\or September\or October\or November\or December\fi\
+\the\year}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\noindent I study how AI-driven growth would move United States government
+revenue, benefit outlays, poverty and inequality, by running two experiment
+families through PolicyEngine-US, an open-source static microsimulation of the
+full federal and state tax and transfer system, on openly published microdata.
+A mechanism sweep shifts 0--100\% of labor income into capital income under
+current law; a scenario set adopts the Budget Lab's calibration of the
+\citet{karger2026} forecaster survey --- Slow, Moderate and Rapid adoption
+crossed with three wage-inequality variants --- so that remaining differences
+between the two models are differences in coverage, not assumptions. In Rapid,
+the forecast tilt toward capital keeps \genRapidShareKeptPct\% of the revenue
+gain that shares-fixed growth would deliver (\genRapidPropRev B against
+\genRapidFixedRev B) and erases the poverty gain from growth
+(\genRapidFixedPovPp pp becomes \genRapidPropPovPp pp). Across the
+wage-inequality variants, net revenue stays within
+\genRapidCompRev B--\genRapidExpRev B while the poverty outcome flips sign,
+from \genRapidCompPovPp pp to \genRapidExpPovPp pp; automatic transfer
+responses absorb \genTransferAbsorbPct\% of the gross-tax swing across those
+variants, \$\genBenefitSwing B of it in programs outside a tax-only model, and
+state tax doubles from \genRapidCompState B to \genRapidExpState B. If less
+than \genRealBreakevenPct\% of the incremental capital income is realized on
+tax returns, the household sector loses revenue on Rapid AI growth.
+Reconciled cell by cell against the Budget Lab's published grid, payroll
+responses agree closely throughout, while the bridged headline is
+\genBridgeOursTotal B against their \genBridgeTheirsTotal B
+(\genBridgeRatio$\times$), concentrated in the income-tax response to the
+capital shock.
+\end{abstract}
+
+\medskip
+\noindent\textbf{Keywords:} artificial intelligence, factor shares,
+microsimulation, taxation, transfers, poverty, inequality, state taxes
+
+\medskip
+\noindent\textbf{JEL codes:} H24, H53, H71, D31, I32, O33, C63
+
+\newpage
+\input{sections/intro}
+\input{sections/literature}
+\input{sections/methodology}
+\input{sections/results}
+\input{sections/sensitivity}
+\input{sections/reconciliation}
+\input{sections/discussion}
+
+\clearpage
+\input{sections/references}
+\clearpage
+\appendix
+\input{sections/appendix}
+
+\end{document}

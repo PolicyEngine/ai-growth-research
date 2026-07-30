@@ -1,0 +1,82 @@
+\section{Reconciliation with the Budget Lab}\label{sec:reconciliation}
+
+The two models measure different totals: theirs is federal individual income
+tax plus payroll plus a corporate wedge, with no states and no non-credit
+transfers; this paper's household total spans federal and state and nets out
+the whole transfer system. Setting the headline numbers side by side without
+a bridge would be wrong, so this section builds one, using only this paper's
+run output and objects they publish. Their repository commits the complete
+published result grid --- revenue by instrument for all eighteen cells ---
+which makes the comparison possible at the cell level rather than against
+two text-stated totals.
+
+\textbf{Basis.} Their microsimulation total is individual income tax plus
+payroll minus tax-credit outlays; the matching quantity here is federal
+income tax net of refundable credits, plus payroll (both halves and
+self-employment). Their corporate wedge reduces to the capital growth rate
+times CBO's 2030 corporate anchor of \$486B --- in their formula
+$\Delta R_{\mathrm{CIT}} = X \cdot (R_{\mathrm{CIT}}/Y^0_K)$ with
+$X = Y^0_K\,g$, the capital base cancels --- and all eighteen committed
+values equal $g \times \$486\mathrm{B}$ to within \$0.15B. Adding their wedge
+to this paper's federal microsimulation total yields a like-for-like
+``bridged'' headline. The wedge is not PolicyEngine modelling corporate tax,
+and it inherits every constant-rate assumption they list.
+
+\begin{table}[t]
+\centering
+\tabBridge
+\caption{The bridged headline cell (Rapid~/~expansive, their central
+published scenario), \$B, 2030. ``IIT (net)'' is individual income tax net
+of refundable credits; the corporate wedge is theirs in both rows.}
+\label{tab:bridge}
+\end{table}
+
+\textbf{Where the models agree.} Payroll responses agree closely in every
+Rapid cell (Table~\ref{tab:cells}): ours run
+\genPayrollTripletOurs{} against theirs \genPayrollTripletTheirs{} across
+compressive~/~proportional~/~expansive --- two independent models putting
+similar wage distributions against the same taxable maximum, including the
+sign reversal under compression. The tilt ratios also line up once stated on
+the same basis: on their federal-plus-corporate accounting, shares-fixed
+revenue exceeds as-forecast revenue by
+\genTiltOursMatchedSlow$\times$~/~\genTiltOursMatchedMod$\times$~/~\genTiltOursMatchedRapid$\times$
+here against
+\genTiltTheirsSlow$\times$~/~\genTiltTheirsMod$\times$~/~\genTiltTheirsRapid$\times$
+in their grid for Slow~/~Moderate~/~Rapid --- agreement on the paper's
+central mechanism, with the same ordering. (The household-total ratios here
+are larger --- \genTiltOursHouseholdRapid$\times$ for Rapid --- because
+states and transfers amplify what the tilt costs; that is a coverage
+statement, not a disagreement.) Their most extreme published comparison also
+reproduces directionally: for Slow with compressive inequality, their grid
+puts revenue \genSlowCompTheirsLowerPct\% below the shares-and-distribution-%
+unchanged counterfactual (their text states 82\%); this paper gets
+\genSlowCompOursLowerPct\%.
+
+\begin{table}[t]
+\centering
+\tabPayrollCells
+\caption{Cell-level comparison on the matched federal basis, Rapid variants,
+\$B, 2030.}
+\label{tab:cells}
+\end{table}
+
+\textbf{Where they diverge, and why.} The bridged headline is
+\genBridgeOursTotal B against their \genBridgeTheirsTotal B ---
+\genBridgeRatio$\times$, or \genBridgeOursCboPct\% against
+\genBridgeTheirsCboPct\% of CBO 2030 revenue. The gap concentrates in the
+income-tax response to the capital shock: on the proportional cell, where
+the wage-spread channel is neutral and the income-tax response is almost
+entirely the capital shock, this paper's response is
+\genIITRatioProp$\times$ theirs (\genIITRatio$\times$ on the expansive
+bridge cell). Three model differences point the same direction. First, the
+realized-capital base: their methodology's remark that the effective
+corporate parameter ``falls out to roughly one'' implies a baseline realized
+taxable capital base near \$4.6T, against \$\genModelledCapitalShareT T
+here, roughly 14\% larger. Second, allocation: they distribute the
+incremental capital flow by SCF-imputed total wealth; this paper distributes
+by existing realized capital income, which they note is the more
+top-concentrated choice --- and top-concentrated dollars face higher
+marginal rates. Third, retirement routing: taxable pension and IRA
+distributions here scale with the capital shock and are taxed at ordinary
+rates. The capital-scope sensitivity of Section~\ref{sec:scope} shows that
+last channel alone is worth about \$105B in Rapid.

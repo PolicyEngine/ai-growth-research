@@ -1,0 +1,115 @@
+\section{Additional tables}\label{app:tables}
+
+\begin{table}[h]
+\centering
+\tabRealization
+\caption{Net revenue under Rapid~/~proportional by realized share of the
+incremental capital flow, \$B, 2030.}
+\label{tab:realization}
+\end{table}
+
+\begin{table}[h]
+\centering
+\tabCapitalScope
+\caption{Capital-scope sensitivity: net revenue with and without taxable
+pension and IRA distributions in the capital set (proportional variants),
+\$B, 2030.}
+\label{tab:scope}
+\end{table}
+
+\begin{table}[h]
+\centering
+\tabStates
+\caption{Top ten states by net state revenue change (state tax before
+refundable credits minus refundable state credits), Rapid~/~proportional,
+\$B, 2030.}
+\label{tab:states}
+\end{table}
+
+\begin{table}[h]
+\centering
+\tabSweep
+\caption{The mechanism sweep, \genSweepYear{}: net revenue, federal income
+tax, SPM poverty and net Gini by share of labor income shifted to capital.}
+\label{tab:sweep}
+\end{table}
+
+\clearpage
+\section{Shock routing into the tax base}\label{app:routing}
+
+Several shocked variables are aggregates rather than raw inputs, so the
+implementation verifies that overriding them moves taxable income rather
+than being recomputed away. Traced against the model's gross-income and
+market-income source registries (\texttt{gov.irs.gross\_income.sources} and
+\texttt{gov.household.market\_income\_sources} in policyengine-us
+\genModelVersion{}):
+
+\begin{table}[h]
+\centering
+\small
+\begin{tabular}{lll}
+\toprule
+Shocked variable & Route into IRS gross income & Route into market income \\
+\midrule
+employment income & via employment income, net of & listed source \\
+ & pre-tax contributions & \\
+self-employment income & listed source & listed source \\
+long/short-term capital gains & capital gains & capital gains \\
+qualified/non-qualified dividends & ordinary dividend income & dividend income \\
+taxable interest & listed source & interest income \\
+rental income & listed source & listed source \\
+partnership and S-corp income & listed source & listed source \\
+taxable pension income & listed source & pension income \\
+taxable IRA distributions & taxable retirement distributions & retirement distributions \\
+\bottomrule
+\end{tabular}
+\caption{Every shocked variable reaches both the federal tax base and
+household market income. Qualified and non-qualified dividends are the two
+components of ordinary dividends; short- and long-term gains the two
+components of capital gains; tax-exempt interest is deliberately outside the
+shocked set.}
+\label{tab:routing}
+\end{table}
+
+Because every shocked variable reaches household market income, the
+net-income identity closes; the maximum residual across scenarios is
+\$\genIdentityMaxResidual B, and the labor aggregate lands on its target to
+within relative error \genLaborTargetMaxErr{}.
+
+\clearpage
+\section{Reproducibility}\label{app:repro}
+
+Everything in this paper runs from open source against openly published
+microdata:
+
+\begin{itemize}
+\item \textbf{Model:} policyengine-us \genModelVersion{} via policyengine.py
+\genRunnerVersion{} (the runtime certifies the model--data pairing).
+\item \textbf{Data:} \texttt{populace-us} certified build
+\texttt{\genDataBuild}.
+\item \textbf{Code:} \texttt{github.com/PolicyEngine/ai-inequality} ---
+scenario engine in \texttt{analysis/ai\_scenarios.py}, runner in
+\texttt{analysis/compute\_ai\_scenarios.py}, sweep in
+\texttt{analysis/compute\_shift\_sweep.py}, reconciliation in
+\texttt{analysis/reconcile\_budget\_lab.py}. Every number and table in this
+paper is emitted from the run outputs by
+\texttt{analysis/emit\_paper\_values.py}; figures by
+\texttt{analysis/paper\_figures.py}.
+\item \textbf{Their side:} the Budget Lab's \texttt{AI-Fiscal} repository
+(MIT license) commits the complete published result grid
+(\texttt{results/aggregates/ai\_fiscal\_publishable\_2030\_latest.xlsx});
+the reconciliation reads it directly. Their PUF-based input microdata cannot
+be redistributed, so their pipeline is readable but not rerunnable by third
+parties; this paper's is both.
+\item \textbf{Interactive companion:}
+\url{https://policyengine.org/us/ai-inequality/income-shift} (scenario
+explorer) and \url{https://policyengine.org/us/ai-inequality/budget-lab}
+(memo-length summary).
+\end{itemize}
+
+Calibration unit tests reproduce all nine of the Budget Lab's published
+derived scenario values to within 0.005\,pp from the two recovered
+constants ($G_{\mathrm{CBO}}=1.0976$, $\theta^0_L=0.5550$) and re-derive the
+labor share by grid search. The scenario runner checkpoints per-scenario
+results and is resumable; run logs and build-o archives are kept under
+\texttt{analysis/outputs/}.
