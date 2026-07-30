@@ -238,11 +238,14 @@ Rapid variants — two independent models putting similar wage distributions
 against the same cap), while the gap is concentrated in the **income tax
 response to the capital shock**: on the proportional cell, where the wage
 spread is neutral and the income tax response is almost entirely the capital
-shock, ours is 1.97× theirs (1.47× on this expansive cell). That is consistent with a
-larger realized-capital base (their η ≈ 1 remark implies about $4.6T against
-our $5.3T, though the wedge itself cannot confirm it), allocation by realized
-income rather than SCF total wealth — which they note is the more
-top-concentrated choice — and our ordinary-rate retirement routing.
+shock, ours is 1.97× theirs (1.47× on this expansive cell). The absolute gap
+says it more plainly: nearly constant at $93B / $95B / $91B across the three
+Rapid variants, which is what a difference in the shared capital shock —
+rather than in the varying wage channel — looks like. Three things point the
+same way: their committed cell parameters put their baseline realized taxable
+capital base at $4.51T against our $5.27T, 17% larger; allocation by realized
+income rather than SCF total wealth, which they note is the more
+top-concentrated choice; and our ordinary-rate retirement routing.
 
 Their grid quantifies their "roughly twice as large" tilt claim at exactly
 2.11× for Rapid; on the same federal-plus-corporate basis ours is 2.00×
