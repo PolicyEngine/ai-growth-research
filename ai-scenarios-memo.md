@@ -172,34 +172,43 @@ WIC, Medicaid, CHIP, ACA premium tax credits), and state tax and benefit codes.
 
 **They model and we cannot:** the corporate income tax. Their microsimulation
 covers federal individual income tax plus payroll; the corporate effect is a
-single aggregate wedge layered on top, not attributed to households.
+single aggregate wedge layered on top, not attributed to households. The wedge
+reduces to the capital growth rate times CBO's 2030 corporate anchor of $486B —
+the capital base cancels — which their committed results confirm on all
+eighteen cells.
 
-Their methodology document publishes that wedge in full — a 21% statutory rate,
-a C-corp share of capital income near 0.50, a CBO 2030 corporate anchor of about
-$486B, and an effective-rate adjustment that "falls out to roughly one" — which
-works out to 10.5% of the excess capital flow. Applying their formula to our
-capital flow gives the first genuinely comparable figure:
+Their code and full result grid are public (`Budget-Lab-Yale/AI-Fiscal`, MIT),
+so the comparison can be made cell by cell on an identical accounting basis:
+federal individual income tax net of refundable credits, plus payroll, plus
+their wedge. On that basis:
 
-| Rapid + expansive | Federal income tax + payroll | + their corporate wedge | Comparable total |
-| --- | --- | --- | --- |
-| ours | +$217B | +$96B | **+$313B** |
-| theirs (published) | — | — | +$216B |
+| Rapid + expansive | Fed income tax (net) | Payroll | + their wedge | Total |
+| --- | --- | --- | --- | --- |
+| ours | +$287B | −$70B | +$84B | **+$301B** |
+| theirs | +$195B | −$63B | +$84B | +$216B |
 
-So on a like-for-like basis we are **1.45× their estimate**, or 4.7% of CBO's
-2030 revenue against their 3.3% — not the near-agreement the raw totals
-suggested. Most of the gap is the capital base. Inverting the same wedge
-identity recovers the realized taxable capital income their run starts from,
-which they do not publish: about **$4.6T** against our **$5.3T**. A 14% larger
-base, shocked at the same rate, produces a proportionally larger flow.
+**We are 1.40× their estimate** — 4.6% of CBO 2030 revenue against their 3.3%.
+And the divergence has a clean anatomy: **payroll responses agree remarkably
+well in every cell** (ours −16/+34/−70 against theirs −11/+37/−63 across the
+Rapid variants — two independent models putting similar wage distributions
+against the same cap), while the gap is concentrated in the **income tax
+response to the capital shock**, roughly 2× theirs. That is consistent with a
+larger realized-capital base (their η ≈ 1 remark implies about $4.6T against
+our $5.3T, though the wedge itself cannot confirm it), allocation by realized
+income rather than SCF total wealth — which they note is the more
+top-concentrated choice — and our ordinary-rate retirement routing.
 
-Two further differences push the same way and are not netted out above: they
-apportion the capital flow by SCF-imputed *total* wealth while we use existing
-realized capital income (they note a narrower base pushes incidence toward the
-top), and their pass-through split is active/passive-aware where ours applies a
-single rule. `reconcile_budget_lab.py` reproduces the whole bridge.
+Their grid also quantifies their "roughly twice as large" tilt claim exactly:
+2.11× for Rapid against our 2.75×, with the same ordering across scenarios in
+both models (Slow most extreme, Moderate least). One basis caveat: their "82%
+lower" figure for Slow/compressive uses a shares-fixed *compressive*
+counterfactual; ours uses shares-fixed proportional, so our 93% is not exactly
+the same comparison.
 
-The borrowed wedge is not PolicyEngine modelling corporate tax, and it inherits
-every constant-rate assumption they list.
+`reconcile_budget_lab.py` reproduces every number in this section from our run
+output and their committed workbook. The borrowed wedge is not PolicyEngine
+modelling corporate tax, and it inherits every constant-rate assumption they
+list.
 
 **Both static:** no labor supply response, no behavioural response, no change in
 avoidance or enforcement.
