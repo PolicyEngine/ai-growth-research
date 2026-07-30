@@ -4,8 +4,6 @@
 
 *PolicyEngine · prepared with the AV Tax Policy Roundtable of 30 July 2026 in mind*
 
-## The point
-
 The Budget Lab's [How potential AI futures would play out in the current tax
 system](https://budgetlab.yale.edu/research/how-potential-ai-futures-would-play-out-current-tax-system)
 (Iselin and Nunn, 20 July) asks what AI-driven growth does to federal receipts,
