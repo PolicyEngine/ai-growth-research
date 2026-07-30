@@ -118,7 +118,7 @@ income still falls, and there is not enough taxable capital income reaching
 returns to offset it. One important counterweight sits outside our model:
 corporate tax is levied upstream of household realization, so the Budget Lab's
 corporate wedge would still collect about $84B on the same shock regardless of
-realization — enough to keep the all-in federal total positive (about +$33B)
+realization — enough to keep the all-in federal total positive (about +$23B)
 even at the 0% floor. Low realization shifts the entire fiscal burden of an AI
 boom onto the corporate side; it does not eliminate it.
 
@@ -235,7 +235,9 @@ And the divergence has a clean anatomy: **payroll responses agree remarkably
 well in every cell** (ours −16/+34/−70 against theirs −11/+37/−63 across the
 Rapid variants — two independent models putting similar wage distributions
 against the same cap), while the gap is concentrated in the **income tax
-response to the capital shock**, roughly 2× theirs. That is consistent with a
+response to the capital shock**: on the proportional cell, where the wage
+spread is neutral and the income tax response is almost entirely the capital
+shock, ours is 1.97× theirs (1.47× on this expansive cell). That is consistent with a
 larger realized-capital base (their η ≈ 1 remark implies about $4.6T against
 our $5.3T, though the wedge itself cannot confirm it), allocation by realized
 income rather than SCF total wealth — which they note is the more
