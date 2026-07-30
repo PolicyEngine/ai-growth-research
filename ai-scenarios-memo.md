@@ -22,10 +22,11 @@ assumptions. PolicyEngine carries the transfer system, the SPM poverty measure,
 and the state codes their tax model does not. Three things follow that a
 revenue-only score cannot show.
 
-**1. The tilt toward capital erases the poverty gain from growth.** In the
-Rapid scenario — 3.3% annual real GDP growth either way — poverty falls 1.09
-points if the gains split at today's factor shares, and is flat (+0.11) with
-the tilt forecasters expect under a distribution-neutral wage spread.
+**1. The tilt toward capital turns growth's poverty gain into a marginal
+loss.** In the Rapid scenario — 3.3% annual real GDP growth either way —
+poverty falls 1.09 points if the gains split at today's factor shares, and
+rises 0.11 points with the tilt forecasters expect under a
+distribution-neutral wage spread.
 
 **2. The assumption with the least evidence behind it decides the household
 outcome.** The Budget Lab is explicit that nobody knows whether AI compresses or

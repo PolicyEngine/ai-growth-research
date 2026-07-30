@@ -35,12 +35,18 @@ rate, drives the fiscal and poverty results. Rapid adoption with factor
 shares held at today's levels raises net government revenue by
 \genRapidFixedRev B in 2030 and cuts SPM poverty by
 \genRapidFixedPovPp pp; the same growth with the forecast tilt keeps
-\genRapidShareKeptPct\% of the revenue (\genRapidPropRev B) and erases the
-poverty gain (\genRapidPropPovPp pp).
+\genKeptHouseholdRapidPct\% of that revenue (\genRapidPropRev B) and turns
+the poverty gain into a marginal loss (\genRapidPropPovPp pp). The keep-rate
+is basis-dependent, and the paper reports it both ways: on the narrower
+federal basis that the Budget Lab measures, the tilt keeps
+\genKeptMatchedRapidPct\% here and \genKeptTheirsRapidPct\% in their grid;
+the lower household figure is what adding state taxes and the transfer
+system does to the same tilt.
 
-Second, the assumption the forecasting literature is least sure of --- whether
-AI compresses or widens the wage distribution --- decides the household
-verdict while leaving the revenue verdict intact. Across the Budget Lab's own
+Second, the assumption with the least evidence behind it --- whether AI
+compresses or widens the wage distribution, a question the forecaster survey
+does not elicit and the Budget Lab spans with stylized variants --- decides
+the household verdict while leaving the revenue verdict intact. Across the Budget Lab's own
 compressive-to-expansive span, Rapid net revenue stays between
 \genRapidCompRev B and \genRapidExpRev B, always positive, while the poverty
 outcome flips sign: \genRapidCompPovPp pp under compression,
@@ -60,23 +66,24 @@ answer.
 Fourth, two definitional choices about the tax base move the revenue answer
 by more than the choice between Slow, Moderate and Rapid. If AI's incremental
 capital income goes unrealized --- retained, accrued, or sheltered inside
-retirement accounts --- revenue falls roughly linearly, and below a
-\genRealBreakevenPct\% realized share the household sector loses money on
-Rapid AI growth; poverty, meanwhile, sits still to within
-\genRealPovMaxPct$-$\genRealPovMinPct~pp across the whole sweep. And whether
+retirement accounts --- revenue falls roughly linearly, and below a realized
+share of roughly \genRealBreakevenPct\% the household sector loses money on
+Rapid AI growth; poverty, meanwhile, moves by
+\genRealPovSpanPp~pp across the whole sweep. And whether
 taxable retirement distributions count as capital income halves the Rapid
 estimate when excluded (\genRapidScopeFull B to \genRapidScopeExcl B).
 
 The reconciliation with the Budget Lab in Section~\ref{sec:reconciliation} is,
 to my knowledge, the first cell-level comparison of two independent
 microsimulations of AI fiscal scenarios. It is reassuring where the models
-share machinery --- payroll responses agree closely in every cell, two
-independent wage distributions meeting the same taxable maximum --- and
+share machinery --- payroll responses agree in all nine cells to within
+\$\genPayrollMaxCellGap B, two independent wage distributions meeting the
+same taxable maximum --- and
 informative where they do not: the bridged headline is \genBridgeOursTotal B
 against their \genBridgeTheirsTotal B (\genBridgeRatio$\times$), with the gap
-concentrated in the income-tax response to the capital shock
-(\genIITRatioProp$\times$ on the cell where the wage-spread channel is
-neutral), consistent with a larger realized-capital base and a more
+concentrated in the income-tax response to the capital shock --- nearly
+constant in absolute terms across the wage-spread cells --- consistent with
+this paper's \genBaseGapPct\% larger realized-capital base and more
 top-concentrated allocation rule.
 
 The paper proceeds as follows. Section~\ref{sec:literature} places the

@@ -10,18 +10,24 @@ Rapid~/~proportional fixed and varying only how much of the incremental
 capital flow lands on a tax return (Figure~\ref{fig:realization},
 Table~\ref{tab:realization} in the appendix), revenue runs from
 \genRealZeroRev B at a 0\% realized share to \genRealFullRev B at their
-100\% assumption --- linear to within a percent, with breakeven at a
-\genRealBreakevenPct\% realized share. Below that, the household side of the
-fiscal system loses money on Rapid AI growth: labor income still falls, and
-not enough taxable capital income reaches returns to offset it.
+100\% assumption --- linear to within a percent across a grid in
+\genRealGridStepPct-point steps, with breakeven interpolated at a
+\genRealBreakevenPct\% realized share (the grid's own adjacent points are
+\genRealZeroRev B at 0\% and \genRealQuarterRev B at
+\genRealGridStepPct\%). Below that, the household side of the fiscal system
+loses money on Rapid AI growth: labor income still falls, and not enough
+taxable capital income reaches returns to offset it.
 
 One counterweight sits outside the household sector: corporate tax is levied
 upstream of household realization, so the Budget Lab's corporate wedge would
 still collect about \genTheirRapidCit B on the same shock regardless of the
-realized share --- enough to keep the all-in federal total positive, about
-\genRealZeroAllIn B, even at the 0\% floor. Low realization shifts the
-fiscal burden of an AI boom onto the corporate side; it does not eliminate
-it.
+realized share --- enough to keep the all-in total (household, state and
+corporate) positive, about \genRealZeroAllIn B, even at the 0\% floor. Low
+realization shifts the fiscal burden of an AI boom onto the corporate side;
+it does not eliminate it. One scope note: the realization haircut applies
+uniformly to all nine capital variables, including pass-through income and
+retirement distributions that are realized by construction, so the low end
+of the axis is a stress bound rather than a describable world.
 
 Poverty is flat across the entire sweep, between \genRealPovMinPct\% and
 \genRealPovMaxPct\%. Whether AI's capital gains are taxable moves the
@@ -53,14 +59,22 @@ answer than the choice between Slow, Moderate and Rapid.
 \subsection{Stability across data builds}\label{sec:stability}
 
 The results were first computed on the prior \texttt{populace-us} build
-(build~o, 22 July 2026) and rerun on build~p (28 July, with revised capital
-gains calibration) under the identical pinned model version --- a data-only
-change. Every scenario revenue figure moved by less than 3\%, every poverty
-change by less than 0.11\,pp, and no conclusion changed. The recalibration's
+(build~o, 22 July 2026) and rerun on build~p (\genDataBuildDate{}, with
+revised capital gains calibration) under the identical pinned model version
+--- a data-only change. No scenario revenue figure moved by more than
+\$\genStabMaxAbsRevB B in absolute terms; in relative terms Moderate and
+Rapid cells moved by at most \genStabMaxRelModRapidPct\%, while the smallest
+Slow cells --- single-digit-billion bases --- moved by up to
+\genStabMaxRelPct\%. Every poverty change moved by less than
+\genStabMaxPovChangePp\,pp, and no conclusion changed. The recalibration's
 visible effect is distributional: the baseline top-1\% net income share
-rises from 8.77\% to 9.00\%, and New York's state take under Rapid rises
-from \$3.8B to \$5.8B as more of the gains land where they are taxed. An
-average-tax-rate cross-check also holds: Rapid~/~proportional turns a
-\genRapidPropMarketDelta B market income increase into \genRapidPropRev B of
-receipts, \genRapidPropATRPct\%, inside the 21--34\% band the Budget Lab
-reports on gross factor income.
+rises from \genStabTopOneOld\% to \genStabTopOneNew\%, and New York's state
+take under Rapid rises from \$\genStabNYOld B to \$\genStabNYNew B as more
+of the gains land where they are taxed. This build-to-build movement bounds
+sensitivity to data calibration, not sampling error, which is unquantified
+here (Section~\ref{sec:discussion}). An average-tax-rate cross-check also
+lands in range: Rapid~/~proportional turns a \genRapidPropMarketDelta B
+market income increase into \genRapidPropRev B of receipts,
+\genRapidPropATRPct\% --- of the same order as the 21--34\% band the Budget
+Lab reports, though their denominator is gross factor income rather than
+modelled market income.

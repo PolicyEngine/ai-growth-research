@@ -98,9 +98,16 @@ paper is emitted from the run outputs by
 \item \textbf{Their side:} the Budget Lab's \texttt{AI-Fiscal} repository
 (MIT license) commits the complete published result grid
 (\texttt{results/aggregates/ai\_fiscal\_publishable\_2030\_latest.xlsx});
-the reconciliation reads it directly. Their PUF-based input microdata cannot
-be redistributed, so their pipeline is readable but not rerunnable by third
-parties; this paper's is both.
+the reconciliation reads it directly, and a copy is committed alongside this
+paper's own run outputs so the bridge is reproducible without a network
+fetch. Their PUF-based input microdata cannot be redistributed, so their
+pipeline is readable but not rerunnable by third parties; this paper's is
+both.
+\item \textbf{Canonical run outputs:} \texttt{analysis/outputs/ai\_scenarios.json}
+(build~p) and \texttt{ai\_scenarios\_buildo.json} (build~o, for the stability
+comparison of Section~\ref{sec:stability}) are committed, so every value and
+table in this paper regenerates from the repository alone --- the full
+simulation need only be rerun to change a scenario, not to check a number.
 \item \textbf{Interactive companion:}
 \url{https://policyengine.org/us/ai-inequality/income-shift} (scenario
 explorer) and \url{https://policyengine.org/us/ai-inequality/budget-lab}

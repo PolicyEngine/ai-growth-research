@@ -99,10 +99,17 @@ def main():
         ls="--",
         label="Benefit outlays (sign flipped)",
     )
-    band = 7.6
+    # Forecast-equivalence band, derived the same way as emit_paper_values.py.
+    ks = {}
+    for r in sc["scenarios"]:
+        s = r["scenario"]
+        if s["inequality"] == "proportional" and not s.get("hold_shares_fixed"):
+            ks[s["name"]] = 100 * (1 - (1 + s["labor_growth"]) / (1 + s["gdp_growth"]))
+    band = ks["Rapid"]
     ax.axvspan(0, band, color=TEAL, alpha=0.08)
     ax.annotate(
-        "forecast-equivalent range\n(Slow 0.9, Moderate 3.1, Rapid 7.6)",
+        "forecast-equivalent range\n"
+        f"(Slow {ks['Slow']:.1f}, Moderate {ks['Moderate']:.1f}, Rapid {ks['Rapid']:.1f})",
         xy=(band, ax.get_ylim()[0]),
         xytext=(10, -880),
         fontsize=7.5,
@@ -178,7 +185,18 @@ def main():
     rp = srow("Rapid", "proportional")
     rates = [r["scenario"]["realization_rate"] for r in real] + [1.0]
     revs = [r["total_rev_change_b"] for r in real] + [rp["total_rev_change_b"]]
-    wedge = 84.0
+    # Their committed Rapid corporate wedge (g_K x $486B; realization-independent).
+    import pandas as pd
+
+    wedge = float(
+        pd.read_excel(
+            os.path.join(OUT, "yale_publishable_2030.xlsx"),
+            sheet_name="revenue_grid_wide",
+            engine="openpyxl",
+        )
+        .set_index("scenario_id")
+        .loc["ai_R_R_S0_V1", "macro_cit_delta"]
+    )
     fig, ax = plt.subplots(figsize=(5.6, 3.2))
     ax.axhline(0, color=GRAY, lw=0.8, ls=(0, (4, 3)))
     ax.plot(
@@ -191,7 +209,7 @@ def main():
         color=NAVY,
         lw=1.3,
         ls="--",
-        label="Plus their corporate wedge (+$84B)",
+        label=f"Plus their corporate wedge (+${wedge:.0f}B)",
     )
     # Breakeven.
     grid = sorted(zip(rates, revs))

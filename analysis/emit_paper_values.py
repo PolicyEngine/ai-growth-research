@@ -20,13 +20,21 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 OUT = os.path.join(ROOT, "analysis", "outputs")
 PAPER = os.path.join(ROOT, "paper")
 
-#: From their corporate_tax sheet / methodology (see reconcile_budget_lab.py).
-THEIR_CBO_2030_TOTAL_REVENUE_B = 6595.0
+#: CBO 2030 corporate income tax anchor, from their corporate_tax sheet.
+CBO_CIT_ANCHOR_B = 486.0
 
 VARIANT = {"Slow": "S", "Moderate": "M", "Rapid": "R"}
 LABOR = {"proportional": "S0", "compressive": "S2", "expansive": "S3"}
 
-ZERO_STATES = ("FL", "NV", "NH", "SD", "TN", "TX", "WY")
+STATE_NAMES = {
+    "FL": "Florida",
+    "NV": "Nevada",
+    "NH": "New Hampshire",
+    "SD": "South Dakota",
+    "TN": "Tennessee",
+    "TX": "Texas",
+    "WY": "Wyoming",
+}
 
 
 def our_row(data, name, variant, shares_fixed=False):
@@ -79,11 +87,16 @@ def main():
         sc = json.load(fh)
     with open(os.path.join(ROOT, "src", "data", "shiftSweepData.json")) as fh:
         sweep = json.load(fh)
+    xlsx = os.path.join(OUT, "yale_publishable_2030.xlsx")
     theirs = pd.read_excel(
-        os.path.join(OUT, "yale_publishable_2030.xlsx"),
-        sheet_name="revenue_grid_wide",
-        engine="openpyxl",
+        xlsx, sheet_name="revenue_grid_wide", engine="openpyxl"
     ).set_index("scenario_id")
+    # Their committed anchors: CBO 2030 total revenue (revenue_to_gdp sheet)
+    # and their baseline realized taxable capital base (cell_params sheet).
+    rev_gdp = pd.read_excel(xlsx, sheet_name="revenue_to_gdp", engine="openpyxl")
+    their_cbo_rev = float(rev_gdp["baseline_revenue_B_cbo"].dropna().unique()[0])
+    cell_params = pd.read_excel(xlsx, sheet_name="cell_params", engine="openpyxl")
+    their_y0k = float(cell_params["y0_k_B"].dropna().unique()[0])
 
     V = {}  # macro name -> string value
     base = sc["baseline"]
@@ -197,16 +210,19 @@ def main():
     ):
         V[macro] = f"{code} {val:+.1f}"
     V["WAState"] = sfmt(sn["WA"], 1)
-    n_zero = sum(1 for s in ZERO_STATES if abs(sn.get(s, 0.0)) < 0.005)
+    # Zero-collecting states are derived from the data, not asserted.
+    zero_states = sorted(k for k, v in sn.items() if v == 0.0)
+    n_zero = len(zero_states)
     V["NZeroStates"] = str(n_zero)
+    names = [STATE_NAMES.get(s, s) for s in zero_states]
+    V["ZeroStatesList"] = ", ".join(names[:-1]) + " and " + names[-1]
+    V["ZeroStatesCodes"] = ", ".join(zero_states)
 
     # --- Realization sweep ---
     real = sorted(
         sc["sensitivities"]["realization"],
         key=lambda r: r["scenario"]["realization_rate"],
     )
-    real_rows = [rp if abs(r["scenario"]["realization_rate"] - 1.0) < 1e-9 else r for r in real]
-    rates = [r["scenario"]["realization_rate"] for r in real]
     revs = {
         r["scenario"]["realization_rate"]: r["total_rev_change_b"] for r in real
     }
@@ -221,11 +237,23 @@ def main():
             breakeven = x0 + (0 - y0) * (x1 - x0) / (y1 - y0)
             break
     V["RealBreakevenPct"] = fmt(100 * breakeven, 1)
+    V["RealGridStepPct"] = fmt(100 * (grid[1][0] - grid[0][0]), 0)
+    V["RealQuarterRev"] = sfmt(revs[0.25])
     povs = [r["spm_poverty_rate"] for r in real] + [rp["spm_poverty_rate"]]
     V["RealPovMinPct"] = fmt(100 * min(povs), 2)
     V["RealPovMaxPct"] = fmt(100 * max(povs), 2)
+    V["RealPovSpanPp"] = fmt(100 * (max(povs) - min(povs)), 2)
     their_rapid_cit = theirs.loc["ai_R_R_S0_V1", "macro_cit_delta"]
     V["TheirRapidCit"] = sfmt(their_rapid_cit)
+    # Their wedge equals g_K x $486B on every committed cell (the base cancels):
+    # verify against their own per-cell g_k rather than asserting it.
+    n_cells = len(cell_params)
+    cit_dev = max(
+        abs(row.delta_R_CIT_B - row.g_k * CBO_CIT_ANCHOR_B)
+        for row in cell_params.itertuples()
+    )
+    V["CitWedgeMaxDevB"] = fmt(cit_dev, 3)
+    V["TheirNCells"] = str(n_cells)
     V["RealZeroAllIn"] = sfmt(revs[0.0] + their_rapid_cit)
 
     # --- Capital scope ---
@@ -238,10 +266,12 @@ def main():
         excl = scope[name]["total_rev_change_b"]
         V[f"{macro}ScopeFull"] = sfmt(full)
         V[f"{macro}ScopeExcl"] = sfmt(excl)
-    V["RapidScopeDiff"] = sfmt(
+    scope_diff = (
         scope["Rapid"]["total_rev_change_b"]
         - rows[("Rapid", "proportional")]["total_rev_change_b"]
     )
+    V["RapidScopeDiff"] = sfmt(scope_diff)
+    V["RapidScopeDiffAbs"] = fmt(abs(scope_diff), 0)
 
     # --- Average tax rate cross-check ---
     V["RapidPropMarketDelta"] = sfmt(rp["market_income_change_b"])
@@ -262,9 +292,14 @@ def main():
     V["BridgeTheirsPayroll"] = sfmt(them_cell.revenues_payroll_tax)
     V["BridgeTheirsTotal"] = sfmt(them_cell.total_with_macro_cit)
     V["BridgeRatio"] = fmt(bridged / them_cell.total_with_macro_cit, 2)
-    V["BridgeOursCboPct"] = fmt(100 * bridged / THEIR_CBO_2030_TOTAL_REVENUE_B, 1)
+    V["TheirCBORevB"] = f"{their_cbo_rev:,.0f}"
+    V["BridgeOursCboPct"] = fmt(100 * bridged / their_cbo_rev, 1)
     V["BridgeTheirsCboPct"] = fmt(
-        100 * them_cell.total_with_macro_cit / THEIR_CBO_2030_TOTAL_REVENUE_B, 1
+        100 * them_cell.total_with_macro_cit / their_cbo_rev, 1
+    )
+    V["TheirYZeroKT"] = fmt(their_y0k / 1000, 2)
+    V["BaseGapPct"] = fmt(
+        100 * (ctx["positive_capital_income_t"] * 1000 / their_y0k - 1), 0
     )
     V["IITRatio"] = fmt(us["iit_net"] / them_iit_net, 2)
     prop_us = our_side(rp)
@@ -272,13 +307,32 @@ def main():
     prop_them_iit = prop_cell.revenues_income_tax - prop_cell.outlays_tax_credits
     V["IITRatioProp"] = fmt(prop_us["iit_net"] / prop_them_iit, 2)
 
-    pay_ours, pay_theirs = [], []
+    pay_ours, pay_theirs, iit_gaps = [], [], []
     for var in ("compressive", "proportional", "expansive"):
-        pay_ours.append(our_side(rows[("Rapid", var)])["payroll"])
+        u = our_side(rows[("Rapid", var)])
         cell = theirs.loc[f"ai_R_R_{LABOR[var]}_V1"]
+        pay_ours.append(u["payroll"])
         pay_theirs.append(cell.revenues_payroll_tax)
+        iit_gaps.append(
+            u["iit_net"] - (cell.revenues_income_tax - cell.outlays_tax_credits)
+        )
     V["PayrollTripletOurs"] = "/".join(f"{x:+.0f}" for x in pay_ours)
     V["PayrollTripletTheirs"] = "/".join(f"{x:+.0f}" for x in pay_theirs)
+    V["IITGapTriplet"] = "/".join(f"{x:+.0f}" for x in iit_gaps)
+    V["PayrollMaxCellGap"] = fmt(
+        max(
+            abs(
+                our_side(rows[(n, v)])["payroll"]
+                - theirs.loc[f"ai_{VARIANT[n]}_R_{LABOR[v]}_V1"].revenues_payroll_tax
+            )
+            for n in ("Slow", "Moderate", "Rapid")
+            for v in ("compressive", "proportional", "expansive")
+        ),
+        0,
+    )
+
+    # Market-income deltas behind the tilt (Section: national vs modelled shares).
+    V["RapidFixedMarketDelta"] = sfmt(rf["market_income_change_b"])
 
     # Tilt ratios: shares fixed / as forecast (proportional), publishable basis
     # for them; matched federal+CIT basis for ours; household basis separately.
@@ -296,6 +350,15 @@ def main():
             rows[(name, "fixed")]["total_rev_change_b"]
             / rows[(name, "proportional")]["total_rev_change_b"],
             2,
+        )
+        # Keep-rates (inverse tilt ratios), so the paper can state the basis.
+        V[f"KeptMatched{macro}Pct"] = fmt(100 * or_tot / of_tot, 0)
+        V[f"KeptTheirs{macro}Pct"] = fmt(100 * tr / tf, 0)
+        V[f"KeptHousehold{macro}Pct"] = fmt(
+            100
+            * rows[(name, "proportional")]["total_rev_change_b"]
+            / rows[(name, "fixed")]["total_rev_change_b"],
+            0,
         )
 
     # Slow / compressive extreme case: percent below shares-and-distribution
@@ -322,6 +385,14 @@ def main():
     V["SweepTroughRev"] = sfmt(trough["total_rev_change_b"])
     V["SweepTroughShift"] = str(trough["shift_pct"])
     V["SweepFullRev"] = sfmt(sw[100]["total_rev_change_b"])
+    ten = sw[10]
+    V["SweepTenIIT"] = sfmt(ten["income_tax_change_b"])
+    V["SweepTenPayroll"] = sfmt(
+        ten["employee_ss_tax_change_b"]
+        + ten["employee_medicare_tax_change_b"]
+        + ten["employer_payroll_change_b"]
+        + ten.get("self_employment_tax_change_b", 0.0)
+    )
     bf = sweep["metadata"]["baseline_facts"]
     V["SweepLaborT"] = fmt(bf["positive_labor_income_t"], 1)
     V["SweepCapitalT"] = fmt(bf["positive_capital_income_t"], 1)
@@ -333,6 +404,7 @@ def main():
     }
     d100 = {d["decile"]: d["pct_change"] for d in dec[100]["deciles"]}
     V["SweepTopDecilePct"] = sfmt(d100[10], 0)
+    V["SweepBottomDecilePct"] = sfmt(d100[1], 1)
     worst = min((v, k) for k, v in d100.items() if k != 10)
     V["SweepWorstDecilePct"] = fmt(worst[0], 1)
     V["SweepWorstDecile"] = str(worst[1])
@@ -347,10 +419,54 @@ def main():
     V["IdentityMaxResidual"] = fmt(
         max(abs(r["identity_residual_b"]) for r in sc["scenarios"]), 3
     )
-    V["LaborTargetMaxErr"] = f"{max(abs(r['diagnostics']['labor_growth_error']) for r in sc['scenarios']):.0e}"
-    V["ModelVersion"] = meta.get("country_model_version", meta.get("policyengine_us_version"))
-    V["RunnerVersion"] = meta.get("policyengine_version", "5.0.1")
-    V["DataBuild"] = meta.get("certified_data_build_id", "")
+    err = max(abs(r["diagnostics"]["labor_growth_error"]) for r in sc["scenarios"])
+    mant, exp = f"{err:.0e}".split("e")
+    V["LaborTargetMaxErr"] = rf"${mant}\times10^{{{int(exp)}}}$"
+    V["ModelVersion"] = meta["country_model_version"]
+    V["RunnerVersion"] = meta["policyengine_version"]
+    V["DataBuild"] = meta["certified_data_build_id"]
+    # e.g. populace-us-2024-buildp-sparse-rmloss100-cae8640-20260728T011454Z
+    parts = V["DataBuild"].split("-")
+    V["DataBuildShort"] = parts[-2]
+    stamp = parts[-1]
+    V["DataBuildDate"] = f"{stamp[6:8]} {['','January','February','March','April','May','June','July','August','September','October','November','December'][int(stamp[4:6])]} {stamp[:4]}"
+
+    # --- Stability across data builds (build o vs build p, same model) ---
+    with open(os.path.join(OUT, "ai_scenarios_buildo.json")) as fh:
+        old = json.load(fh)
+    assert old["metadata"]["country_model_version"] == V["ModelVersion"]
+
+    def skey(r):
+        s = r["scenario"]
+        return (s["name"], s["inequality"], bool(s.get("hold_shares_fixed")))
+
+    orows = {skey(r): r for r in old["scenarios"]}
+    obase = old["baseline"]
+    max_abs = max_rel = max_rel_mr = max_pov = 0.0
+    for r in sc["scenarios"]:
+        o = orows[skey(r)]
+        d = abs(r["total_rev_change_b"] - o["total_rev_change_b"])
+        rel = d / abs(o["total_rev_change_b"])
+        max_abs = max(max_abs, d)
+        max_rel = max(max_rel, rel)
+        if r["scenario"]["name"] != "Slow":
+            max_rel_mr = max(max_rel_mr, rel)
+        dpov = abs(
+            (r["spm_poverty_rate"] - base["spm_poverty_rate"])
+            - (o["spm_poverty_rate"] - obase["spm_poverty_rate"])
+        )
+        max_pov = max(max_pov, dpov)
+    V["StabMaxAbsRevB"] = fmt(max_abs, 1)
+    V["StabMaxRelPct"] = fmt(100 * max_rel, 0)
+    V["StabMaxRelModRapidPct"] = fmt(100 * max_rel_mr, 1)
+    V["StabMaxPovChangePp"] = fmt(100 * max_pov, 2)
+    V["StabTopOneOld"] = fmt(100 * obase["net_top_1_share"], 2)
+    V["StabTopOneNew"] = fmt(100 * base["net_top_1_share"], 2)
+    ny_old = orows[("Rapid", "proportional", False)]["state_deltas"]["NY"][
+        "state_net_change_b"
+    ]
+    V["StabNYOld"] = fmt(ny_old, 1)
+    V["StabNYNew"] = fmt(sn["NY"], 1)
 
     # ---------------- values_generated.tex ----------------
     lines = [
@@ -458,21 +574,24 @@ def main():
     T.append(r"\bottomrule")
     T.append(r"\end{tabular}}")
 
-    # Payroll agreement table (Rapid variants, matched basis).
+    # Payroll agreement table (all nine as-forecast cells, matched basis).
     T.append(r"\newcommand{\tabPayrollCells}{%")
     T.append(r"\begin{tabular}{lrrrr}")
     T.append(r"\toprule")
-    T.append(r"Rapid variant & \multicolumn{2}{c}{IIT net of credits} & \multicolumn{2}{c}{Payroll} \\")
+    T.append(r"Cell & \multicolumn{2}{c}{IIT net of credits} & \multicolumn{2}{c}{Payroll} \\")
     T.append(r" & Ours & Theirs & Ours & Theirs \\")
     T.append(r"\midrule")
-    for var in ("compressive", "proportional", "expansive"):
-        u = our_side(rows[("Rapid", var)])
-        cell = theirs.loc[f"ai_R_R_{LABOR[var]}_V1"]
-        t_iit = cell.revenues_income_tax - cell.outlays_tax_credits
-        T.append(
-            f"{var.capitalize()} & {u['iit_net']:+.0f} & {t_iit:+.0f} & "
-            f"{u['payroll']:+.0f} & {cell.revenues_payroll_tax:+.0f} \\\\"
-        )
+    for name in ("Slow", "Moderate", "Rapid"):
+        for var in ("compressive", "proportional", "expansive"):
+            u = our_side(rows[(name, var)])
+            cell = theirs.loc[f"ai_{VARIANT[name]}_R_{LABOR[var]}_V1"]
+            t_iit = cell.revenues_income_tax - cell.outlays_tax_credits
+            T.append(
+                f"{name} / {var} & {u['iit_net']:+.0f} & {t_iit:+.0f} & "
+                f"{u['payroll']:+.0f} & {cell.revenues_payroll_tax:+.0f} \\\\"
+            )
+        if name != "Rapid":
+            T.append(r"\addlinespace")
     T.append(r"\bottomrule")
     T.append(r"\end{tabular}}")
 
@@ -487,7 +606,7 @@ def main():
     T.append(r"\addlinespace")
     T.append(
         rf"\multicolumn{{2}}{{l}}{{\footnotesize {n_zero} states collect exactly \$0: "
-        + ", ".join(ZERO_STATES)
+        + V["ZeroStatesCodes"]
         + r".} \\"
     )
     T.append(r"\bottomrule")

@@ -5,17 +5,26 @@
 Figure~\ref{fig:sweep-rev} runs the composition mechanism from 0\% to 100\%.
 Net government revenue falls almost monotonically as labor income becomes
 capital income, bottoming at \genSweepTroughRev B at a
-\genSweepTroughShift\% shift: the income tax initially loses progressivity
-revenue as wages leave the schedule, payroll revenue falls roughly linearly
-with the wage base, state codes track the federal pattern, and benefit
-outlays rise as wage-dependent households qualify for means-tested support.
+\genSweepTroughShift\% shift. The decomposition is not what a
+``capital-is-taxed-lightly'' intuition alone would predict: the federal
+income tax \emph{gains} at every step (\genSweepTenIIT B at the first),
+because concentrating income into the small capital-holding population
+pushes it into upper brackets by more than the preferential rates give back.
+Revenue falls anyway because payroll collections fall roughly linearly with
+the wage base (\genSweepTenPayroll B at the first step) and benefit outlays
+and refundable
+credits rise as wage-dependent households qualify for means-tested support;
+state codes track the federal income-tax pattern.
 The distributional counterpart (Figure~\ref{fig:sweep-dist}) is severe by
 construction --- only \genSweepHHCapSharePct\% of households hold any
 positive capital income, so the net-income Gini rises from
 \genSweepBaseGini{} to \genSweepFullGini{} and SPM poverty from
 \genSweepBasePovPct\% to \genSweepFullPovPct\% at the full shift, with the
 top decile's mean net income rising \genSweepTopDecilePct\% while decile
-\genSweepWorstDecile{} falls \genSweepWorstDecilePct\%. The
+\genSweepWorstDecile{} falls \genSweepWorstDecilePct\%. The exception is
+instructive and is the transfer system's signature: the bottom decile ends
+essentially where it started (\genSweepBottomDecilePct\%), because its income
+is largely transfers, which do not follow wages out of the labor market. The
 forecast-equivalent range --- the shaded band at
 \genForecastShiftSlowPct{}--\genForecastShiftRapidPct\% --- says how much of
 this axis the 2030 forecasts actually reach: the first decade. The sweep's
@@ -47,8 +56,12 @@ machinery. Within each scenario, moving from compressive to expansive raises
 income-tax revenue through progressivity and lowers payroll revenue as
 earnings cross the Social Security taxable maximum. And the tilt is
 expensive: Table~\ref{tab:tilt} shows each scenario keeping a fraction of its
-shares-fixed revenue --- \genRapidShareKeptPct\% in Rapid
-(\genRapidPropRev B against \genRapidFixedRev B).
+shares-fixed revenue --- \genKeptHouseholdRapidPct\% in Rapid
+(\genRapidPropRev B against \genRapidFixedRev B) on this all-government
+household basis, against \genKeptMatchedRapidPct\% on the narrower federal
+basis Section~\ref{sec:reconciliation} matches to the Budget Lab. The
+difference between those two keep-rates is what the state and transfer
+channels add to the tilt's cost.
 
 \begin{table}[t]
 \centering
@@ -139,16 +152,19 @@ The geography is concentrated (Figure~\ref{fig:states}): the top five states
 collect \genStateTopFiveSharePct\% of the national state take
 (\genStateFirst, \genStateSecond, \genStateThird, \genStateFourth,
 \genStateFifth, in \$B). \genNZeroStates{} states collect exactly nothing
-from the capital shock --- Florida, Nevada, New Hampshire, South Dakota,
-Tennessee, Texas and Wyoming --- and Washington is the instructive
-exception: it has no income tax either, but its capital-gains excise tax
+from the capital shock --- \genZeroStatesList{} --- and Washington is the
+instructive exception: it has no income tax either, but its capital-gains excise tax
 collects \genWAState B, more than the seven zero-collecting states combined.
 A state that taxes capital gains participates in an AI capital boom; a state
 that taxes only wages does not participate in an economy where wages are the
 shrinking share. State-funded benefit responses are negligible in these runs
-(the model's state-benefit registry covers state SSI supplements and
-child-care subsidies), so the automatic-stabilizer response above is almost
-entirely federal.
+(the model's state-benefit registry at version \genModelVersion{} covers
+state SSI supplements and child-care subsidies), so the automatic-stabilizer
+response above is almost entirely federal. Sub-national cells this small
+carry material data-calibration sensitivity --- Section~\ref{sec:stability}
+shows a single data-build revision moving New York's take from
+\$\genStabNYOld B to \$\genStabNYNew B --- so the state figures locate the
+pattern rather than measure any one state precisely.
 
 \begin{figure}[t]
 \centering

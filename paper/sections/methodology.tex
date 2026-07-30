@@ -2,13 +2,17 @@
 
 \subsection{Model and data}
 
-All results come from PolicyEngine-US version \genModelVersion{}, an
-open-source static microsimulation of United States federal and state tax and
-benefit law, executed through the \texttt{policyengine.py} runtime
-(version \genRunnerVersion{}), which certifies the pairing of model version
-and dataset build. The dataset is \texttt{populace-us} build
-\texttt{cae8640} (28 July 2026), an openly published enhanced-CPS microdata
-file for 2024, uprated by the model to the analysis years. The mechanism
+All results come from PolicyEngine-US version \genModelVersion{}
+\citep{policyengineus}, an open-source static microsimulation of United
+States federal and state tax and benefit law, executed through the
+\texttt{policyengine.py} runtime (version \genRunnerVersion{}), which
+certifies the pairing of model version and dataset build. The 2030 baseline
+is current law as of that model version, including the 2025 reconciliation
+act. The dataset is \texttt{populace-us} build \texttt{\genDataBuildShort}
+(\genDataBuildDate{}) \citep{populaceus}, an openly published enhanced-CPS
+microdata file for 2024, uprated by the model to the analysis years; scenario
+growth is defined in excess of the CBO baseline path, which is exactly right
+only where the model's own uprating tracks CBO's projection. The mechanism
 sweep of Section~\ref{sec:sweep} is run at \genSweepYear{}; the calibrated
 scenarios are run at 2030, matching the Budget Lab's horizon. In the 2030
 baseline, SPM poverty is \genBaselinePovertyPct\% and the household
@@ -33,7 +37,8 @@ transfers: household tax before refundable credits (federal and state,
 including employee-side payroll) plus employer payroll tax, minus refundable
 credits and benefit outlays. An identity check --- the change in market
 income minus the change in household net income must equal the household-side
-revenue change --- closes to \$\genIdentityMaxResidual B in every scenario.
+revenue change --- closes to within \$0.001B in every scenario (maximum
+absolute residual \$\genIdentityMaxResidual B at three decimals).
 Where the paper compares against the Budget Lab
 (Section~\ref{sec:reconciliation}), it restates results on their narrower
 basis: federal individual income tax net of refundable credits, plus payroll.
@@ -44,8 +49,14 @@ The sweep isolates composition. In 10-point steps from 0\% to 100\%, it
 reduces every person's positive employment and self-employment income by the
 step share and redistributes the same weighted total to positive capital
 income in proportion to existing holdings, holding modelled market income
-fixed. The \genSweepYear{} baseline contains \$\genSweepLaborT T of positive
-labor income and \$\genSweepCapitalT T of positive capital income, with
+fixed. Capital income here means the six directly held flows (long- and
+short-term capital gains, taxable interest, qualified and non-qualified
+dividends, and rental income); the calibrated scenarios of
+Section~\ref{sec:method-scenarios} use a wider nine-variable set that adds
+pass-through and taxable retirement income, which is why the two baselines'
+capital aggregates differ. The \genSweepYear{} sweep baseline contains
+\$\genSweepLaborT T of positive labor income and \$\genSweepCapitalT T of
+positive capital income on the six-variable definition, with
 \genSweepHHCapSharePct\% of households receiving any positive capital income
 --- so the sweep concentrates income by construction, and the question is
 what current law does about it.
@@ -55,12 +66,12 @@ while forecasters expect AI to raise output \emph{and} tilt its composition.
 The sweep therefore answers ``what does composition alone do to current
 law?'', and the calibrated scenarios answer ``what happens on the paths
 forecasters actually expect?''. The two connect through a
-forecast-equivalence mapping: the share of baseline labor income that the
-tilt removes, $k = 1 - (1+g_L)/(1+g_Y)$, places each scenario on the sweep
-axis at \genForecastShiftSlowPct\% (Slow), \genForecastShiftModPct\%
-(Moderate) and \genForecastShiftRapidPct\% (Rapid) --- the sweep's
-forecast-relevant range is its first decade, and the rest is out-of-sample
-stress test.
+forecast-equivalence mapping: the proportional reduction in labor's income
+share that each tilt produces, $k = 1 - (1+g_L)/(1+g_Y)$, is also the sweep
+position delivering the same share reduction, placing the scenarios at
+\genForecastShiftSlowPct\% (Slow), \genForecastShiftModPct\% (Moderate) and
+\genForecastShiftRapidPct\% (Rapid) --- the sweep's forecast-relevant range
+is its first decade, and the rest is out-of-sample stress test.
 
 \subsection{Design II: forecaster-calibrated scenarios}\label{sec:method-scenarios}
 
@@ -99,7 +110,9 @@ short-term capital gains, taxable interest, qualified and non-qualified
 dividends, rental income, partnership and S-corporation income, taxable
 pension income and taxable IRA distributions --- in proportion to existing
 holdings, after routing pass-through income through the Budget Lab's
-labor/capital split rule. Appendix~\ref{app:routing} traces every shocked
+labor/capital split rule. The wage-spread transform is not applied to the
+labor portion of pass-through income, which follows the pass-through rule
+instead. Appendix~\ref{app:routing} traces every shocked
 variable into IRS gross income and household market income, confirming the
 shock reaches the tax base rather than being recomputed away; the labor
 aggregate lands on its target to within relative error

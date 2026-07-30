@@ -65,12 +65,20 @@ Budget Lab & +195 & -63 & +84 & +216 \\
 \newcommand{\tabPayrollCells}{%
 \begin{tabular}{lrrrr}
 \toprule
-Rapid variant & \multicolumn{2}{c}{IIT net of credits} & \multicolumn{2}{c}{Payroll} \\
+Cell & \multicolumn{2}{c}{IIT net of credits} & \multicolumn{2}{c}{Payroll} \\
  & Ours & Theirs & Ours & Theirs \\
 \midrule
-Compressive & +104 & +11 & +34 & +37 \\
-Proportional & +193 & +98 & -16 & -11 \\
-Expansive & +287 & +195 & -70 & -63 \\
+Slow / compressive & +3 & -4 & -1 & +0 \\
+Slow / proportional & +11 & +4 & -5 & -4 \\
+Slow / expansive & +18 & +11 & -10 & -8 \\
+\addlinespace
+Moderate / compressive & +69 & +18 & +33 & +30 \\
+Moderate / proportional & +114 & +64 & +7 & +5 \\
+Moderate / expansive & +161 & +111 & -20 & -21 \\
+\addlinespace
+Rapid / compressive & +104 & +11 & +34 & +37 \\
+Rapid / proportional & +193 & +98 & -16 & -11 \\
+Rapid / expansive & +287 & +195 & -70 & -63 \\
 \bottomrule
 \end{tabular}}
 \newcommand{\tabStates}{%
@@ -89,7 +97,7 @@ MN & +1.02 \\
 IL & +0.91 \\
 OR & +0.89 \\
 \addlinespace
-\multicolumn{2}{l}{\footnotesize 7 states collect exactly \$0: FL, NV, NH, SD, TN, TX, WY.} \\
+\multicolumn{2}{l}{\footnotesize 7 states collect exactly \$0: FL, NH, NV, SD, TN, TX, WY.} \\
 \bottomrule
 \end{tabular}}
 \newcommand{\tabSweep}{%
