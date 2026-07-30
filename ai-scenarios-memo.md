@@ -76,9 +76,13 @@ from above the cap to below it.
 | Moderate | +$289B | +$144B | 50% |
 | Rapid | +$581B | +$211B | 36% |
 
-Their "roughly twice as large" claim is specifically about Rapid. We get 2.7× —
-the same finding, somewhat stronger, in the direction a missing corporate tax
-line predicts.
+Their "roughly twice as large" claim is specifically about Rapid; their grid
+puts it at exactly 2.11×. Our 2.7× above is not directly comparable — it is an
+all-government household total with no corporate wedge. Restated on their
+federal-plus-corporate basis, our ratios are 3.13× / 1.65× / 2.00× against
+their 3.62× / 1.71× / 2.11× — the two models agree on the tilt, scenario by
+scenario. The larger household-total ratio is saying something different:
+adding state taxes and the transfer system amplifies what the tilt costs.
 
 Their most extreme case checks out too: for Slow with compressive labor
 inequality they report the gain 82% lower than with shares and distribution
@@ -105,9 +109,15 @@ and varying only how much of the incremental capital flow lands on a tax return:
 | 75% | +$142B |
 | 100% (their assumption) | +$211B |
 
-Linear to within a percent, with **breakeven at 22.5%**. Below that, Rapid AI
-growth is a net fiscal cost under current law: labor income still falls, and
-there is not enough taxable capital income to offset it.
+Linear to within a percent, with **breakeven at 22.5%**. Below that, the
+household side of the fiscal system loses money on Rapid AI growth: labor
+income still falls, and there is not enough taxable capital income reaching
+returns to offset it. One important counterweight sits outside our model:
+corporate tax is levied upstream of household realization, so the Budget Lab's
+corporate wedge would still collect about $84B on the same shock regardless of
+realization — enough to keep the all-in federal total positive (about +$33B)
+even at the 0% floor. Low realization shifts the entire fiscal burden of an AI
+boom onto the corporate side; it does not eliminate it.
 
 Poverty is flat across the entire sweep, 12.24% to 12.27%. Whether AI's capital
 gains are taxable moves the federal balance sheet by more than a
@@ -198,9 +208,11 @@ our $5.3T, though the wedge itself cannot confirm it), allocation by realized
 income rather than SCF total wealth — which they note is the more
 top-concentrated choice — and our ordinary-rate retirement routing.
 
-Their grid also quantifies their "roughly twice as large" tilt claim exactly:
-2.11× for Rapid against our 2.75×, with the same ordering across scenarios in
-both models (Slow most extreme, Moderate least). One basis caveat: their "82%
+Their grid quantifies their "roughly twice as large" tilt claim at exactly
+2.11× for Rapid; on the same federal-plus-corporate basis ours is 2.00×
+(Slow 3.13× vs their 3.62×, Moderate 1.65× vs 1.71×) — agreement, not
+divergence, with the same ordering across scenarios. Our household-total 2.75×
+runs higher because states and transfers amplify the tilt's cost. One basis caveat: their "82%
 lower" figure for Slow/compressive uses a shares-fixed *compressive*
 counterfactual; ours uses shares-fixed proportional, so our 93% is not exactly
 the same comparison.
