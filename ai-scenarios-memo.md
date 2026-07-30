@@ -151,13 +151,42 @@ a crossover wage: below it workers lose, above it they gain.
 | Expansive | 1.072 | $168,205 — workers below this lose |
 
 Under Rapid / expansive, that puts the great majority of workers on the losing
-side of a scenario that raises federal receipts $244B.
+side of a scenario that adds $244B to government net revenue.
+
+## The transfer system
+
+The Revenue column above nets transfers out; pulling them apart shows the
+safety net doing exactly what it is built to do. Across the Rapid wage-spread
+variants — identical aggregate labor income, only its distribution varies —
+gross tax collections swing $122B, and automatic transfer responses absorb
+$57B of that swing, nearly half. Non-credit transfers alone swing **$42B**:
+−$20B under compressive, as rising low-end wages pull households off
+means-tested programs, to +$22B under expansive, as falling ones push them on.
+SNAP carries $19B of the swing (−$9B to +$10B) and SSI $3B; Moderate shows the
+same shape at −$11B to +$8B. Refundable credits contribute the remaining $15B
+— a response their accounting does capture, through its tax-credit outlays
+line. The $42B of program spending is the piece outside their model's
+coverage.
+
+This is the outlay half of the 3.26-point poverty span: the variant
+uncertainty their report scores as a revenue question arrives at households as
+a benefits question, and transfers expand exactly when workers lose. One scope
+note: these totals carry no health-program response in either direction — the
+model values Medicaid, CHIP and ACA subsidies, but a simulation switch, off in
+these runs, keeps health coverage out of the net-income accounting.
 
 ## States
 
-State revenue under Rapid / proportional concentrates almost entirely in a
-handful of states — California +$10.0B, New York +$5.8B, New Jersey +$1.6B,
-Massachusetts +$1.3B, Maryland +$1.2B.
+The State column of the scenario table is the other fiscal response their
+federal model does not carry: **+$36B** under Rapid / proportional, doubling
+from +$24B to +$48B across the wage-spread variants as progressive state codes
+concentrate collections at the top the way federal brackets do. On the
+Rapid / expansive cell we bridge to their headline below, state tax net of
+state credits adds $47B — another 16% on top of the +$301B federal take.
+
+That revenue concentrates almost entirely in a handful of states — California
++$10.0B, New York +$5.8B, New Jersey +$1.6B, Massachusetts +$1.3B, Maryland
++$1.2B.
 
 Seven states collect **exactly nothing** from the capital shock: Florida,
 Nevada, New Hampshire, South Dakota, Tennessee, Texas and Wyoming. Alaska
@@ -182,7 +211,8 @@ formulas, reproducing all nine of their Table 1 derived values to within
 0.005pp.
 
 **We model and they do not:** SPM poverty, the transfer system (SNAP, SSI, TANF,
-WIC, Medicaid, CHIP, ACA premium tax credits), and state tax and benefit codes.
+WIC — health programs are valued in the model but excluded from these runs'
+net-income accounting), and state tax and benefit codes.
 
 **They model and we cannot:** the corporate income tax. Their microsimulation
 covers federal individual income tax plus payroll; the corporate effect is a
