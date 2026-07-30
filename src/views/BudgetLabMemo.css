@@ -1,0 +1,80 @@
+/* Long-form memo page. Palette and type come from the shared PE tokens. */
+
+.memo-page {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: var(--space-10) var(--space-4) var(--space-16);
+  color: var(--pe-gray-900);
+  line-height: 1.65;
+}
+
+.memo-page-nav {
+  margin-bottom: var(--space-6);
+  font-size: 0.9rem;
+}
+
+.memo-page h1 {
+  font-size: clamp(1.7rem, 4vw, 2.2rem);
+  line-height: 1.25;
+  margin: 0 0 var(--space-2);
+  color: var(--pe-gray-900);
+}
+
+.memo-page h1 + p em {
+  color: var(--pe-gray-500);
+  font-style: normal;
+}
+
+.memo-page h2 {
+  font-size: 1.25rem;
+  color: var(--pe-teal-600);
+  border-bottom: 1px solid var(--pe-gray-200);
+  padding-bottom: var(--space-1);
+  margin: var(--space-8) 0 var(--space-3);
+}
+
+.memo-page p {
+  margin: 0 0 var(--space-4);
+}
+
+.memo-page ul {
+  margin: 0 0 var(--space-4);
+  padding-left: 1.4em;
+}
+
+.memo-page a {
+  color: var(--pe-blue);
+}
+
+.memo-page table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.88rem;
+  font-variant-numeric: tabular-nums;
+  margin: var(--space-4) 0 var(--space-6);
+  display: block;
+  overflow-x: auto;
+}
+
+.memo-page th,
+.memo-page td {
+  border-bottom: 1px solid var(--pe-gray-200);
+  padding: var(--space-2) var(--space-3);
+  text-align: right;
+  white-space: nowrap;
+}
+
+.memo-page th:first-child,
+.memo-page td:first-child {
+  text-align: left;
+}
+
+.memo-page thead th {
+  color: var(--pe-gray-500);
+  font-weight: 600;
+  font-size: 0.8rem;
+}
+
+.memo-page h2 {
+  text-align: left;
+}

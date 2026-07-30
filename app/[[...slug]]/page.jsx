@@ -1,6 +1,13 @@
 import ClientAppRouter from "../../src/ClientAppRouter";
 
-const routes = ["", "research", "policy-analysis", "income-shift", "references"];
+const routes = [
+  "",
+  "research",
+  "policy-analysis",
+  "income-shift",
+  "references",
+  "budget-lab",
+];
 
 export function generateStaticParams() {
   return routes.map((route) => ({

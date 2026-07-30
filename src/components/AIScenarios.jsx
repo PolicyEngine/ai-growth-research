@@ -1,4 +1,5 @@
 import React, { useMemo, useState } from "react";
+import { Link } from "react-router-dom";
 import {
   Bar,
   BarChart,
@@ -513,7 +514,8 @@ function AIScenarios({ scenariosData = defaultScenariosData }) {
 
         <p className="analysis-metadata">
           {metadata.countryModelPackage} {metadata.countryModelVersion} ·{" "}
-          {metadata.dataPackage} {metadata.dataVersion} · {metadata.datasetName}
+          {metadata.dataPackage} {metadata.dataVersion} · {metadata.datasetName}{" "}
+          · <Link to="/budget-lab">read the full write-up</Link>
         </p>
       </div>
     </div>

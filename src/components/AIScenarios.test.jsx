@@ -1,6 +1,7 @@
 import React from "react";
 import { describe, expect, it } from "vitest";
 import { fireEvent, render, screen } from "@testing-library/react";
+import { MemoryRouter } from "react-router-dom";
 import AIScenarios, { realizationBreakeven } from "./AIScenarios";
 import scenariosData from "../data/aiScenariosData.json";
 
@@ -19,7 +20,11 @@ function revenueOf(name, variant) {
 
 describe("AIScenarios", () => {
   it("renders the section with scenario and variant controls", () => {
-    render(<AIScenarios />);
+    render(
+      <MemoryRouter>
+        <AIScenarios />
+      </MemoryRouter>,
+    );
     expect(
       screen.getByText("What forecasters expect, under current law"),
     ).toBeTruthy();
@@ -28,14 +33,22 @@ describe("AIScenarios", () => {
   });
 
   it("defaults to Rapid / proportional and shows its revenue", () => {
-    render(<AIScenarios />);
+    render(
+      <MemoryRouter>
+        <AIScenarios />
+      </MemoryRouter>,
+    );
     expect(
       screen.getAllByText(revenueOf("Rapid", "proportional")).length,
     ).toBeGreaterThan(0);
   });
 
   it("switches scenario when a tab is clicked", () => {
-    render(<AIScenarios />);
+    render(
+      <MemoryRouter>
+        <AIScenarios />
+      </MemoryRouter>,
+    );
     fireEvent.click(screen.getByRole("radio", { name: "Slow" }));
     expect(
       screen.getAllByText(revenueOf("Slow", "proportional")).length,
@@ -43,19 +56,31 @@ describe("AIScenarios", () => {
   });
 
   it("shows the crossover wage only for spread variants", () => {
-    render(<AIScenarios />);
+    render(
+      <MemoryRouter>
+        <AIScenarios />
+      </MemoryRouter>,
+    );
     expect(screen.queryByText(/workers earning below/i)).toBeNull();
     fireEvent.click(screen.getByRole("radio", { name: "Wages spread" }));
     expect(screen.getByText(/workers earning below/i)).toBeTruthy();
   });
 
   it("carries the corporate-tax scope note from the payload", () => {
-    render(<AIScenarios />);
+    render(
+      <MemoryRouter>
+        <AIScenarios />
+      </MemoryRouter>,
+    );
     expect(screen.getByText(/no corporate income tax/i)).toBeTruthy();
   });
 
   it("cites the model and data build", () => {
-    render(<AIScenarios />);
+    render(
+      <MemoryRouter>
+        <AIScenarios />
+      </MemoryRouter>,
+    );
     expect(screen.getByText(/populace_us_2024/)).toBeTruthy();
   });
 });

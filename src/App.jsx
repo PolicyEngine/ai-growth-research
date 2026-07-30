@@ -5,6 +5,7 @@ import ResearchPage from "./views/Research";
 import PolicyAnalysis from "./views/PolicyAnalysis";
 import IncomeShift from "./views/IncomeShift";
 import References from "./views/References";
+import BudgetLabMemo from "./views/BudgetLabMemo";
 import { basePath } from "./utils/basePath";
 
 function App() {
@@ -17,6 +18,7 @@ function App() {
           <Route path="/policy-analysis" element={<PolicyAnalysis />} />
           <Route path="/income-shift" element={<IncomeShift />} />
           <Route path="/references" element={<References />} />
+          <Route path="/budget-lab" element={<BudgetLabMemo />} />
         </Routes>
       </div>
     </Router>

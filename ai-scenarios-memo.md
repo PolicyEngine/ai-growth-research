@@ -12,11 +12,17 @@ system](https://budgetlab.yale.edu/research/how-potential-ai-futures-would-play-
 and finds the answer is less than you would hope, because growth skewed toward
 capital is growth the tax base collects less of.
 
-We ran their scenarios through PolicyEngine-US, deliberately adopting their
-calibration so that what differs is model coverage rather than assumptions.
-PolicyEngine carries the transfer system, the SPM poverty measure, and the state
-codes their tax model does not. Three things follow that a revenue-only score
-cannot show.
+PolicyEngine has been running an open labor-to-capital income-shift analysis
+since last fall — an experiment that sweeps a 0–100% shift of labor income into
+capital income and measures the revenue, poverty and inequality consequences at
+each step, live at
+[policyengine.org/us/ai-inequality/income-shift](https://policyengine.org/us/ai-inequality/income-shift).
+The Budget Lab's report gave that work an external anchor. We extended the same
+framework to the Karger et al. scenarios they calibrate to, deliberately
+adopting their calibration so that what differs is model coverage rather than
+assumptions. PolicyEngine carries the transfer system, the SPM poverty measure,
+and the state codes their tax model does not. Three things follow that a
+revenue-only score cannot show.
 
 **1. The same growth path either cuts poverty by a point or raises it,
 depending only on where the income lands.** In the Rapid scenario — 3.3% annual

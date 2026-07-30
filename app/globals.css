@@ -6,6 +6,7 @@
 @import "../src/components/AnalysisSection.css";
 @import "../src/components/Approach.css";
 @import "../src/components/BaselineDistributionSummary.css";
+@import "../src/views/BudgetLabMemo.css";
 @import "../src/components/Challenge.css";
 @import "../src/components/Ecosystem.css";
 @import "../src/components/Evidence.css";
