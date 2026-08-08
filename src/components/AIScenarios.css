@@ -50,6 +50,17 @@
   margin: 0 0 var(--space-6);
 }
 
+/* Scope note under the stat tiles: what the headline number does and does not
+   contain. Quieter than the crossover callout — it clarifies, not alerts. */
+.ai-scenarios-stat-note {
+  font-size: 0.85rem;
+  line-height: 1.55;
+  color: var(--pe-gray-600);
+  border-left: 2px solid var(--pe-gray-200);
+  padding-left: var(--space-4);
+  margin: var(--space-4) 0 var(--space-6);
+}
+
 .ai-scenarios-pair {
   margin-top: var(--space-8);
 }

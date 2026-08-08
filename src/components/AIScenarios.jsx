@@ -368,6 +368,16 @@ function AIScenarios({ scenariosData = defaultScenariosData }) {
   const povertyPp = (selected.povertyRateChange ?? 0) * 100;
   const crossover = selected.laborCrossoverIncome;
 
+  // Share of the shares-fixed revenue gain the forecast tilt keeps, on the
+  // all-government basis these cards use. The matched-federal figure the
+  // reconciliation reports is different, so the copy names both bases.
+  const rapidFixed = findSharesFixed(scenarios, "Rapid")?.revenueChange;
+  const rapidForecast = findRow(scenarios, "Rapid", "proportional")?.revenueChange;
+  const tiltKeptPct =
+    rapidFixed && rapidForecast
+      ? Math.round((100 * rapidForecast) / rapidFixed)
+      : null;
+
   return (
     <div id="ai-scenarios" className="analysis-section">
       <div className="analysis-header">
@@ -446,9 +456,9 @@ function AIScenarios({ scenariosData = defaultScenariosData }) {
 
         <div className="ai-scenarios-stats">
           <StatTile
-            label="Revenue"
+            label="Net government revenue"
             value={fmtBillions(selected.revenueChange)}
-            delta="vs current-law baseline"
+            delta="federal + state, net of transfers"
           />
           <StatTile
             label="SPM poverty"
@@ -470,6 +480,15 @@ function AIScenarios({ scenariosData = defaultScenariosData }) {
           />
         </div>
 
+        <p className="ai-scenarios-stat-note">
+          Net government revenue is federal <em>and</em> state taxes minus
+          transfers: refundable credits (EITC, refundable CTC) and benefit
+          outlays (SNAP, SSI, TANF, WIC, state-funded benefits) are netted out,
+          so a scenario that raises taxes and benefit spending together shows
+          the difference. Under {scenarioName} / proportional, state income tax
+          is {fmtBillions(selected.stateTaxChange)} of it.
+        </p>
+
         {crossover != null && (
           <p className="ai-scenarios-crossover">
             Under this variant, workers earning below{" "}
@@ -483,14 +502,22 @@ function AIScenarios({ scenariosData = defaultScenariosData }) {
         <p className="shift-sweep-description">
           The blue bars grow both factors at the scenario&apos;s GDP rate; the
           teal bars tilt the same growth toward capital as forecasters expect.
-          Under Rapid, the tilt costs 64% of the revenue gain.
+          {tiltKeptPct != null && (
+            <>
+              {" "}
+              Under Rapid the tilt keeps {tiltKeptPct}% of the revenue gain on
+              this all-government basis, and 50% on the narrower federal basis
+              comparable to the Budget Lab&apos;s — the difference is what
+              state taxes and transfers add to the tilt&apos;s cost.
+            </>
+          )}
         </p>
 
         <VariantPairCharts scenarios={scenarios} scenarioName={scenarioName} />
         <p className="shift-sweep-description">
           Whether AI compresses or spreads the wage distribution is the
-          assumption forecasters flag as least evidenced — and it moves poverty
-          far more than it moves revenue.
+          assumption forecasters flag as least evidenced. Revenue stays
+          positive across the whole range; the poverty outcome flips sign.
         </p>
 
         <RealizationChart rows={realizationRows} breakeven={breakeven} />
